@@ -459,7 +459,7 @@ app.get('/api/drivers', (req, res) => {
 // 5. DIAGNOSTIC PIPELINE (Multi-Agent Reasoning)
 // -----------------------------------------------------
 app.post('/api/fault-reports', async (req, res) => {
-  const { vehicle_id, driver_id, symptom_text_hindi, symptom_text_english, acoustic_signal_class } = req.body;
+  const { vehicle_id, driver_id, symptom_text_hindi, symptom_text_english, acoustic_signal_class, image_base64 } = req.body;
   
   if (!driver_id || !symptom_text_hindi) {
     return res.status(400).json({ error: "Driver ID and symptom text are required." });
@@ -534,6 +534,7 @@ app.post('/api/fault-reports', async (req, res) => {
     // Execute the LangGraph workflow
     const parsed = await diagnosticGraph.invoke({
       symptom_hindi: symptom_text_hindi,
+      image_base64: image_base64,
       acoustic_signal: acoustic_signal_class || "normal",
       kb_matches: kbMatches
     });

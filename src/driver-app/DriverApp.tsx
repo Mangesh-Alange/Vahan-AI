@@ -5,7 +5,7 @@ import {
   Eye, RefreshCw, LogOut, ChevronDown, ChevronUp, UserPlus, 
   Truck, Settings, Lock, Phone, User, EyeOff, AlertOctagon, HelpCircle,
   Send, MessageSquare, Sun, Moon
-, Camera, X, MessageCircle, Map, MapPin} from 'lucide-react';
+, Camera, X, MessageCircle, Map, MapPin, Navigation} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { User as UserType, Vehicle, FaultReport, FatigueEvent } from '../types.js';
 import { faultKnowledgeBase } from '../../server/faultKnowledgeBase.js';
@@ -340,7 +340,8 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             driver_id: user.id,
             symptom_text_hindi: symptomText,
             symptom_text_english: symptomText, // Server will translate
-            acoustic_signal_class: audioSignalClass
+            acoustic_signal_class: audioSignalClass,
+            image_base64: selectedImage
           })
         });
         const data = await res.json();
@@ -1453,6 +1454,26 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                       {msg.role === 'user' ? 'Aap' : 'VahanAI Copilot'}
                     </span>
                     <p className="leading-relaxed whitespace-pre-line">{msg.content}</p>
+                    {(msg as any).action && (msg as any).action.type === 'OPEN_MAPS' && (
+                      <div className="mt-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded bg-amber-500/20 flex items-center justify-center shrink-0">
+                            <MapPin className="h-5 w-5 text-amber-500" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-slate-900 dark:text-white text-[11px]">Tata Motors Service Hub</h4>
+                            <p className="text-[9px] text-slate-500 mt-0.5">NH-44 Bypass Road • 2.4 km away</p>
+                            <button 
+                              onClick={() => window.location.assign((msg as any).action.url)}
+                              className="mt-2 bg-amber-500 hover:bg-amber-600 text-slate-950 px-3 py-1.5 rounded-full font-bold text-[9px] flex items-center gap-1.5 transition-colors shadow-sm"
+                            >
+                              <Navigation className="h-3 w-3" />
+                              Start Navigation
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
                 {isSendingToCopilot && (

@@ -7,6 +7,7 @@ export const GraphState = Annotation.Root({
   symptom_hindi: Annotation<string>(),
   acoustic_signal: Annotation<string>(),
   kb_matches: Annotation<any[]>(),
+  image_base64: Annotation<string>(),
   
   // Populated by agents
   symptom_english: Annotation<string>(),
@@ -63,7 +64,14 @@ const diagnosticAgent = async (state: typeof GraphState.State) => {
     Provide a precise engineering diagnosis strictly in Devanagari Hindi. 
     IMPORTANT: If the symptom is a general query (like asking for locations, service centers, greetings) and NOT a vehicle fault, set diagnosis to 'यह एक सामान्य प्रश्न है, वाहन की खराबी नहीं' (This is a general question, not a vehicle fault).
     Return ONLY a JSON object: { "diagnosis": "string", "reasoning": "string" }`;
-  const res = await model.invoke([new HumanMessage(prompt)]);
+  let contentMsg: any = prompt;
+  if (state.image_base64) {
+    contentMsg = [
+      { type: "text", text: prompt },
+      { type: "image_url", image_url: state.image_base64 }
+    ];
+  }
+  const res = await model.invoke([new HumanMessage({ content: contentMsg })]);
   const parsed = parseJSON(res.content.toString());
   return {
     diagnosis: parsed.diagnosis || "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
