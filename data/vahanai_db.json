@@ -469,6 +469,15 @@
       ],
       "created_at": "2026-06-29T16:00:00Z",
       "resolved": true
+    },
+    {
+      "id": "sos_7irmfo9",
+      "org_id": "org_rajpath",
+      "pattern_description": "SOS EMERGENCY ALERT: गाड़ी ख़राब है और ड्राइवर हाईवे पर फंसा हुआ है",
+      "severity": "high",
+      "related_fault_report_ids": [],
+      "resolved": false,
+      "created_at": 1782934471946
     }
   ],
   "service_centers": [
