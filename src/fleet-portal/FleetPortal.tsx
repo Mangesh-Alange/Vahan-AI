@@ -1282,7 +1282,19 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {workshops.map((shop, idx) => (
-                  <div key={idx} className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl border border-slate-200 dark:border-slate-600 shadow-sm p-5 space-y-3 flex flex-col justify-between">
+                  <div 
+                    key={idx} 
+                    className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl border border-slate-200 dark:border-slate-600 shadow-sm p-5 space-y-3 flex flex-col justify-between cursor-pointer"
+                    onClick={() => {
+                      const service = {
+                        address: `${shop.name} – ${shop.location}`
+                      };
+                      window.open(
+                        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(service.address)}`,
+                        "_blank"
+                      );
+                    }}
+                  >
                     <div className="space-y-2">
                       <div className="bg-amber-500/10 text-amber-600 p-2.5 rounded-xl self-start w-fit">
                         <MapPin className="h-5 w-5" />
