@@ -351,6 +351,21 @@
       "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
       "id": "rep_nveoagd",
       "_id": "6a455d787e1abc6eb15dac85"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:05:43.143Z",
+      "symptom_text_hindi": "mere paas service  center kidhar hee",
+      "acoustic_signal_class": "normal",
+      "severity": "caution",
+      "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
+      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
+      "estimated_cost_range": "N/A",
+      "synced_at": "2026-07-01T19:05:43.143Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
+      "id": "rep_oc0d91x",
+      "_id": "6a45658b7e1abc6eb15dac86"
     }
   ],
   "fleet_alerts": [

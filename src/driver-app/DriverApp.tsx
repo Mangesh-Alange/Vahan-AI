@@ -325,7 +325,10 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     } else {
       // Online mode: call backend Express multi-agent LLM route
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
         const res = await fetch('/api/fault-reports', {
+          signal: controller.signal,
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -588,7 +591,10 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     }
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
       const res = await fetch('/api/driver-copilot', {
+        signal: controller.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1208,6 +1214,14 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                   <textarea 
                     value={symptomText}
                     onChange={(e) => setSymptomText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        if (!isDiagnosing && (symptomText.trim() || selectedImage)) {
+                          runDiagnosticPipeline();
+                        }
+                      }
+                    }}
                     placeholder={isRecordingRealVoice ? "[RECORDING ACTIVE...] Speak now" : "Type a message or use the mic..."}
                     className="w-full bg-transparent text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none min-h-[44px] max-h-[120px] px-2 py-2.5 resize-none leading-relaxed"
                     rows={1}
