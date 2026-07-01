@@ -5,7 +5,7 @@ import {
   Eye, RefreshCw, LogOut, ChevronDown, ChevronUp, UserPlus, 
   Truck, Settings, Lock, Phone, User, EyeOff, AlertOctagon, HelpCircle,
   Send, MessageSquare, Sun, Moon
-, Camera, X, MessageCircle, Map} from 'lucide-react';
+, Camera, X, MessageCircle, Map, MapPin} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { User as UserType, Vehicle, FaultReport, FatigueEvent } from '../types.js';
 import { faultKnowledgeBase } from '../../server/faultKnowledgeBase.js';
@@ -928,43 +928,39 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   };
 
   return (
-    <div className={`h-[100dvh] transition-colors duration-500 flex flex-col font-sans max-w-md mx-auto relative border-x shadow-2xl overflow-hidden ${darkMode ? 'dark bg-slate-950 bg-gradient-to-tr from-slate-950 via-slate-900 to-black text-slate-200 border-white/10' : 'bg-slate-50 bg-gradient-to-tr from-slate-100 via-slate-50 to-slate-200 text-slate-800 border-slate-200'}`}>
-      {/* PWA Phone Header Frame */}
-      <div className="bg-slate-950/90 backdrop-blur-xl border-b border-white/10 text-white px-4 py-4 flex items-center justify-between shadow-lg shrink-0 z-20 relative">
-        <div className="flex items-center gap-2">
-          <Truck className="h-5 w-5 text-amber-500 animate-pulse" />
-          <div>
-            <h1 className="text-sm font-bold tracking-tight text-white flex items-center gap-1.5">
-              VahanAI <span className="text-[10px] bg-amber-500/20 text-amber-400 px-1 rounded">Driver PWA</span>
-            </h1>
-            <p className="text-[10px] text-slate-400">आपका सुरक्षित सफर</p>
+    <div className={`h-[100dvh] transition-colors duration-500 flex flex-col font-sans max-w-md mx-auto relative sm:border-x shadow-2xl overflow-hidden ${darkMode ? 'dark bg-slate-950 bg-gradient-to-tr from-slate-950 via-slate-900 to-black text-slate-200 border-white/10' : 'bg-slate-50 bg-[#F9FAFB] text-slate-800 border-slate-200'}`}>
+      {/* Zomato-style Premium Header */}
+      <div className="px-5 pt-6 pb-2 flex items-center justify-between shrink-0 z-20 relative">
+        <div className="flex flex-col">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 mb-1">
+            <MapPin className="h-3.5 w-3.5 text-amber-600 dark:text-amber-500" />
+            <span className="text-[10px] font-bold uppercase tracking-widest">Current Route</span>
           </div>
+          <h1 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
+            NH-48, Pune Hwy
+          </h1>
         </div>
 
         {/* Network & Sync Badge Controls */}
-        <div className="flex items-center gap-2">
-          <button onClick={() => setDarkMode(!darkMode)} className="p-1.5 rounded-full hover:bg-slate-800/50 text-slate-300 transition-colors" title="Toggle Theme">
-            {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
+        <div className="flex items-center gap-3">
           <button 
             onClick={() => setIsOnline(!isOnline)} 
-            className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded transition-colors ${
+            className={`flex items-center justify-center h-8 w-8 rounded-full shadow-sm transition-colors ${
               isOnline 
-                ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' 
-                : 'bg-red-500/10 text-red-400 hover:bg-red-500/20'
+                ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20' 
+                : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
             }`}
           >
-            {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
-            {isOnline ? "Online" : "Force Offline"}
+            {isOnline ? <Wifi className="h-4 w-4" /> : <WifiOff className="h-4 w-4" />}
           </button>
-
-          <button 
-            onClick={onLogout}
-            className="p-1 hover:bg-slate-200 dark:bg-slate-700/60 rounded text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-500 transition-colors"
-            title="Logout"
-          >
-            <LogOut className="h-4 w-4" />
+          
+          <button onClick={() => setDarkMode(!darkMode)} className="h-8 w-8 flex items-center justify-center rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors shadow-sm border border-slate-100 dark:border-slate-700">
+            {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
+          
+          <div className="h-9 w-9 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-full flex shadow-md items-center justify-center text-white font-bold border-2 border-white dark:border-slate-900 cursor-pointer" onClick={onLogout}>
+            {user.name.charAt(0)}
+          </div>
         </div>
       </div>
 
@@ -1006,139 +1002,55 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       {/* Main App Scrolling Stage */}
       <div className="flex-1 overflow-y-auto p-4 pb-20 space-y-4">
         
-        {/* Welcome Driver Badge card */}
-        <div className="glass dark:bg-slate-800/50 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 flex items-center gap-3">
-          <div className="h-10 w-10 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-full flex shadow-lg shadow-amber-500/20 items-center justify-center text-slate-900 dark:text-white font-bold">
-            {user.name.charAt(0)}
-          </div>
-          <div className="flex-1">
-            <p className="text-xs text-slate-600 dark:text-slate-400">नमस्ते, वाहन चालक</p>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">{user.name}</h3>
-          </div>
-          <div>
-            <span className="text-[10px] font-semibold bg-slate-200 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-full border border-slate-300 dark:border-slate-600">
-              ID: {user.phone}
-            </span>
-          </div>
-        </div>
+        {/* Zomato-style Greeting & Vehicle Widget */}
+        <div className="px-5 mb-6 mt-2">
+          <h2 className="text-[26px] leading-tight font-black text-slate-900 dark:text-white mb-1">Hi, {user.name.split(' ')[0]} 👋</h2>
+          <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-6">Ready for a safe journey today?</p>
 
-        {/* Selected Vehicle Selector Banner */}
-        <div className="glass dark:bg-slate-800/50 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-              <Truck className="h-3 w-3 text-amber-500" /> आपकी गाड़ी (Your Vehicle)
-            </span>
+          {/* Premium Vehicle Selector Card */}
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-slate-100 dark:border-slate-800/60 flex items-center justify-between transition-all">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-2xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center shrink-0">
+                <Truck className="h-6 w-6 text-amber-600 dark:text-amber-500" />
+              </div>
+              <div className="flex flex-col justify-center">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Active Vehicle</p>
+                {!registrationMode ? (
+                  selectedVehicleId ? (
+                    <div className="text-sm font-black text-slate-900 dark:text-white">
+                      {vehicles.find(v => v.id === selectedVehicleId)?.registration_number || "Select your truck"}
+                    </div>
+                  ) : (
+                    <div className="text-sm font-bold text-amber-600 dark:text-amber-500">No Truck Selected</div>
+                  )
+                ) : (
+                  <div className="text-sm font-bold text-amber-600 dark:text-amber-500">Registering...</div>
+                )}
+              </div>
+            </div>
+            
             <button 
-              onClick={() => setRegistrationMode(!registrationMode)} 
-              className="text-[11px] font-semibold text-amber-500 hover:underline"
+              onClick={() => setRegistrationMode(!registrationMode)}
+              className="bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold px-4 py-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors shadow-sm"
             >
-              {registrationMode ? "Select Vehicle" : "+ Register Vehicle"}
+              {registrationMode ? "Cancel" : "Change"}
             </button>
           </div>
 
-          {!registrationMode ? (
-            <div className="flex items-center justify-between">
-              <div>
-                {selectedVehicleId ? (
-                  <div className="text-sm font-bold text-slate-900 dark:text-white">
-                    {vehicles.find(v => v.id === selectedVehicleId)?.registration_number || "MH-12-QW-5678"}
-                  </div>
-                ) : (
-                  <div className="text-xs text-amber-400">No Vehicle Assigned. Please register/select.</div>
-                )}
-                <p className="text-[10px] text-slate-600 dark:text-slate-400">
-                  {selectedVehicleId 
-                    ? `${vehicles.find(v => v.id === selectedVehicleId)?.make} ${vehicles.find(v => v.id === selectedVehicleId)?.model || 'Drivetrain'}` 
-                    : "Solo driver profile"
-                  }
-                </p>
-              </div>
-              <select 
-                value={selectedVehicleId} 
-                onChange={(e) => {
-                  const vid = e.target.value;
-                  const chosen = vehicles.find(v => v.id === vid);
-                  // If driver is not already assigned to this vehicle, persist the binding
-                  if (chosen && chosen.assigned_driver_id !== user.id) {
-                    handleBindExistingVehicle(vid);
-                  } else {
-                    setSelectedVehicleId(vid);
-                  }
-                }}
-                className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors text-xs text-slate-900 dark:text-white px-2 py-1 rounded border border-slate-300 dark:border-slate-600 focus:outline-none focus:border-amber-500"
-              >
-                <option value="">-- Select Vehicle --</option>
-                {vehicles.map(v => (
-                  <option key={v.id} value={v.id}>
-                    {v.registration_number}{v.assigned_driver_id && v.assigned_driver_id !== user.id ? ' (assigned)' : ''}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <form onSubmit={handleRegisterVehicle} className="space-y-3 pt-2">
-              <div className="grid grid-cols-2 gap-2">
+          {/* Minimalist Registration Form */}
+          {registrationMode && (
+            <form onSubmit={handleRegisterVehicle} className="mt-4 p-5 bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] text-slate-600 dark:text-slate-400">Reg Number</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. MH-12-AB-1234"
-                    value={newVehicle.registration_number}
-                    onChange={(e) => setNewVehicle(prev => ({ ...prev, registration_number: e.target.value }))}
-                    className="w-full bg-slate-200 dark:bg-slate-700/60 text-xs text-slate-900 dark:text-white p-2 rounded border border-slate-300 dark:border-slate-600"
-                    required
-                  />
+                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Reg Number</label>
+                  <input type="text" placeholder="MH-12-AB-1234" value={newVehicle.registration_number} onChange={(e) => setNewVehicle(prev => ({ ...prev, registration_number: e.target.value }))} className="w-full mt-1 bg-slate-50 dark:bg-slate-800/50 text-sm font-bold text-slate-900 dark:text-white p-3 rounded-2xl border-none focus:ring-2 focus:ring-amber-500 outline-none transition-all" required />
                 </div>
                 <div>
-                  <label className="text-[10px] text-slate-600 dark:text-slate-400">Model Name</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Dost / Signa"
-                    value={newVehicle.model}
-                    onChange={(e) => setNewVehicle(prev => ({ ...prev, model: e.target.value }))}
-                    className="w-full bg-slate-200 dark:bg-slate-700/60 text-xs text-slate-900 dark:text-white p-2 rounded border border-slate-300 dark:border-slate-600"
-                    required
-                  />
+                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Model</label>
+                  <input type="text" placeholder="e.g. Signa" value={newVehicle.model} onChange={(e) => setNewVehicle(prev => ({ ...prev, model: e.target.value }))} className="w-full mt-1 bg-slate-50 dark:bg-slate-800/50 text-sm font-bold text-slate-900 dark:text-white p-3 rounded-2xl border-none focus:ring-2 focus:ring-amber-500 outline-none transition-all" required />
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <label className="text-[10px] text-slate-600 dark:text-slate-400">Make</label>
-                  <select 
-                    value={newVehicle.make}
-                    onChange={(e) => setNewVehicle(prev => ({ ...prev, make: e.target.value as any }))}
-                    className="w-full bg-slate-200 dark:bg-slate-700/60 text-xs text-slate-900 dark:text-white p-2 rounded border border-slate-300 dark:border-slate-600"
-                  >
-                    <option value="Tata">Tata</option>
-                    <option value="Ashok Leyland">Ashok Leyland</option>
-                    <option value="Mahindra">Mahindra</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-600 dark:text-slate-400">Year</label>
-                  <input 
-                    type="number" 
-                    value={newVehicle.year}
-                    onChange={(e) => setNewVehicle(prev => ({ ...prev, year: parseInt(e.target.value) }))}
-                    className="w-full bg-slate-200 dark:bg-slate-700/60 text-xs text-slate-900 dark:text-white p-2 rounded border border-slate-300 dark:border-slate-600"
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-600 dark:text-slate-400">Mileage (KM)</label>
-                  <input 
-                    type="number" 
-                    value={newVehicle.mileage}
-                    onChange={(e) => setNewVehicle(prev => ({ ...prev, mileage: parseInt(e.target.value) }))}
-                    className="w-full bg-slate-200 dark:bg-slate-700/60 text-xs text-slate-900 dark:text-white p-2 rounded border border-slate-300 dark:border-slate-600"
-                  />
-                </div>
-              </div>
-              <button 
-                type="submit" 
-                className="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-2 rounded text-xs transition-colors"
-              >
-                Register & Bind Vehicle
-              </button>
+              <button type="submit" className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3.5 rounded-2xl text-sm shadow-md transition-all active:scale-95">Register Truck</button>
             </form>
           )}
         </div>
@@ -1150,7 +1062,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             {/* Onboarding Diagnostic input box */}
             <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-3.5">
               <h3 className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" /> Diagnose Issue
+                <Sparkles className="h-3.5 w-3.5 text-amber-600 dark:text-amber-500 animate-pulse" /> Diagnose Issue
               </h3>
               
 
@@ -1183,7 +1095,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                 </div>
 
                 {/* Input Container */}
-                <div className="relative glass dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm p-2 flex flex-col focus-within:border-amber-500/50 focus-within:shadow-[0_0_15px_rgba(245,158,11,0.1)] transition-all">
+                <div className="relative bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800/60 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] p-2.5 flex flex-col focus-within:border-amber-500/50 focus-within:shadow-[0_8px_30px_rgba(245,158,11,0.15)] transition-all">
                   
                   {/* Selected Image Preview */}
                   {selectedImage && (
@@ -1213,7 +1125,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                   <div className="flex items-center justify-between mt-1">
                     <div className="flex items-center gap-1">
                       {/* Camera Button */}
-                      <label className="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-full transition-colors cursor-pointer">
+                      <label className="p-2 text-slate-400 hover:text-amber-600 dark:text-amber-500 hover:bg-amber-500/10 rounded-full transition-colors cursor-pointer">
                         <Camera className="h-5 w-5" />
                         <input 
                           type="file" 
@@ -1235,7 +1147,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                         <button 
                           onClick={startRealVoiceRecording}
                           disabled={isRecordingVoice}
-                          className="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-full transition-colors"
+                          className="p-2 text-slate-400 hover:text-amber-600 dark:text-amber-500 hover:bg-amber-500/10 rounded-full transition-colors"
                         >
                           <Mic className="h-5 w-5" />
                         </button>
@@ -1335,9 +1247,9 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                     <div className="border-t border-slate-200 dark:border-white/10 pt-2">
                       <button 
                         onClick={() => setShowTrace(!showTrace)}
-                        className="w-full flex items-center justify-between text-[11px] font-bold text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-500 transition-colors py-1"
+                        className="w-full flex items-center justify-between text-[11px] font-bold text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-600 dark:text-amber-500 transition-colors py-1"
                       >
-                        <span className="flex items-center gap-1 text-amber-500">
+                        <span className="flex items-center gap-1 text-amber-600 dark:text-amber-500">
                           <Sparkles className="h-3 w-3" /> Show Multi-Agent Engineering Trace
                         </span>
                         {showTrace ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
@@ -1376,10 +1288,10 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             {/* Quick Demo Scenarios */}
             <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl space-y-2">
               <h4 className="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1">
-                <HelpCircle className="h-3.5 w-3.5 text-amber-500" /> Common Issues (आम समस्याएं)
+                <HelpCircle className="h-3.5 w-3.5 text-amber-600 dark:text-amber-500" /> Common Issues (आम समस्याएं)
               </h4>
               <p className="text-[9px] text-slate-600 dark:text-slate-400">जल्दी से अपनी समस्या चुनें (Select a quick issue):</p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex overflow-x-auto whitespace-nowrap hide-scrollbar gap-3 pb-4 pt-1 -mx-5 px-5">
                 {demoScenarios.map((scene, idx) => (
                   <button
                     key={idx}
@@ -1388,10 +1300,10 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                       setAudioSignalClass(scene.sound);
                       setSpeechStatus(`Loaded: ${scene.title}`);
                     }}
-                    className="text-[10px] text-slate-900 dark:text-white glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 rounded px-2.5 py-1.5 hover:glass dark:bg-slate-800/50 hover:border-neutral-600 transition-colors flex-1 min-w-[110px] text-left cursor-pointer"
+                    className="flex-shrink-0 bg-white dark:bg-slate-900 shadow-[0_2px_10px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-slate-800/60 rounded-2xl p-3.5 hover:border-amber-500 dark:hover:border-amber-500 transition-all flex flex-col items-start gap-1 w-[140px] text-left active:scale-95"
                   >
-                    <p className="font-bold text-amber-400 text-[10px]">{scene.title}</p>
-                    <p className="text-[9px] text-slate-600 dark:text-slate-400 line-clamp-1">{scene.text}</p>
+                    <p className="font-bold text-slate-900 dark:text-white text-xs">{scene.title}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate w-full">{scene.text}</p>
                   </button>
                 ))}
               </div>
@@ -1401,7 +1313,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             <div className="glass dark:bg-slate-800/50 border border-amber-500/30 shadow-sm transition-colors p-4 rounded-xl space-y-3">
               <div className="border-b border-slate-200 dark:border-white/10 pb-2 space-y-0.5">
                 <h4 className="text-[10px] font-black text-amber-400 uppercase tracking-widest flex items-center gap-1.5">
-                  <MessageSquare className="h-4 w-4 text-amber-500" /> VahanAI Copilot — Quick Q&amp;A Chat
+                  <MessageSquare className="h-4 w-4 text-amber-600 dark:text-amber-500" /> VahanAI Copilot — Quick Q&amp;A Chat
                 </h4>
                 <p className="text-[9px] text-slate-500 dark:text-slate-500 leading-relaxed">
                   💬 <strong className="text-slate-600 dark:text-slate-400">Copilot</strong> = Ask general highway/mechanic questions in Hindi (no fault report saved).<br />
@@ -1459,7 +1371,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Activity className="h-4 w-4 text-amber-500" /> इंजन की आवाज़ से जांच (Acoustic Sound Detection)
+                  <Activity className="h-4 w-4 text-amber-600 dark:text-amber-500" /> इंजन की आवाज़ से जांच (Acoustic Sound Detection)
                 </h3>
                 <span className="text-[10px] bg-slate-200 dark:bg-slate-700/60 px-2 py-0.5 rounded text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600">
                   आवाज़ विश्लेषक (Audio Analyzer)
@@ -1539,7 +1451,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Eye className="h-4 w-4 text-amber-500" /> Driver Fatigue Monitor (EAR)
+                  <Eye className="h-4 w-4 text-amber-600 dark:text-amber-500" /> Driver Fatigue Monitor (EAR)
                 </h3>
                 {cooldownRemaining > 0 ? (
                   <span className="text-[9px] font-black px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 animate-pulse">
@@ -1616,7 +1528,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                 <div className="glass dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-slate-600 dark:text-slate-400 font-bold">थकान का स्तर (Fatigue Score):</span>
-                    <span className={`font-mono font-black ${fatigueScore >= 80 ? 'text-red-500 animate-bounce' : fatigueScore >= 40 ? 'text-amber-500' : 'text-emerald-500'}`}>
+                    <span className={`font-mono font-black ${fatigueScore >= 80 ? 'text-red-500 animate-bounce' : fatigueScore >= 40 ? 'text-amber-600 dark:text-amber-500' : 'text-emerald-500'}`}>
                       {fatigueScore}%
                     </span>
                   </div>
@@ -1690,7 +1602,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
               <button 
                 onClick={syncOfflineReports}
                 disabled={isSyncingHistory || !isOnline}
-                className="text-[10px] glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors hover:glass dark:bg-slate-800/50 disabled:glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 text-amber-500 hover:text-amber-400 disabled:text-slate-400 dark:text-slate-600 px-2 py-1 rounded font-bold flex items-center gap-1 transition-colors"
+                className="text-[10px] glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors hover:glass dark:bg-slate-800/50 disabled:glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 text-amber-600 dark:text-amber-500 hover:text-amber-400 disabled:text-slate-400 dark:text-slate-600 px-2 py-1 rounded font-bold flex items-center gap-1 transition-colors"
               >
                 <RefreshCw className={`h-3 w-3 ${isSyncingHistory ? 'animate-spin' : ''}`} />
                 <span>Force sync local log</span>
@@ -1760,7 +1672,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
         <button 
           onClick={() => setActiveTab('diagnose')}
           className={`flex flex-col items-center justify-center py-2 gap-1 transition-colors ${
-            activeTab === 'diagnose' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-500 transition-colors'
+            activeTab === 'diagnose' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-600 dark:text-amber-500 transition-colors'
           }`}
         >
           <Mic className="h-4.5 w-4.5" />
@@ -1773,7 +1685,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             stopFatigueMonitoring();
           }}
           className={`flex flex-col items-center justify-center py-2 gap-1 transition-colors ${
-            activeTab === 'acoustic' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-500 transition-colors'
+            activeTab === 'acoustic' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-600 dark:text-amber-500 transition-colors'
           }`}
         >
           <Activity className="h-4.5 w-4.5" />
@@ -1787,7 +1699,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             startFatigueMonitoring();
           }}
           className={`flex flex-col items-center justify-center py-2 gap-1 transition-colors ${
-            activeTab === 'fatigue' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-500 transition-colors'
+            activeTab === 'fatigue' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-600 dark:text-amber-500 transition-colors'
           }`}
         >
           <Eye className="h-4.5 w-4.5" />
@@ -1801,7 +1713,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             stopFatigueMonitoring();
           }}
           className={`flex flex-col items-center justify-center py-2 gap-1 transition-colors ${
-            activeTab === 'history' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-500 transition-colors'
+            activeTab === 'history' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-600 dark:text-amber-500 transition-colors'
           }`}
         >
           <FileText className="h-4.5 w-4.5" />
