@@ -1172,6 +1172,24 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
         {activeTab === 'diagnose' && (
           <div className="space-y-4">
             
+            {/* Predictive AI Health Widget */}
+            <div className="glass dark:bg-slate-800/50 p-4 rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-2 opacity-10">
+                <Activity className="h-16 w-16" />
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-500" />
+                <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200">AI Predictive Health (BETA)</h3>
+              </div>
+              <p className="text-[10px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                Based on 85,400km mileage and recent overheating pattern across 4 Tata Prima trucks in Rajpath Logistics, your <strong className="text-amber-600 dark:text-amber-400">Radiator Coolant Pump</strong> has a 78% probability of failure in the next 450km.
+              </p>
+              <div className="mt-3 flex gap-2">
+                <button className="bg-amber-500 text-slate-950 text-[9px] font-bold px-3 py-1.5 rounded-full">Schedule Inspection</button>
+                <button className="glass dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 text-[9px] font-bold px-3 py-1.5 rounded-full">Dismiss</button>
+              </div>
+            </div>
+            
             {/* Onboarding Diagnostic input box */}
             <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-3.5">
               <h3 className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
@@ -1803,6 +1821,45 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
               )}
             </div>
 
+          </div>
+        )}
+
+        {activeTab === 'wellness' && (
+          <div className="space-y-4">
+            <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 dark:text-white">Safety Score</h3>
+                  <p className="text-[10px] text-slate-500">Based on Fatigue AI & Telematics</p>
+                </div>
+                <div className="h-16 w-16 rounded-full border-4 border-emerald-500 flex items-center justify-center bg-emerald-500/10">
+                  <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">92</span>
+                </div>
+              </div>
+              
+              <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="text-slate-600 dark:text-slate-400">Total Safe KMS</span>
+                  <span className="font-bold text-slate-900 dark:text-white">45,210 km</span>
+                </div>
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="text-slate-600 dark:text-slate-400">Fatigue Interventions</span>
+                  <span className="font-bold text-slate-900 dark:text-white">2 (Followed Protocol)</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-5 rounded-xl text-slate-950 shadow-xl relative overflow-hidden">
+              <div className="absolute top-[-20px] right-[-20px] opacity-20">
+                <Sparkles className="h-32 w-32" />
+              </div>
+              <h3 className="text-lg font-black mb-1">Rajpath Rewards</h3>
+              <div className="text-3xl font-black mb-3">1,450 pts</div>
+              <p className="text-[10px] font-bold opacity-80 mb-4 max-w-[200px]">You are 50 points away from a free Hot Meal at NH-44 Dhaba!</p>
+              <button className="bg-slate-950 text-amber-500 font-bold text-[10px] px-4 py-2 rounded-full shadow-lg">
+                Redeem Rewards
+              </button>
+            </div>
           </div>
         )}
 
