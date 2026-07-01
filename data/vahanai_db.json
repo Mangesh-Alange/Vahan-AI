@@ -312,6 +312,7 @@
       "driver_id": "user_ndm4xbq",
       "timestamp": "2026-07-01T18:13:15.832Z",
       "symptom_text_hindi": "meri gadi nahi chal rahi",
+      "symptom_text_english": null,
       "acoustic_signal_class": "normal",
       "severity": "caution",
       "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
@@ -319,14 +320,14 @@
       "estimated_cost_range": "N/A",
       "synced_at": "2026-07-01T18:13:15.832Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
-      "id": "rep_3sfnwpd",
-      "_id": "6a4558cc7e1abc6eb15dac83"
+      "id": "rep_3sfnwpd"
     },
     {
       "vehicle_id": "veh_icvnigx",
       "driver_id": "user_ndm4xbq",
       "timestamp": "2026-07-01T18:17:22.065Z",
       "symptom_text_hindi": "gadi nahi cahl rahi meri\n",
+      "symptom_text_english": null,
       "acoustic_signal_class": "normal",
       "severity": "caution",
       "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
@@ -334,14 +335,14 @@
       "estimated_cost_range": "N/A",
       "synced_at": "2026-07-01T18:17:22.065Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
-      "id": "rep_ddiufto",
-      "_id": "6a4559c47e1abc6eb15dac84"
+      "id": "rep_ddiufto"
     },
     {
       "vehicle_id": "veh_icvnigx",
       "driver_id": "user_ndm4xbq",
       "timestamp": "2026-07-01T18:31:23.931Z",
       "symptom_text_hindi": "where is my nearby service station\n",
+      "symptom_text_english": null,
       "acoustic_signal_class": "normal",
       "severity": "caution",
       "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
@@ -349,14 +350,14 @@
       "estimated_cost_range": "N/A",
       "synced_at": "2026-07-01T18:31:23.931Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
-      "id": "rep_nveoagd",
-      "_id": "6a455d787e1abc6eb15dac85"
+      "id": "rep_nveoagd"
     },
     {
       "vehicle_id": "veh_icvnigx",
       "driver_id": "user_ndm4xbq",
       "timestamp": "2026-07-01T19:05:43.143Z",
       "symptom_text_hindi": "mere paas service  center kidhar hee",
+      "symptom_text_english": null,
       "acoustic_signal_class": "normal",
       "severity": "caution",
       "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
@@ -364,8 +365,7 @@
       "estimated_cost_range": "N/A",
       "synced_at": "2026-07-01T19:05:43.143Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
-      "id": "rep_oc0d91x",
-      "_id": "6a45658b7e1abc6eb15dac86"
+      "id": "rep_oc0d91x"
     },
     {
       "vehicle_id": "veh_icvnigx",
@@ -380,8 +380,7 @@
       "estimated_cost_range": "₹2,500 - ₹12,000",
       "synced_at": "2026-07-01T19:14:13.490Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_05 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Coolant leak / radiator puncture. Cost estimate standard: ₹2,500 - ₹12,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
-      "id": "rep_bf8ar0f",
-      "_id": "6a4567097e1abc6eb15dac87"
+      "id": "rep_bf8ar0f"
     },
     {
       "vehicle_id": "veh_icvnigx",
@@ -396,8 +395,7 @@
       "estimated_cost_range": "₹3,500 - ₹9,000",
       "synced_at": "2026-07-01T19:14:37.123Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_02 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Worn brake pads (metal-on-metal). Cost estimate standard: ₹3,500 - ₹9,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
-      "id": "rep_sgs1shh",
-      "_id": "6a45671d7e1abc6eb15dac88"
+      "id": "rep_sgs1shh"
     },
     {
       "vehicle_id": "veh_icvnigx",
@@ -412,8 +410,7 @@
       "estimated_cost_range": "₹2,500 - ₹12,000",
       "synced_at": "2026-07-01T19:17:10.398Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_05 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Coolant leak / radiator puncture. Cost estimate standard: ₹2,500 - ₹12,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
-      "id": "rep_ll00rsx",
-      "_id": "6a4567b67e1abc6eb15dac89"
+      "id": "rep_ll00rsx"
     },
     {
       "vehicle_id": "veh_icvnigx",
@@ -428,8 +425,37 @@
       "estimated_cost_range": "₹6,000 - ₹18,000",
       "synced_at": "2026-07-01T19:17:31.681Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_06 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: CAUTION. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Clutch master or slave cylinder leak. Cost estimate standard: ₹6,000 - ₹18,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
-      "id": "rep_lrzbmz1",
-      "_id": "6a4567cb7e1abc6eb15dac8a"
+      "id": "rep_lrzbmz1"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:22:47.011Z",
+      "symptom_text_hindi": "mere pas service sattion kidhar he",
+      "symptom_text_english": "mere pas service sattion kidhar he",
+      "acoustic_signal_class": "normal",
+      "severity": "stop_immediately",
+      "diagnosis": "रियर ब्रेक चैंबर डायाफ्राम खराब या लीक (Damaged rear brake chamber diaphragm)",
+      "recommended_action": "1. अचानक रियर ब्रेक जाम हो सकते हैं।\n2. गाड़ी को सुरक्षित किनारे लगाएं।\n3. रियर व्हील के पीछे जाने वाले एयर होज़ पाइप की जांच करें। ब्रेक एयर बाईपास न करें।",
+      "estimated_cost_range": "₹2,800 - ₹7,500",
+      "synced_at": "2026-07-01T19:22:47.011Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_30 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Damaged air brake chamber diaphragm. Cost estimate standard: ₹2,800 - ₹7,500.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_3mnazp4"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:27:06.362Z",
+      "symptom_text_hindi": "mere pas service station kidhar he",
+      "symptom_text_english": null,
+      "acoustic_signal_class": "normal",
+      "severity": "drive",
+      "diagnosis": "यह एक सामान्य प्रश्न है, वाहन की खराबी नहीं",
+      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
+      "estimated_cost_range": "N/A",
+      "synced_at": "2026-07-01T19:27:06.362Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"पूछा गया प्रश्न 'मेरे पास सर्विस स्टेशन किधर है' वाहन में किसी खराबी से संबंधित नहीं है, बल्कि यह एक स्थान संबंधी सामान्य पूछताछ है। उपलब्ध संदर्भ जानकारी भी इसे एक सामान्य प्रश्न (स्थान संबंधी खोज) के रूप में पहचानती है।\",\"TriageAgent\":\"The diagnosis explicitly states 'वाहन की खराबी नहीं' (not a vehicle fault). Per instructions, if the diagnosis indicates it is not a vehicle fault, the severity is always 'drive'.\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
+      "id": "rep_kb8eieu"
     }
   ],
   "fleet_alerts": [
@@ -611,8 +637,7 @@
       "ear_value": 0.20400000000000001,
       "duration_seconds": 6,
       "severity": "critical",
-      "id": "fe_yaszmex",
-      "_id": "6a4557f87e1abc6eb15dac81"
+      "id": "fe_yaszmex"
     },
     {
       "driver_id": "user_ndm4xbq",
@@ -620,8 +645,7 @@
       "ear_value": 0.20587569121475022,
       "duration_seconds": 6,
       "severity": "critical",
-      "id": "fe_jf29d0y",
-      "_id": "6a4557fe7e1abc6eb15dac82"
+      "id": "fe_jf29d0y"
     }
   ]
 }

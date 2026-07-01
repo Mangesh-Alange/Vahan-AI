@@ -266,7 +266,11 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       ].filter(k => k.length > 3);
 
       keywords.forEach(kw => {
-        if (query.includes(kw)) matches++;
+        try {
+          if (new RegExp('\\b' + kw + '\\b', 'i').test(query)) matches++;
+        } catch(e) {
+          if (query.includes(kw)) matches++;
+        }
       });
 
       if (matches > maxMatches) {
@@ -571,7 +575,11 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
           const keywords = [...fault.symptoms_hindi, ...fault.symptoms_english].flatMap(s => s.toLowerCase().split(/\s+/));
           let matches = 0;
           for (const w of words) {
-            if (w.length > 3 && keywords.some(k => k.includes(w))) matches++;
+            try {
+              if (w.length > 3 && keywords.some(k => new RegExp('\\b' + w + '\\b', 'i').test(k))) matches++;
+            } catch(e) {
+              if (w.length > 3 && keywords.some(k => k.includes(w))) matches++;
+            }
           }
           if (matches > maxMatches) {
             maxMatches = matches;
