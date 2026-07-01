@@ -1,0 +1,6 @@
+{
+  "name": "VahanAI",
+  "description": "AI-powered vehicle diagnostic system and fleet management portal with multi-agent reasoning, audio diagnostics, and fatigue monitoring.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
