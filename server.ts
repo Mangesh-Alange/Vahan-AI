@@ -757,6 +757,8 @@ app.post('/api/driver-copilot', async (req, res) => {
       const call = response.functionCalls[0];
       let toolResponseStr = "";
       if (call.name === "log_sos_alert") {
+        const reason = call.args && call.args.reason ? call.args.reason : "Driver requested emergency SOS via Copilot";
+        db.addSosAlert("org_rajpath", reason);
         toolResponseStr = "[🚨 SOS ALERT SENT] आपकी आपातकालीन स्थिति फ्लीट मैनेजर को भेज दी गई है। कृपया सुरक्षित स्थान पर रहें, मदद जल्द ही आ रही है।";
       } else if (call.name === "find_service_station") {
         toolResponseStr = "[📍 SERVICE STATION FOUND] मैंने आपके आस-पास 3 Tata Motors ऑथराइज्ड सर्विस स्टेशन खोजे हैं। आपकी स्क्रीन पर नेविगेशन लिंक भेजा जा रहा है।";

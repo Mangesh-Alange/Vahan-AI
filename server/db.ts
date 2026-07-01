@@ -564,6 +564,22 @@ export class Database {
   }
 
   // Fleet Alerts API
+  public addSosAlert(org_id: string, reason: string): FleetAlert {
+    const newAlert: FleetAlert = {
+      id: 'sos_' + Math.random().toString(36).substring(2, 9),
+      org_id,
+      pattern_description: 'SOS EMERGENCY ALERT: ' + reason,
+      severity: 'high',
+      related_fault_report_ids: [],
+      resolved: false,
+      created_at: Date.now()
+    };
+    this.data.fleet_alerts.unshift(newAlert);
+    this.save();
+    this.asyncWrite('fleet_alerts', 'insert', undefined, newAlert);
+    return newAlert;
+  }
+
   public getFleetAlerts(orgId: string): FleetAlert[] {
     return this.data.fleet_alerts.filter(a => a.org_id === orgId);
   }
