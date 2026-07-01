@@ -61,6 +61,7 @@ const diagnosticAgent = async (state: typeof GraphState.State) => {
   const prompt = `You are the Diagnostic Agent. 
     Based on the symptom: "${state.symptom_hindi}", acoustic signal: "${state.acoustic_signal}", and local RAG context: ${kbCtx}. 
     Provide a precise engineering diagnosis strictly in Devanagari Hindi. 
+    IMPORTANT: If the symptom is a general query (like asking for locations, service centers, greetings) and NOT a vehicle fault, set diagnosis to 'यह एक सामान्य प्रश्न है, वाहन की खराबी नहीं' (This is a general question, not a vehicle fault).
     Return ONLY a JSON object: { "diagnosis": "string", "reasoning": "string" }`;
   const res = await model.invoke([new HumanMessage(prompt)]);
   const parsed = parseJSON(res.content.toString());
@@ -79,6 +80,7 @@ const triageAgent = async (state: typeof GraphState.State) => {
   const prompt = `You are the Triage Agent. 
     Given the diagnosis: "${state.diagnosis}". 
     Establish road safety severity. Must be exactly one of: "drive", "caution", or "stop_immediately". 
+    IMPORTANT: If the diagnosis indicates it is not a vehicle fault, ALWAYS return "drive".
     Return ONLY a JSON object: { "severity": "string", "reasoning": "string" }`;
   const res = await model.invoke([new HumanMessage(prompt)]);
   const parsed = parseJSON(res.content.toString());
@@ -98,7 +100,8 @@ const maintenanceAgent = async (state: typeof GraphState.State) => {
   const prompt = `You are the Maintenance Agent. 
     Given diagnosis: "${state.diagnosis}". 
     Outline actionable roadside instructions strictly in Devanagari Hindi. 
-    Also estimate repair cost in Indian Rupees (e.g. ₹5,000 - ₹10,000). 
+    IMPORTANT: If the diagnosis indicates it is a general question or not a vehicle fault, just reply conversationally to their question in Devanagari Hindi instead of giving maintenance steps, and set cost to "N/A".
+    Also estimate repair cost in Indian Rupees (e.g. ₹5,000 - ₹10,000) or "N/A".
     Return ONLY a JSON object: { "recommended_action": "string", "estimated_cost_range": "string", "reasoning": "string" }`;
   const res = await model.invoke([new HumanMessage(prompt)]);
   const parsed = parseJSON(res.content.toString());

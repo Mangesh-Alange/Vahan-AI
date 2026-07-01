@@ -92,7 +92,7 @@ function performRAGLookup(queryHindi: string, queryEnglish: string): any[] {
     .map(w => w.trim().toLowerCase())
     .filter(w => w.length > 2 && !STOP_WORDS.has(w));
   
-  if (keywords.length === 0) return faultKnowledgeBase.slice(0, 2);
+  if (keywords.length === 0) return [faultKnowledgeBase.find(f => f.id === "kb_00")];
 
   const scored = faultKnowledgeBase.map(entry => {
     let score = 0;
@@ -118,7 +118,7 @@ function performRAGLookup(queryHindi: string, queryEnglish: string): any[] {
     .sort((a, b) => b.score - a.score)
     .map(s => s.entry);
 
-  return sorted.length > 0 ? sorted.slice(0, 3) : faultKnowledgeBase.slice(0, 2);
+  return sorted.length > 0 ? sorted.slice(0, 3) : [faultKnowledgeBase.find(f => f.id === "kb_00")];
 }
 
 function translateKnowledgeBaseToHindi(id: string, defaultDiag: string, defaultAction: string): { diagnosis: string, recommended_action: string, estimated_cost_range: string } {

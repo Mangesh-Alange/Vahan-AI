@@ -398,6 +398,38 @@
       "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_02 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Worn brake pads (metal-on-metal). Cost estimate standard: ₹3,500 - ₹9,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
       "id": "rep_sgs1shh",
       "_id": "6a45671d7e1abc6eb15dac88"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:17:10.398Z",
+      "symptom_text_hindi": "gadi nahi chal rahi he kya karu",
+      "symptom_text_english": "gadi nahi chal rahi he kya karu",
+      "acoustic_signal_class": "normal",
+      "severity": "stop_immediately",
+      "diagnosis": "इंजन अत्यधिक गर्म (Overheat) होना - रेडिएटर लीक या थर्मास्टेट वाल्व जाम (Radiator leak / Thermostat failure)",
+      "recommended_action": "1. गाड़ी तुरंत किनारे लगाएं।\n2. गरम रेडिएटर कैप को कभी भी न खोलें (गंभीर रूप से जलने का खतरा)।\n3. इंजन को 30 मिनट ठंडा होने दें, फिर साफ़ पानी या कूलेंट डालें और लीक की जांच करें।",
+      "estimated_cost_range": "₹2,500 - ₹12,000",
+      "synced_at": "2026-07-01T19:17:10.398Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_05 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Coolant leak / radiator puncture. Cost estimate standard: ₹2,500 - ₹12,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_ll00rsx",
+      "_id": "6a4567b67e1abc6eb15dac89"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:17:31.681Z",
+      "symptom_text_hindi": "mere paas service station kaha milega",
+      "symptom_text_english": "mere paas service station kaha milega",
+      "acoustic_signal_class": "normal",
+      "severity": "caution",
+      "diagnosis": "गियर शिफ्टर लिंकेज या क्लच सिलेंडर लीक होना (Clutch cylinder leak / Gearbox synchronizer wear)",
+      "recommended_action": "1. क्लच ऑयल रिज़र्वोइर (clutch oil reservoir) चेक करें।\n2. यदि खाली है, तो ब्रेक/क्लच ऑयल डालें और क्लच पेडल को दबाएं।\n3. धीरे-धीरे बिना बार-बार गियर बदले पास के गैरेज में पहुंचें।",
+      "estimated_cost_range": "₹6,000 - ₹18,000",
+      "synced_at": "2026-07-01T19:17:31.681Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_06 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: CAUTION. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Clutch master or slave cylinder leak. Cost estimate standard: ₹6,000 - ₹18,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_lrzbmz1",
+      "_id": "6a4567cb7e1abc6eb15dac8a"
     }
   ],
   "fleet_alerts": [
