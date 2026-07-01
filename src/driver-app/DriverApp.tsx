@@ -654,7 +654,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       const canvasCtx = canvas?.getContext('2d');
       
       const drawWaveform = () => {
-        if (!isRecordingAcoustic || !analyserRef.current || !canvas || !canvasCtx) return;
+        if (!analyserRef.current || !canvas || !canvasCtx) return;
         animationFrameRef.current = requestAnimationFrame(drawWaveform);
         
         analyserRef.current.getByteFrequencyData(dataArray);
@@ -731,6 +731,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     if (audioContextRef.current) {
       audioContextRef.current.close();
     }
+    analyserRef.current = null;
   };
 
   const exportAcousticCSV = () => {
