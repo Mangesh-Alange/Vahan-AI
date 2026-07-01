@@ -1378,12 +1378,12 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             </div>
 
             {/* Quick Demo Scenarios */}
-            <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl space-y-2">
+            <div className="space-y-2 pt-2">
               <h4 className="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1">
                 <HelpCircle className="h-3.5 w-3.5 text-amber-600 dark:text-amber-500" /> Common Issues (आम समस्याएं)
               </h4>
               <p className="text-[9px] text-slate-600 dark:text-slate-400">जल्दी से अपनी समस्या चुनें (Select a quick issue):</p>
-              <div className="flex overflow-x-auto whitespace-nowrap hide-scrollbar gap-3 pb-4 pt-1 -mx-5 px-5">
+              <div className="flex overflow-x-auto whitespace-nowrap hide-scrollbar gap-3 pb-4 pt-1 -mx-4 px-4">
                 {demoScenarios.map((scene, idx) => (
                   <button
                     key={idx}
