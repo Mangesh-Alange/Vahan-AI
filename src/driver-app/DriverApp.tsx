@@ -1185,8 +1185,8 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                 Based on 85,400km mileage and recent overheating pattern across 4 Tata Prima trucks in Rajpath Logistics, your <strong className="text-amber-600 dark:text-amber-400">Radiator Coolant Pump</strong> has a 78% probability of failure in the next 450km.
               </p>
               <div className="mt-3 flex gap-2">
-                <button className="bg-amber-500 text-slate-950 text-[9px] font-bold px-3 py-1.5 rounded-full">Schedule Inspection</button>
-                <button className="glass dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 text-[9px] font-bold px-3 py-1.5 rounded-full">Dismiss</button>
+                <button onClick={() => alert('Inspection scheduled for tomorrow morning at Hub #14!')} className="bg-amber-500 text-slate-950 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-amber-400 transition-colors">Schedule Inspection</button>
+                <button onClick={(e) => (e.target as HTMLElement).parentElement?.parentElement?.remove()} className="glass dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-slate-700 transition-colors">Dismiss</button>
               </div>
             </div>
             
@@ -1915,7 +1915,21 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
           }`}
         >
           <FileText className="h-4.5 w-4.5" />
-          <span className="text-[10px] font-bold">पिछला इतिहास</span>
+          <span className="text-[10px] font-bold">इतिहास</span>
+        </button>
+
+        <button 
+          onClick={() => {
+            setActiveTab('wellness');
+            stopAcousticCapture();
+            stopFatigueMonitoring();
+          }}
+          className={`flex flex-col items-center justify-center py-2 gap-1 transition-colors ${
+            activeTab === 'wellness' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-600 dark:text-amber-500 transition-colors'
+          }`}
+        >
+          <Sparkles className="h-4.5 w-4.5" />
+          <span className="text-[10px] font-bold">वेलनेस</span>
         </button>
       </div>
 
