@@ -1392,10 +1392,10 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                       setAudioSignalClass(scene.sound);
                       setSpeechStatus(`Loaded: ${scene.title}`);
                     }}
-                    className="flex-shrink-0 bg-white dark:bg-slate-900 shadow-[0_2px_10px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-slate-800/60 rounded-2xl p-3.5 hover:border-amber-500 dark:hover:border-amber-500 transition-all flex flex-col items-start gap-1 w-[140px] text-left active:scale-95"
+                    className="flex-shrink-0 bg-white dark:bg-slate-900 shadow-[0_2px_10px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-slate-800/60 rounded-2xl p-3.5 hover:border-amber-500 dark:hover:border-amber-500 transition-all flex flex-col items-start gap-1 w-[160px] whitespace-normal text-left active:scale-95"
                   >
-                    <p className="font-bold text-slate-900 dark:text-white text-xs">{scene.title}</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate w-full">{scene.text}</p>
+                    <p className="font-bold text-slate-900 dark:text-white text-xs leading-tight">{scene.title}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate w-full mt-0.5">{scene.text}</p>
                   </button>
                 ))}
               </div>
