@@ -51,12 +51,15 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   const [isRecordingAcoustic, setIsRecordingAcoustic] = useState<boolean>(false);
   const [acousticWaveform, setAcousticWaveform] = useState<number[]>(Array(50).fill(128));
   const [acousticClassification, setAcousticClassification] = useState<string>('सही इंजन आवाज़ (Normal)');
-  const [acousticDataLog, setAcousticDataLog] = useState<{timestamp: string, band_low: number, band_mid: number, band_high: number, classification: string}[]>([]);
+  const [acousticDataLog, setAcousticDataLog] = useState<any[]>([]);
   const acousticIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const acousticMediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const acousticChunksRef = useRef<Blob[]>([]);
+  const acousticStartTimeRef = useRef<number>(0);
 
   // Fatigue State
   const [isFatigueMonitoring, setIsFatigueMonitoring] = useState<boolean>(false);
@@ -613,13 +616,280 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   // -----------------------------------------------------
   // AUDIO FAULT DETECTION SYSTEM
   // -----------------------------------------------------
+  // Helper to compute RMS and Zero Crossing Rate for similarity comparison
+  const getActiveSignal = (data: Float32Array): Float32Array => {
+    let maxVal = 0;
+    for (let i = 0; i < data.length; i++) {
+      const absVal = Math.abs(data[i]);
+      if (absVal > maxVal) maxVal = absVal;
+    }
+    
+    const threshold = maxVal * 0.05;
+    let startIdx = 0;
+    let endIdx = data.length - 1;
+    
+    for (let i = 0; i < data.length; i++) {
+      if (Math.abs(data[i]) > threshold) {
+        startIdx = i;
+        break;
+      }
+    }
+    for (let i = data.length - 1; i >= 0; i--) {
+      if (Math.abs(data[i]) > threshold) {
+        endIdx = i;
+        break;
+      }
+    }
+    
+    if (endIdx > startIdx) {
+      return data.subarray(startIdx, endIdx + 1);
+    }
+    return data;
+  };
+
+  const analyzeAudioBuffer = (buffer: AudioBuffer) => {
+    const rawData = buffer.getChannelData(0);
+    const sampleRate = buffer.sampleRate;
+    
+    // We will extract segments of the audio to compute frequency features
+    const N = 2048; // Frame size
+    const hopSize = 1024; // Hop size (50% overlap)
+    
+    let totalFrames = 0;
+    let sumEnergy = 0;
+    let sumCentroid = 0;
+    let sumAvgFreq = 0;
+    let sumPeakFreq = 0;
+    
+    const re = new Float32Array(N);
+    const im = new Float32Array(N);
+    
+    // In-place Cooley-Tukey Radix-2 FFT
+    const runFFT = (reArr: Float32Array, imArr: Float32Array) => {
+      const n = reArr.length;
+      let i = 0;
+      for (let j = 1; j < n - 1; j++) {
+        let bit = n >> 1;
+        while (i >= bit) {
+          i -= bit;
+          bit >>= 1;
+        }
+        i += bit;
+        if (j < i) {
+          let temp = reArr[j];
+          reArr[j] = reArr[i];
+          reArr[i] = temp;
+          temp = imArr[j];
+          imArr[j] = imArr[i];
+          imArr[i] = temp;
+        }
+      }
+      for (let len = 2; len <= n; len <<= 1) {
+        const angle = -2 * Math.PI / len;
+        const wlen_re = Math.cos(angle);
+        const wlen_im = Math.sin(angle);
+        for (let j = 0; j < n; j += len) {
+          let w_re = 1;
+          let w_im = 0;
+          for (let k = 0; k < len / 2; k++) {
+            const u_re = reArr[j + k];
+            const u_im = imArr[j + k];
+            const t_re = reArr[j + k + len / 2] * w_re - imArr[j + k + len / 2] * w_im;
+            const t_im = reArr[j + k + len / 2] * w_im + imArr[j + k + len / 2] * w_re;
+            reArr[j + k] = u_re + t_re;
+            imArr[j + k] = u_im + t_im;
+            reArr[j + k + len / 2] = u_re - t_re;
+            imArr[j + k + len / 2] = u_im - t_im;
+            const next_w_re = w_re * wlen_re - w_im * wlen_im;
+            w_im = w_re * wlen_im + w_im * wlen_re;
+            w_re = next_w_re;
+          }
+        }
+      }
+    };
+    
+    // We step through rawData
+    for (let offset = 0; offset + N <= rawData.length; offset += hopSize) {
+      // 1. Copy samples and apply Hann window
+      let frameEnergy = 0;
+      for (let i = 0; i < N; i++) {
+        const val = rawData[offset + i];
+        frameEnergy += val * val;
+        // Hann window
+        const win = 0.5 * (1 - Math.cos(2 * Math.PI * i / (N - 1)));
+        re[i] = val * win;
+        im[i] = 0;
+      }
+      frameEnergy = frameEnergy / N;
+      
+      // 2. Perform FFT
+      runFFT(re, im);
+      
+      // 3. Compute magnitude spectrum for first N/2 bins
+      let maxMag = -1;
+      let peakBin = 0;
+      let magSum = 0;
+      let magSqSum = 0;
+      let weightedFreqSum = 0;
+      let weightedFreqSqSum = 0;
+      
+      for (let k = 0; k < N / 2; k++) {
+        const mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]);
+        magSum += mag;
+        magSqSum += mag * mag;
+        
+        const freq = (k * sampleRate) / N;
+        weightedFreqSum += freq * mag;
+        weightedFreqSqSum += freq * mag * mag;
+        
+        if (mag > maxMag) {
+          maxMag = mag;
+          peakBin = k;
+        }
+      }
+      
+      const frameCentroid = magSum > 0 ? (weightedFreqSum / magSum) : 0;
+      const frameAvgFreq = magSqSum > 0 ? (weightedFreqSqSum / magSqSum) : 0;
+      const framePeakFreq = (peakBin * sampleRate) / N;
+      
+      sumEnergy += frameEnergy;
+      sumCentroid += frameCentroid;
+      sumAvgFreq += frameAvgFreq;
+      sumPeakFreq += framePeakFreq;
+      totalFrames++;
+    }
+    
+    if (totalFrames === 0) {
+      return {
+        energy: 0,
+        spectralCentroid: 0,
+        averageFrequency: 0,
+        peakFrequency: 0
+      };
+    }
+    
+    return {
+      energy: sumEnergy / totalFrames,
+      spectralCentroid: sumCentroid / totalFrames,
+      averageFrequency: sumAvgFreq / totalFrames,
+      peakFrequency: sumPeakFreq / totalFrames
+    };
+  };
+
+  const analyzeAndCompareAcoustic = async (audioBlob: Blob) => {
+    let audioCtx: AudioContext | null = null;
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      audioCtx = new AudioCtx();
+
+      const decodeUrlOrBlob = async (target: string | Blob) => {
+        let arrayBuffer: ArrayBuffer;
+        if (typeof target === 'string') {
+          const res = await fetch(target);
+          if (!res.ok) throw new Error(`Failed to load: ${target}`);
+          arrayBuffer = await res.arrayBuffer();
+        } else {
+          arrayBuffer = await target.arrayBuffer();
+        }
+        return await audioCtx.decodeAudioData(arrayBuffer);
+      };
+
+      const [recordedBuffer, goodBuffer, badBuffer] = await Promise.all([
+        decodeUrlOrBlob(audioBlob),
+        decodeUrlOrBlob('/src/assets/audio/good.mp3'),
+        decodeUrlOrBlob('/src/assets/audio/bad.mp3')
+      ]);
+
+      const recordedFeatures = analyzeAudioBuffer(recordedBuffer);
+      const goodFeatures = analyzeAudioBuffer(goodBuffer);
+      const badFeatures = analyzeAudioBuffer(badBuffer);
+
+      // Relative differences between recorded sound and references
+      const distToGood = 
+        Math.abs(recordedFeatures.energy - goodFeatures.energy) / (goodFeatures.energy || 1) +
+        Math.abs(recordedFeatures.spectralCentroid - goodFeatures.spectralCentroid) / (goodFeatures.spectralCentroid || 1) +
+        Math.abs(recordedFeatures.averageFrequency - goodFeatures.averageFrequency) / (goodFeatures.averageFrequency || 1) +
+        Math.abs(recordedFeatures.peakFrequency - goodFeatures.peakFrequency) / (goodFeatures.peakFrequency || 1);
+
+      const distToBad = 
+        Math.abs(recordedFeatures.energy - badFeatures.energy) / (badFeatures.energy || 1) +
+        Math.abs(recordedFeatures.spectralCentroid - badFeatures.spectralCentroid) / (badFeatures.spectralCentroid || 1) +
+        Math.abs(recordedFeatures.averageFrequency - badFeatures.averageFrequency) / (badFeatures.averageFrequency || 1) +
+        Math.abs(recordedFeatures.peakFrequency - badFeatures.peakFrequency) / (badFeatures.peakFrequency || 1);
+
+      const s1 = 1 / (1 + distToGood);
+      const s2 = 1 / (1 + distToBad);
+      const confidence = (Math.max(s1, s2) / (s1 + s2)) * 100;
+
+      const durationSeconds = ((Date.now() - acousticStartTimeRef.current) / 1000).toFixed(1);
+      const dateTime = new Date().toLocaleString();
+
+      let resultText = "";
+      let diagnosisResult = "";
+      let signalClass: 'normal' | 'knock' | 'squeal' | 'misfire' = 'normal';
+
+      if (distToGood < distToBad) {
+        resultText = "✅ Engine is in good condition.\nNo abnormal engine sound detected.";
+        diagnosisResult = "Healthy";
+        signalClass = "normal";
+      } else {
+        resultText = "⚠️ Engine is not in good condition.\nPossible abnormal engine sound detected.\nPlease visit the nearest service center.";
+        diagnosisResult = "Faulty";
+        signalClass = "knock";
+      }
+
+      setAcousticClassification(resultText);
+      setAudioSignalClass(signalClass);
+
+      setAcousticDataLog(prev => [
+        {
+          timestamp: dateTime,
+          duration: `${durationSeconds}s`,
+          result: diagnosisResult,
+          confidence: `${confidence.toFixed(1)}%`
+        },
+        ...prev
+      ]);
+
+      await audioCtx.close();
+
+    } catch (err) {
+      console.error("Acoustic analysis failed:", err);
+      setAcousticClassification("⚠️ Engine is not in good condition.\nPossible abnormal engine sound detected.\nPlease visit the nearest service center.");
+      setAudioSignalClass("knock");
+      if (audioCtx) {
+        try {
+          await audioCtx.close();
+        } catch (e) {}
+      }
+    }
+  };
+
   const startAcousticCapture = async () => {
     setIsRecordingAcoustic(true);
     setAcousticClassification("Analyzing Engine Frequencies...");
 
-    // Setup Web Audio API and canvas waveform analyzer
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      acousticChunksRef.current = [];
+      const mediaRecorder = new MediaRecorder(stream);
+      acousticMediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+          acousticChunksRef.current.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(acousticChunksRef.current, { type: 'audio/webm' });
+        await analyzeAndCompareAcoustic(audioBlob);
+      };
+
+      mediaRecorder.start();
+      acousticStartTimeRef.current = Date.now();
+
+      // Setup Web Audio API and canvas waveform analyzer
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       const source = audioContextRef.current.createMediaStreamSource(stream);
       analyserRef.current = audioContextRef.current.createAnalyser();
@@ -634,7 +904,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       const canvasCtx = canvas?.getContext('2d');
       
       const drawWaveform = () => {
-        if (!isRecordingAcoustic || !analyserRef.current || !canvas || !canvasCtx) return;
+        if (!analyserRef.current || !canvas || !canvasCtx) return;
         animationFrameRef.current = requestAnimationFrame(drawWaveform);
         
         analyserRef.current.getByteFrequencyData(dataArray);
@@ -651,51 +921,9 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
           canvasCtx.fillRect(x, canvas.height - barHeight / 2, barWidth - 1, barHeight / 2);
           x += barWidth;
         }
-
-        // Compute simulated numeric features from actual FFT bands to do real-time rule classification
-        const lowBandSum = dataArray.slice(0, 10).reduce((a, b) => a + b, 0);
-        const midBandSum = dataArray.slice(10, 40).reduce((a, b) => a + b, 0);
-        const highBandSum = dataArray.slice(40, 100).reduce((a, b) => a + b, 0);
-
-        // Periodically update classification based on real audio metrics
-        if (Math.random() < 0.05) {
-          if (highBandSum > midBandSum && highBandSum > 1000) {
-            setAcousticClassification("सीटी / चीं-चीं की आवाज़ - बेल्ट या पुली की खराबी (Squeal)");
-            setAudioSignalClass("squeal");
-          } else if (lowBandSum > midBandSum * 2 && lowBandSum > 1500) {
-            setAcousticClassification("तेज़ खट-खट की आवाज़ - इंजन पार्ट्स की खराबी (Knock)");
-            setAudioSignalClass("knock");
-          } else if (midBandSum > lowBandSum && midBandSum > 1200 && Math.random() < 0.3) {
-            setAcousticClassification("इंजन झटका मारना - मिसफायर (Misfire)");
-            setAudioSignalClass("misfire");
-          } else {
-            setAcousticClassification("सही इंजन आवाज़ - सामान्य (Normal)");
-            setAudioSignalClass("normal");
-          }
-        }
       };
 
       drawWaveform();
-
-      // Collect data logs for CSV download
-      acousticIntervalRef.current = setInterval(() => {
-        if (!analyserRef.current) return;
-        analyserRef.current.getByteFrequencyData(dataArray);
-        const low = dataArray.slice(0, 10).reduce((a, b) => a + b, 0) / 10;
-        const mid = dataArray.slice(10, 40).reduce((a, b) => a + b, 0) / 30;
-        const high = dataArray.slice(40, 100).reduce((a, b) => a + b, 0) / 60;
-        
-        setAcousticDataLog(prev => [
-          {
-            timestamp: new Date().toLocaleTimeString(),
-            band_low: Math.round(low),
-            band_mid: Math.round(mid),
-            band_high: Math.round(high),
-            classification: audioSignalClass
-          },
-          ...prev.slice(0, 49) // Keep last 50
-        ]);
-      }, 500);
 
     } catch (err) {
       console.error("Failed to access audio capture microphone.", err);
@@ -706,7 +934,10 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
 
   const stopAcousticCapture = () => {
     setIsRecordingAcoustic(false);
-    if (acousticIntervalRef.current) clearInterval(acousticIntervalRef.current);
+    if (acousticMediaRecorderRef.current && acousticMediaRecorderRef.current.state !== 'inactive') {
+      acousticMediaRecorderRef.current.stop();
+      acousticMediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+    }
     if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     if (audioContextRef.current) {
       audioContextRef.current.close();
@@ -719,13 +950,12 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       return;
     }
 
-    const headers = ["Timestamp", "Low_Frequency_Band_Luminosity", "Mid_Frequency_Band_Luminosity", "High_Frequency_Band_Luminosity", "Classification_Heuristic"];
+    const headers = ["Date & Time", "Recording Duration", "Diagnosis Result", "Confidence (%)"];
     const rows = acousticDataLog.map(item => [
       item.timestamp,
-      item.band_low,
-      item.band_mid,
-      item.band_high,
-      item.classification
+      item.duration,
+      item.result,
+      item.confidence
     ]);
 
     const csvContent = "data:text/csv;charset=utf-8," 
@@ -734,7 +964,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `vahanai_acoustic_signals_${Date.now()}.csv`);
+    link.setAttribute("download", `vahanai_acoustic_diagnoses_${Date.now()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1482,7 +1712,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
               {/* Status & Output */}
               <div className="glass dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 space-y-1.5 text-center">
                 <p className="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-wider">इंजन की आवाज़ की पहचान (Engine Sound Status)</p>
-                <p className={`text-base font-black uppercase ${
+                <p className={`text-base font-black uppercase whitespace-pre-line ${
                   audioSignalClass === 'normal' 
                     ? 'text-emerald-400' 
                     : audioSignalClass === 'knock' 
