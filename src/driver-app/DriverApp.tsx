@@ -1150,12 +1150,12 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             {/* Onboarding Diagnostic input box */}
             <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-3.5">
               <h3 className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" /> AI Voice &amp; Symptom Reporter
+                <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" /> Diagnose Issue
               </h3>
               
               {/* Premium Real-time Voice Recording via Gemini */}
-              <div className="glass dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-white/10 space-y-4 shadow-sm">
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-amber-500"/> ऑप्शन A: बोलकर बताएं (Speak)</p>
+              <div className="space-y-4">
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-amber-500"/> Voice Assistant (बोलकर बताएं)</p>
                 <div className="flex items-center gap-3">
                   {!isRecordingRealVoice ? (
                     <button 
@@ -1207,8 +1207,8 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
               </div>
 
               {/* Text fallback input */}
-              <div className="glass dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-white/10 space-y-4 shadow-sm">
-                <label className="text-[10px] text-slate-800 dark:text-slate-200 font-black uppercase tracking-widest flex items-center gap-1.5"><FileText className="h-3.5 w-3.5 text-amber-500"/> ऑप्शन B: लिखकर बताएं (Type)</label>
+              <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700/50">
+                <label className="text-[10px] text-slate-800 dark:text-slate-200 font-black uppercase tracking-widest flex items-center gap-1.5"><FileText className="h-3.5 w-3.5 text-amber-500"/> Describe the Issue (लिखकर बताएं)</label>
                 <textarea 
                   value={symptomText}
                   onChange={(e) => setSymptomText(e.target.value)}
@@ -1219,9 +1219,9 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
 
               
               {/* Option C: Vision AI */}
-              <div className="glass dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-white/10 space-y-4 shadow-sm">
+              <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700/50">
                 <label className="text-[10px] text-slate-800 dark:text-slate-200 font-black uppercase tracking-widest flex items-center gap-1.5">
-                  <Camera className="h-3.5 w-3.5 text-amber-500"/> ऑप्शन C: फ़ोटो खींचकर बताएं (Camera AI)
+                  <Camera className="h-3.5 w-3.5 text-amber-500"/> Take a Photo (फ़ोटो खींचें)
                 </label>
                 
                 <div className="flex flex-col gap-3">
@@ -1418,9 +1418,9 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             </div>
 
             {/* Quick Demo Scenarios */}
-            <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-2">
+            <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl space-y-2">
               <h4 className="text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1">
-                <HelpCircle className="h-3.5 w-3.5 text-amber-500" /> Demo Quick Scenarios
+                <HelpCircle className="h-3.5 w-3.5 text-amber-500" /> Common Issues (आम समस्याएं)
               </h4>
               <p className="text-[9px] text-slate-600 dark:text-slate-400">जल्दी से अपनी समस्या चुनें (Select a quick issue):</p>
               <div className="flex flex-wrap gap-1.5">
@@ -1430,7 +1430,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                     onClick={() => {
                       setSymptomText(scene.text);
                       setAudioSignalClass(scene.sound);
-                      setSpeechStatus(`Demo Loaded: ${scene.title}`);
+                      setSpeechStatus(`Loaded: ${scene.title}`);
                     }}
                     className="text-[10px] text-slate-900 dark:text-white glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 rounded px-2.5 py-1.5 hover:glass dark:bg-slate-800/50 hover:border-neutral-600 transition-colors flex-1 min-w-[110px] text-left cursor-pointer"
                   >
@@ -1442,7 +1442,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             </div>
 
             {/* VahanAI Copilot — conversational Q&A, NOT a fault reporter */}
-            <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl border border-amber-500/20 space-y-3">
+            <div className="glass dark:bg-slate-800/50 border border-amber-500/30 shadow-sm transition-colors p-4 rounded-xl space-y-3">
               <div className="border-b border-slate-200 dark:border-white/10 pb-2 space-y-0.5">
                 <h4 className="text-[10px] font-black text-amber-400 uppercase tracking-widest flex items-center gap-1.5">
                   <MessageSquare className="h-4 w-4 text-amber-500" /> VahanAI Copilot — Quick Q&amp;A Chat
