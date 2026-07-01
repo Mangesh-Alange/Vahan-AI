@@ -193,10 +193,16 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen bg-slate-950 bg-gradient-to-br from-slate-950 via-slate-900 to-black text-slate-100 flex flex-col md:flex-row font-sans relative overflow-hidden">
       
+      {/* Background ambient glow */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-amber-500/20 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-indigo-500/10 rounded-full blur-[100px]"></div>
+      </div>
+
       {/* Brand & Concept Introduction Left Panel */}
-      <div className="flex-1 bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950 p-8 md:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800">
+      <div className="flex-1 p-8 md:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/5 z-10 relative">
         <div className="space-y-6 max-w-lg">
           <div className="bg-amber-500 text-slate-950 px-4 py-2 rounded-xl font-black w-fit text-xl flex items-center gap-2 shadow-lg shadow-amber-500/10">
             <Truck className="h-6 w-6" />
@@ -204,22 +210,22 @@ export default function App() {
           </div>
 
           <div className="space-y-3">
-            <h1 className="text-3xl md:text-5xl font-black leading-tight text-white tracking-tight">
+            <h1 className="text-4xl md:text-6xl font-black leading-tight text-white tracking-tight">
               AI at the Edge for Indian Fleet Operators
             </h1>
-            <p className="text-sm md:text-base text-slate-300 leading-relaxed">
-              Predictive maintenance and driver safety suite for Tata Technologies InnoVent 2027. Connecting long-haul truck drivers and fleet owners on a single shared engine.
+            <p className="text-sm md:text-lg text-slate-300 leading-relaxed font-light mt-4 max-w-md">
+              A comprehensive predictive maintenance and driver safety suite. Connecting long-haul truck drivers and fleet owners on a single intelligent platform.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-4 text-xs leading-relaxed">
-            <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-              <span className="text-amber-400 font-bold block mb-1">📢 For Driver &amp; Mechanics</span>
-              Hindi-first voice diagnostic RAG, FFT engine sound analyzer, and webcam driver drowsiness detection. Offline capable with local sync.
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-xs leading-relaxed">
+            <div className="glass-dark p-5 rounded-2xl border-l-2 border-l-amber-500 transition-all hover:-translate-y-1 hover:shadow-xl">
+              <span className="text-amber-400 font-bold block mb-2 text-sm">📢 Driver &amp; Mechanics</span>
+              <p className="text-slate-300">Hindi-first voice diagnostic RAG, FFT engine sound analyzer, and webcam driver drowsiness detection. Offline capable with local sync.</p>
             </div>
-            <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-              <span className="text-amber-400 font-bold block mb-1">📊 For Fleet Managers</span>
-              Central analytics dashboard, automated breakdown pattern detection (federated alerts), driver roster, and real safety logs.
+            <div className="glass-dark p-5 rounded-2xl border-l-2 border-l-emerald-500 transition-all hover:-translate-y-1 hover:shadow-xl">
+              <span className="text-emerald-400 font-bold block mb-2 text-sm">📊 Fleet Managers</span>
+              <p className="text-slate-300">Central analytics dashboard, automated breakdown pattern detection (federated alerts), driver roster, and real safety logs.</p>
             </div>
           </div>
         </div>
@@ -227,9 +233,11 @@ export default function App() {
         {/* Footnote branding */}
         <div className="mt-12 text-[11px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-4">
-            <span>Tata Technologies InnoVent 2027</span>
+            <span>© 2027 VahanAI Inc.</span>
             <span>•</span>
-            <span>Vehicle Health &amp; Safety track</span>
+            <a href="#" className="hover:text-amber-500 transition-colors">Privacy Policy</a>
+            <span>•</span>
+            <a href="#" className="hover:text-amber-500 transition-colors">Terms of Service</a>
           </div>
           {dbStatus && (
             <span className="text-[10px] text-slate-400 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded self-start sm:self-auto font-mono">
@@ -239,67 +247,29 @@ export default function App() {
         </div>
       </div>
 
-      {/* Authentication and Quick Demo Login Right Panel */}
-      <div className="w-full md:w-[480px] bg-slate-900/50 p-8 md:p-12 flex flex-col justify-center space-y-8">
+      {/* Authentication Right Panel */}
+      <div className="w-full md:w-[480px] bg-neutral-950/60 backdrop-blur-2xl p-8 md:p-12 flex flex-col justify-center space-y-8 z-10 border-l border-white/5 shadow-2xl">
         
-        {/* Fast-Track Demo Portals */}
-        <div className="space-y-4">
-          <div>
-            <h2 className="text-sm font-black text-amber-500 uppercase tracking-widest flex items-center gap-1.5">
-              <Sparkles className="h-4.5 w-4.5" /> Fast-Track Judge Demo Profiles
-            </h2>
-            <p className="text-xs text-slate-400 mt-1">Select a pre-seeded profile to log in immediately without signing up:</p>
-          </div>
-
-          <div className="space-y-3">
-            {demoProfiles.map((p, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleQuickLogin(p)}
-                className="w-full text-left bg-slate-900 hover:bg-slate-850 p-4 rounded-xl border border-slate-800 hover:border-amber-500/50 transition-all group flex items-start gap-3 shadow-md"
-              >
-                <div className="h-10 w-10 bg-amber-500/10 text-amber-500 rounded-xl flex items-center justify-center font-bold shrink-0">
-                  {p.role === 'fleet_manager' ? <Users className="h-5 w-5" /> : <Truck className="h-5 w-5" />}
-                </div>
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors">
-                      {p.name}
-                    </span>
-                    <span className="text-[9px] uppercase font-black px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                      {p.role === 'fleet_manager' ? "Owner Portal" : "Driver App"}
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-amber-400/90 font-semibold">{p.org}</p>
-                  <p className="text-[11px] text-slate-400 leading-normal">{p.desc}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Separator line */}
-        <div className="relative flex py-2 items-center">
-          <div className="flex-grow border-t border-slate-800"></div>
-          <span className="flex-shrink mx-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Or Secure Login</span>
-          <div className="flex-grow border-t border-slate-800"></div>
+        <div>
+          <h2 className="text-2xl font-black text-white mb-2">Welcome Back</h2>
+          <p className="text-sm text-slate-400">Sign in to your fleet dashboard or driver app.</p>
         </div>
 
         {/* Standard Form Auth */}
-        <div className="space-y-4">
-          <div className="flex bg-slate-900 p-1.5 rounded-xl border border-slate-800">
+        <div className="space-y-6">
+          <div className="flex glass-dark p-1.5 rounded-xl border border-white/5">
             <button
               onClick={() => setIsSignUp(false)}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
-                !isSignUp ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
+              className={`flex-1 py-2.5 rounded-lg text-xs font-bold transition-all ${
+                !isSignUp ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
               }`}
             >
               Log In
             </button>
             <button
               onClick={() => setIsSignUp(true)}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
-                isSignUp ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
+              className={`flex-1 py-2.5 rounded-lg text-xs font-bold transition-all ${
+                isSignUp ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
               }`}
             >
               Sign Up / Register
@@ -336,9 +306,9 @@ export default function App() {
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Full name</label>
-                  <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-3 py-2.5">
-                    <User className="h-4 w-4 text-slate-400 shrink-0 mr-2" />
+                  <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1.5 ml-1">Full name</label>
+                  <div className="flex items-center glass-dark border border-white/10 rounded-xl px-4 py-3 transition-all focus-within:border-amber-500 focus-within:shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                    <User className="h-4 w-4 text-slate-400 shrink-0 mr-3" />
                     <input
                       type="text"
                       placeholder="e.g. Mangesh Alange"
@@ -352,11 +322,11 @@ export default function App() {
 
                 {role === 'driver' ? (
                   <div>
-                    <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">
+                    <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1.5 ml-1">
                       Transport Invite Code (e.g. RAJP-INV-1234)
                     </label>
-                    <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-3 py-2.5">
-                      <Landmark className="h-4 w-4 text-slate-400 shrink-0 mr-2" />
+                    <div className="flex items-center glass-dark border border-white/10 rounded-xl px-4 py-3 transition-all focus-within:border-amber-500 focus-within:shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                      <Landmark className="h-4 w-4 text-slate-400 shrink-0 mr-3" />
                       <input
                         type="text"
                         placeholder="Provided by Fleet Owner"
@@ -369,9 +339,9 @@ export default function App() {
                   </div>
                 ) : (
                   <div>
-                    <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Company / Organization name</label>
-                    <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-3 py-2.5">
-                      <Landmark className="h-4 w-4 text-slate-400 shrink-0 mr-2" />
+                    <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1.5 ml-1">Company / Organization name</label>
+                    <div className="flex items-center glass-dark border border-white/10 rounded-xl px-4 py-3 transition-all focus-within:border-amber-500 focus-within:shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                      <Landmark className="h-4 w-4 text-slate-400 shrink-0 mr-3" />
                       <input
                         type="text"
                         placeholder="e.g. Rajpath Roadways Logistics"
@@ -387,9 +357,9 @@ export default function App() {
             )}
 
             <div>
-              <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">10-Digit Mobile number</label>
-              <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-3 py-2.5">
-                <Phone className="h-4 w-4 text-slate-400 shrink-0 mr-2" />
+              <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1.5 ml-1">10-Digit Mobile number</label>
+              <div className="flex items-center glass-dark border border-white/10 rounded-xl px-4 py-3 transition-all focus-within:border-amber-500 focus-within:shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                <Phone className="h-4 w-4 text-slate-400 shrink-0 mr-3" />
                 <input
                   type="tel"
                   placeholder="e.g. 9876543210"
@@ -402,9 +372,9 @@ export default function App() {
             </div>
 
             <div>
-              <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Password</label>
-              <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg px-3 py-2.5">
-                <Lock className="h-4 w-4 text-slate-400 shrink-0 mr-2" />
+              <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1.5 ml-1">Password</label>
+              <div className="flex items-center glass-dark border border-white/10 rounded-xl px-4 py-3 transition-all focus-within:border-amber-500 focus-within:shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                <Lock className="h-4 w-4 text-slate-400 shrink-0 mr-3" />
                 <input
                   type="password"
                   placeholder="••••••••"
@@ -425,7 +395,7 @@ export default function App() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-neutral-800 disabled:text-neutral-500 text-slate-950 font-black py-3 rounded-lg text-xs transition-colors flex items-center justify-center gap-2 shadow-lg"
+              className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 disabled:from-neutral-800 disabled:to-neutral-800 text-slate-950 disabled:text-neutral-500 font-black py-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-xl hover:-translate-y-0.5 hover:shadow-amber-500/20"
             >
               {isLoading ? "Processing..." : isSignUp ? "Create Transport Profile" : "Authenticate & Open Portal"}
               <ArrowRight className="h-4 w-4" />

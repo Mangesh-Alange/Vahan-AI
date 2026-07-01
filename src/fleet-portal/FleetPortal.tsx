@@ -6,7 +6,7 @@ import {
 import { 
   TrendingUp, Truck, Users, AlertTriangle, CheckCircle, RefreshCw, Plus, 
   Trash2, Mail, Link, AlertOctagon, Eye, MapPin, ChevronRight, FileText, Search, 
-  ShieldAlert, Settings, Info, Check, Calendar
+  ShieldAlert, Settings, Info, Check, Calendar, Sun, Moon
 } from 'lucide-react';
 import { User, Vehicle, FaultReport, FleetAlert, ServiceCenter, FatigueEvent } from '../types.js';
 import { motion, AnimatePresence } from 'motion/react';
@@ -19,6 +19,18 @@ interface FleetPortalProps {
 export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   // Navigation Tabs
   const [activeTab, setActiveTab] = useState<'overview' | 'vehicles' | 'drivers' | 'reports' | 'safety' | 'workshops'>('overview');
+  
+  // Theme State
+  const [darkMode, setDarkMode] = useState<boolean>(true);
+
+  // Sync dark mode class with HTML tag
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
   
   // Data State
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -382,7 +394,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans relative">
+    <div className="min-h-screen transition-colors duration-500 bg-slate-50 dark:bg-slate-800/80 bg-gradient-to-tr from-slate-100 via-slate-50 to-slate-200 dark:bg-slate-950 dark:from-slate-950 dark:via-slate-900 dark:to-black text-slate-800 dark:text-slate-200 dark:text-slate-100 flex flex-col font-sans relative">
       
       {/* Real-time Emergency Fatigue Alert Overlay Panel */}
       <AnimatePresence>
@@ -416,7 +428,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                   stopPortalSiren();
                   setActiveFatigueAlerts([]);
                 }}
-                className="bg-white hover:bg-slate-100 text-red-700 font-black px-4 py-2 rounded-xl text-xs uppercase shadow transition-colors w-full text-center"
+                className="bg-white hover:bg-slate-100 dark:bg-slate-700/60 text-red-700 font-black px-4 py-2 rounded-xl text-xs uppercase shadow transition-colors w-full text-center"
               >
                 Acknowledge &amp; Mute
               </button>
@@ -439,23 +451,32 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
         )}
       </AnimatePresence>
       
-      {/* Top Main Navigation Header */}
-      <header className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between shadow-md shrink-0">
+      {/* Top Main Navigation Header - Glassy Dark */}
+      <header className="bg-slate-950/90 backdrop-blur-xl border-b border-white/10 text-white px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4 shadow-lg shrink-0 z-20 relative">
         <div className="flex items-center gap-3">
           <div className="bg-amber-500 text-slate-950 p-2 rounded-lg font-black tracking-wider flex items-center gap-1.5 shadow-md">
             <Truck className="h-6 w-6 text-slate-950" />
             <span className="text-lg">VahanAI</span>
           </div>
           <div className="hidden md:block">
-            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Fleet Management Portal</span>
-            <span className="text-sm font-bold text-slate-200">
-              {user.org_id === 'org_rajpath' ? "Rajpath Roadways Logistics" : "Kedar Inter-State Logistics"}
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest block">Fleet Management Portal</span>
+            <span className="text-base font-black text-white tracking-tight">
+              {/* @ts-ignore */}
+              {user.org_name || (user.org_id === 'org_rajpath' ? "Rajpath Roadways Logistics" : "My Fleet Organization")}
             </span>
           </div>
         </div>
 
         {/* Real-time dashboard badging and user settings */}
         <div className="flex items-center gap-5">
+          {/* Theme Toggle */}
+          <button 
+            onClick={() => setDarkMode(!darkMode)} 
+            className="p-2 rounded-full hover:bg-white/10 transition-colors"
+            title="Toggle Light/Dark Mode"
+          >
+            {darkMode ? <Sun className="h-5 w-5 text-amber-400" /> : <Moon className="h-5 w-5 text-slate-300" />}
+          </button>
           {/* Notification Indicators */}
           <div className="hidden sm:flex gap-3">
             {activeAlertsCount > 0 && (
@@ -472,7 +493,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
             )}
           </div>
 
-          <div className="flex items-center gap-3 border-l border-slate-700 pl-5">
+          <div className="flex items-center gap-2 sm:gap-3 border-l border-slate-700 pl-3 sm:pl-5">
             <div className="text-right hidden sm:block">
               <p className="text-xs text-slate-400 font-semibold">Logged in as Owner</p>
               <p className="text-sm font-bold text-slate-100">{user.name}</p>
@@ -498,7 +519,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         
         {/* Sidebar */}
-        <aside className="w-64 bg-slate-850 text-slate-300 border-r border-slate-700 p-5 flex flex-col justify-between shrink-0 hidden lg:flex bg-slate-900">
+        <aside className="w-64 glass-dark text-slate-300 border-r border-white/10 p-5 flex flex-col justify-between shrink-0 hidden lg:flex z-10 relative shadow-2xl">
           <nav className="space-y-1">
             <button 
               onClick={() => setActiveTab('overview')}
@@ -589,12 +610,20 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
             </button>
           </nav>
 
-          <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700/50 text-[11px] leading-relaxed text-slate-400 space-y-2">
-            <p className="font-bold text-slate-200">🏆 TATA TECHNOLOGIES INNOVENT</p>
-            <p>Vehicle Health &amp; Predictive Maintenance Track Entry.</p>
-            <div className="bg-slate-850 p-2 rounded border border-slate-750 font-mono text-[9px]">
-              NODE: LIVE IN CONTAINER<br />
-              DB: PERSISTENT JSON STORE
+          <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700/50 text-[11px] leading-relaxed text-slate-400 space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+              <p className="font-bold text-slate-200">System Status: All Systems Operational</p>
+            </div>
+            <div className="bg-slate-850 p-2 rounded border border-slate-750 space-y-1">
+              <div className="flex justify-between items-center text-[10px]">
+                <span>AI Diagnostics Engine</span>
+                <span className="text-emerald-400">Online</span>
+              </div>
+              <div className="flex justify-between items-center text-[10px]">
+                <span>Fleet Data Sync</span>
+                <span className="text-emerald-400">Active</span>
+              </div>
             </div>
           </div>
         </aside>
@@ -660,7 +689,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
               
               {/* Dense Info Numbers grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 sm:gap-4">
+                <div className="glass p-4 sm:p-5 rounded-3xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex items-center gap-3 sm:gap-4">
                   <div className="bg-amber-500/10 text-amber-600 p-2 sm:p-3 rounded-xl">
                     <Truck className="h-5 w-5 sm:h-6 sm:w-6" />
                   </div>
@@ -670,7 +699,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                   </div>
                 </div>
 
-                <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 sm:gap-4">
+                <div className="glass p-4 sm:p-5 rounded-3xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex items-center gap-3 sm:gap-4">
                   <div className="bg-emerald-500/10 text-emerald-600 p-2 sm:p-3 rounded-xl">
                     <Users className="h-5 w-5 sm:h-6 sm:w-6" />
                   </div>
@@ -680,7 +709,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                   </div>
                 </div>
 
-                <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 sm:gap-4">
+                <div className="glass p-4 sm:p-5 rounded-3xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex items-center gap-3 sm:gap-4">
                   <div className="bg-red-500/10 text-red-600 p-2 sm:p-3 rounded-xl">
                     <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6" />
                   </div>
@@ -690,7 +719,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                   </div>
                 </div>
 
-                <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3 sm:gap-4">
+                <div className="glass p-4 sm:p-5 rounded-3xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex items-center gap-3 sm:gap-4">
                   <div className="bg-indigo-500/10 text-indigo-600 p-2 sm:p-3 rounded-xl">
                     <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6" />
                   </div>
@@ -705,10 +734,10 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 
                 {/* Recharts dynamic line/bar trends */}
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm xl:col-span-2 space-y-4">
+                <div className="glass p-5 rounded-3xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 xl:col-span-2 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Breakdown Severity Trends (Last 5 Days)</h3>
-                    <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono font-bold">Real-time DB query</span>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Breakdown Severity Trends (Last 5 Days)</h3>
+                    <span className="text-[10px] bg-slate-100 dark:bg-slate-700/60 text-slate-600 px-2 py-0.5 rounded font-mono font-bold">Real-time DB query</span>
                   </div>
                   
                   <div className="h-64">
@@ -728,9 +757,9 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                 </div>
 
                 {/* Pie Charts */}
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
+                <div className="glass p-5 rounded-3xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 space-y-4 flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Severity Breakdown</h3>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Severity Breakdown</h3>
                   </div>
 
                   <div className="h-44 flex items-center justify-center relative">
@@ -764,7 +793,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
                           {item.name}
                         </span>
-                        <span className="font-bold text-slate-900">{item.value} reports</span>
+                        <span className="font-bold text-slate-900 dark:text-white">{item.value} reports</span>
                       </div>
                     ))}
                   </div>
@@ -775,9 +804,9 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 
                 {/* Recent Fault table list */}
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div className="glass p-5 rounded-3xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Recent AI Breakdown Alerts</h3>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Recent AI Breakdown Alerts</h3>
                     <button onClick={() => setActiveTab('reports')} className="text-xs font-bold text-amber-600 hover:underline">View All</button>
                   </div>
 
@@ -786,14 +815,14 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                       <div key={idx} className="border-b border-slate-100 pb-3 last:border-0 last:pb-0 flex items-start justify-between gap-3">
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-black text-slate-900 bg-slate-100 px-2 py-0.5 rounded font-mono">
+                            <span className="text-xs font-black text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-700/60 px-2 py-0.5 rounded font-mono">
                               {report.vehicle_reg || "MH-12"}
                             </span>
                             <span className="text-[10px] text-slate-400 font-mono">
                               {new Date(report.timestamp).toLocaleTimeString()}
                             </span>
                           </div>
-                          <p className="text-xs font-bold text-slate-800 line-clamp-1">"{report.symptom_text_hindi}"</p>
+                          <p className="text-xs font-bold text-slate-800 dark:text-slate-200 line-clamp-1">"{report.symptom_text_hindi}"</p>
                           <p className="text-xs text-amber-600 font-bold">{report.diagnosis}</p>
                         </div>
                         <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded ${
@@ -811,9 +840,9 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                 </div>
 
                 {/* Fatigue events tracker */}
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div className="glass p-5 rounded-3xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Active Fatigue Logs</h3>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Active Fatigue Logs</h3>
                     <button onClick={() => setActiveTab('safety')} className="text-xs font-bold text-amber-600 hover:underline">View All</button>
                   </div>
 
@@ -825,7 +854,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                             <Eye className="h-5 w-5" />
                           </div>
                           <div>
-                            <p className="text-xs font-bold text-slate-900">{log.driver_name || "Driver"}</p>
+                            <p className="text-xs font-bold text-slate-900 dark:text-white">{log.driver_name || "Driver"}</p>
                             <p className="text-[10px] text-slate-400 font-mono">
                               {new Date(log.timestamp).toLocaleString()} • {log.vehicle_reg || "MH-12"}
                             </p>
@@ -854,7 +883,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Enlisted Trucks &amp; Containers</h3>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Enlisted Trucks &amp; Containers</h3>
                   <p className="text-xs text-slate-500">Monitor health status, mileage, and driver assignments across your fleet.</p>
                 </div>
                 <button
@@ -868,16 +897,27 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
               {/* Grid of Vehicles */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {vehicles.map((v, idx) => (
-                  <div key={idx} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4 relative overflow-hidden flex flex-col justify-between">
+                  <div key={idx} className="glass dark:bg-slate-800/50 rounded-3xl border border-slate-200 dark:border-slate-600 dark:border-white/10 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-5 space-y-4 relative overflow-hidden flex flex-col justify-between">
                     
-                    {/* Make background logo badge */}
-                    <div className="absolute right-3 top-3 opacity-10 font-black text-2xl uppercase select-none">
-                      {v.make}
+                    {/* Make background logo SVG */}
+                    <div className="absolute right-[-10px] bottom-[-10px] opacity-5 pointer-events-none w-32 h-32">
+                      {v.make === 'Tata' && (
+                        <svg viewBox="0 0 100 100" fill="currentColor" className="text-slate-900 dark:text-white dark:text-white"><path d="M50 10c-22 0-40 18-40 40s18 40 40 40 40-18 40-40-18-40-40-40zm0 15c13.8 0 25 11.2 25 25S63.8 75 50 75 25 63.8 25 50 36.2 25 50 25zm0 10c-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15-6.7-15-15-15zm0 8c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7z"/></svg>
+                      )}
+                      {v.make === 'Ashok Leyland' && (
+                        <svg viewBox="0 0 100 100" fill="currentColor" className="text-slate-900 dark:text-white dark:text-white"><path d="M50 5L15 25v50l35 20 35-20V25L50 5zm0 15l22 13v25L50 71 28 58V33l22-13zm0 10L35 38v15l15 9 15-9V38L50 30z"/></svg>
+                      )}
+                      {v.make === 'Mahindra' && (
+                        <svg viewBox="0 0 100 100" fill="currentColor" className="text-slate-900 dark:text-white dark:text-white"><path d="M20 20h60v20H20V20zm0 40h60v20H20V60zM40 20v60h20V20H40z"/></svg>
+                      )}
+                      {(!['Tata', 'Ashok Leyland', 'Mahindra'].includes(v.make)) && (
+                        <Truck className="w-full h-full text-slate-900 dark:text-white dark:text-white" />
+                      )}
                     </div>
 
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-black text-slate-900 tracking-tight font-mono border border-slate-300 bg-slate-50 px-2.5 py-0.5 rounded">
+                        <span className="text-sm font-black text-slate-900 dark:text-white tracking-tight font-mono border border-slate-300 dark:border-slate-500 bg-slate-50 dark:bg-slate-800/80 px-2.5 py-0.5 rounded">
                           {v.registration_number}
                         </span>
                         <span className="text-[11px] text-slate-400 font-bold">{v.make} {v.model}</span>
@@ -888,7 +928,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                     <div className="grid grid-cols-2 gap-4 border-y border-slate-100 py-3 text-xs">
                       <div>
                         <span className="text-slate-400 font-semibold block uppercase text-[10px]">Odometer Reading</span>
-                        <span className="font-bold text-slate-900">{(v.mileage || 0).toLocaleString()} KM</span>
+                        <span className="font-bold text-slate-900 dark:text-white">{(v.mileage || 0).toLocaleString()} KM</span>
                       </div>
                       <div>
                         <span className="text-slate-400 font-semibold block uppercase text-[10px]">Health status</span>
@@ -908,7 +948,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                       <select
                         value={v.assigned_driver_id || ''}
                         onChange={(e) => handleUpdateVehicleDriver(v.id, e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 p-2 rounded-lg text-xs text-slate-800 font-medium focus:outline-none focus:border-amber-500"
+                        className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 p-2 rounded-lg text-xs text-slate-800 dark:text-slate-200 font-medium focus:outline-none focus:border-amber-500"
                       >
                         <option value="">Unassigned (Parked in yard)</option>
                         {drivers.map(d => (
@@ -937,7 +977,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Driver Roster &amp; Operators</h3>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Driver Roster &amp; Operators</h3>
                   <p className="text-xs text-slate-500">Generate fleet invite links and manage driver credentials.</p>
                 </div>
                 <button
@@ -948,7 +988,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                 </button>
               </div>
 
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl border border-slate-200 dark:border-slate-600 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
@@ -966,8 +1006,8 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                         const veh = vehicles.find(v => v.assigned_driver_id === driver.id);
                         const isDrowsy = safetyLogs.some(s => s.driver_id === driver.id && s.severity === 'critical');
                         return (
-                          <tr key={idx} className="hover:bg-slate-50 border-b border-slate-150 transition-colors">
-                            <td className="p-4 font-bold text-slate-900 flex items-center gap-2 whitespace-nowrap">
+                          <tr key={idx} className="hover:bg-slate-50 dark:bg-slate-800/80 border-b border-slate-150 transition-colors">
+                            <td className="p-4 font-bold text-slate-900 dark:text-white flex items-center gap-2 whitespace-nowrap">
                               <div className="h-7 w-7 bg-amber-500 text-slate-950 rounded-full flex items-center justify-center font-bold text-xs uppercase">
                                 {driver.name.charAt(0)}
                               </div>
@@ -976,7 +1016,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                             <td className="p-4 font-mono font-bold text-slate-600 whitespace-nowrap">{driver.phone}</td>
                             <td className="p-4 whitespace-nowrap">
                               {veh ? (
-                                <span className="bg-slate-100 text-slate-700 font-bold font-mono px-2 py-0.5 rounded border border-slate-200">
+                                <span className="bg-slate-100 dark:bg-slate-700/60 text-slate-700 font-bold font-mono px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600">
                                   {veh.registration_number}
                                 </span>
                               ) : (
@@ -1011,21 +1051,21 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Breakdown Diagnosis Records</h3>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Breakdown Diagnosis Records</h3>
                   <p className="text-xs text-slate-500">Analyze spoken symptoms translated and compiled by the Multi-Agent engine.</p>
                 </div>
               </div>
 
               {/* Filters */}
-              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-3">
-                <div className="flex-1 flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50">
+              <div className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors p-4 rounded-xl border border-slate-200 dark:border-slate-600 shadow-sm flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 flex items-center gap-2 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 bg-slate-50 dark:bg-slate-800/80">
                   <Search className="h-4 w-4 text-slate-400 shrink-0" />
                   <input
                     type="text"
                     placeholder="Search by vehicle registration plate..."
                     value={vehicleSearch}
                     onChange={(e) => setVehicleSearch(e.target.value)}
-                    className="bg-transparent text-xs text-slate-800 w-full focus:outline-none"
+                    className="bg-transparent text-xs text-slate-800 dark:text-slate-200 w-full focus:outline-none"
                   />
                 </div>
 
@@ -1034,7 +1074,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                   <select
                     value={severityFilter}
                     onChange={(e) => setSeverityFilter(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 text-xs p-2 rounded-lg text-slate-800 font-medium focus:outline-none"
+                    className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 text-xs p-2 rounded-lg text-slate-800 dark:text-slate-200 font-medium focus:outline-none"
                   >
                     <option value="all">Show All Severities</option>
                     <option value="stop_immediately">Critical (Stop Immediately)</option>
@@ -1048,7 +1088,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
                 
                 {/* Reports List table */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden xl:col-span-2">
+                <div className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl border border-slate-200 dark:border-slate-600 shadow-sm overflow-hidden xl:col-span-2">
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs border-collapse">
                       <thead>
@@ -1066,7 +1106,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                           <tr 
                             key={idx} 
                             onClick={() => setSelectedReport(r)}
-                            className={`hover:bg-slate-50 border-b border-slate-150 transition-colors cursor-pointer ${
+                            className={`hover:bg-slate-50 dark:bg-slate-800/80 border-b border-slate-150 transition-colors cursor-pointer ${
                               selectedReport?.id === r.id ? 'bg-amber-500/10' : ''
                             }`}
                           >
@@ -1084,10 +1124,10 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                                 {r.severity === 'stop_immediately' ? "Stop" : r.severity === 'caution' ? "Caution" : "Drive"}
                               </span>
                             </td>
-                            <td className="p-4 text-slate-800 font-semibold">{r.diagnosis}</td>
+                            <td className="p-4 text-slate-800 dark:text-slate-200 font-semibold">{r.diagnosis}</td>
                             <td className="p-4 whitespace-nowrap">
                               {r.synced_at === null ? (
-                                <span className="text-[10px] bg-slate-100 text-slate-500 border border-slate-200 px-2 py-0.5 rounded font-bold">
+                                <span className="text-[10px] bg-slate-100 dark:bg-slate-700/60 text-slate-500 border border-slate-200 dark:border-slate-600 px-2 py-0.5 rounded font-bold">
                                   Local Heuristic
                                 </span>
                               ) : (
@@ -1104,20 +1144,20 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                 </div>
 
                 {/* Report Detail trace side-panel */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+                <div className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl border border-slate-200 dark:border-slate-600 shadow-sm p-5 space-y-4">
                   {selectedReport ? (
                     <div className="space-y-4">
                       <div className="border-b border-slate-150 pb-3">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-sm font-black text-slate-900 uppercase">Diagnosis Detail</h4>
+                          <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase">Diagnosis Detail</h4>
                           <span className="text-[10px] text-slate-400 font-mono">{new Date(selectedReport.timestamp).toLocaleString()}</span>
                         </div>
-                        <p className="text-xs text-slate-450 mt-1">Vehicle Plate: <span className="font-mono font-bold text-slate-800">{selectedReport.vehicle_reg}</span></p>
+                        <p className="text-xs text-slate-450 mt-1">Vehicle Plate: <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{selectedReport.vehicle_reg}</span></p>
                       </div>
 
                       <div className="space-y-1">
                         <span className="text-[9px] uppercase font-bold text-slate-400">Hindi Complaint Speech Input</span>
-                        <p className="text-xs font-bold text-slate-800 leading-normal bg-slate-50 p-3 rounded-lg border border-slate-200 italic">
+                        <p className="text-xs font-bold text-slate-800 dark:text-slate-200 leading-normal bg-slate-50 dark:bg-slate-800/80 p-3 rounded-lg border border-slate-200 dark:border-slate-600 italic">
                           "{selectedReport.symptom_text_hindi}"
                         </p>
                       </div>
@@ -1185,11 +1225,11 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
           {activeTab === 'safety' && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Driver Cognitive Safety Logs</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Driver Cognitive Safety Logs</h3>
                 <p className="text-xs text-slate-500">Review real-time dynamic EAR fatigue warnings logged during over-the-road transit.</p>
               </div>
 
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl border border-slate-200 dark:border-slate-600 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
@@ -1209,7 +1249,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                         </tr>
                       ) : (
                         safetyLogs.map((log, idx) => (
-                          <tr key={idx} className="hover:bg-slate-50 border-b border-slate-150 transition-colors">
+                          <tr key={idx} className="hover:bg-slate-50 dark:bg-slate-800/80 border-b border-slate-150 transition-colors">
                             <td className="p-4 text-slate-500 font-mono whitespace-nowrap">{new Date(log.timestamp).toLocaleString()}</td>
                             <td className="p-4 font-bold text-slate-950 whitespace-nowrap">{log.driver_name || "Driver"}</td>
                             <td className="p-4 font-mono font-bold text-slate-700 whitespace-nowrap">{log.vehicle_reg || "MH-12"}</td>
@@ -1236,19 +1276,19 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
           {activeTab === 'workshops' && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Seeded Roadside Support Network</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Seeded Roadside Support Network</h3>
                 <p className="text-xs text-slate-500">Provide direct suggestions to operators using the 15 pre-seeded heavy-vehicle service hubs in India.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {workshops.map((shop, idx) => (
-                  <div key={idx} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3 flex flex-col justify-between">
+                  <div key={idx} className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl border border-slate-200 dark:border-slate-600 shadow-sm p-5 space-y-3 flex flex-col justify-between">
                     <div className="space-y-2">
                       <div className="bg-amber-500/10 text-amber-600 p-2.5 rounded-xl self-start w-fit">
                         <MapPin className="h-5 w-5" />
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900">{shop.name}</h4>
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">{shop.name}</h4>
                         <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-1 leading-normal">
                           {shop.location}
                         </p>
@@ -1259,7 +1299,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                       <span className="text-[9px] uppercase font-bold text-slate-400 block mb-1">OEM Brands Supported</span>
                       <div className="flex flex-wrap gap-1">
                         {shop.vehicle_makes_supported.map((make, mIdx) => (
-                          <span key={mIdx} className="text-[10px] font-bold uppercase bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">
+                          <span key={mIdx} className="text-[10px] font-bold uppercase bg-slate-100 dark:bg-slate-700/60 text-slate-700 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600">
                             {make}
                           </span>
                         ))}
@@ -1283,10 +1323,10 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
           <motion.div 
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl"
+            className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900">Add New Truck to Fleet</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Add New Truck to Fleet</h3>
               <button onClick={() => setShowAddVehicleModal(false)} className="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
 
@@ -1298,7 +1338,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                   placeholder="e.g. MH-12-QW-5678"
                   value={newVehicle.registration_number}
                   onChange={(e) => setNewVehicle(prev => ({ ...prev, registration_number: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-lg text-slate-800 font-medium text-xs focus:outline-none focus:border-amber-500"
+                  className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 p-2.5 rounded-lg text-slate-800 dark:text-slate-200 font-medium text-xs focus:outline-none focus:border-amber-500"
                   required
                 />
               </div>
@@ -1309,7 +1349,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                   <select
                     value={newVehicle.make}
                     onChange={(e) => setNewVehicle(prev => ({ ...prev, make: e.target.value as any }))}
-                    className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-lg text-slate-800 text-xs focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 p-2.5 rounded-lg text-slate-800 dark:text-slate-200 text-xs focus:outline-none"
                   >
                     <option value="Tata">Tata</option>
                     <option value="Ashok Leyland">Ashok Leyland</option>
@@ -1324,7 +1364,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                     placeholder="e.g. Signa 4825"
                     value={newVehicle.model}
                     onChange={(e) => setNewVehicle(prev => ({ ...prev, model: e.target.value }))}
-                    className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-lg text-slate-800 text-xs focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 p-2.5 rounded-lg text-slate-800 dark:text-slate-200 text-xs focus:outline-none"
                     required
                   />
                 </div>
@@ -1337,7 +1377,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                     type="number"
                     value={newVehicle.year}
                     onChange={(e) => setNewVehicle(prev => ({ ...prev, year: parseInt(e.target.value) }))}
-                    className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-lg text-slate-800 text-xs focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 p-2.5 rounded-lg text-slate-800 dark:text-slate-200 text-xs focus:outline-none"
                   />
                 </div>
                 <div>
@@ -1346,7 +1386,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                     type="number"
                     value={newVehicle.mileage}
                     onChange={(e) => setNewVehicle(prev => ({ ...prev, mileage: parseInt(e.target.value) }))}
-                    className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-lg text-slate-800 text-xs focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 p-2.5 rounded-lg text-slate-800 dark:text-slate-200 text-xs focus:outline-none"
                   />
                 </div>
               </div>
@@ -1356,7 +1396,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                 <select
                   value={newVehicle.assigned_driver_id}
                   onChange={(e) => setNewVehicle(prev => ({ ...prev, assigned_driver_id: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-lg text-slate-800 text-xs focus:outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 p-2.5 rounded-lg text-slate-800 dark:text-slate-200 text-xs focus:outline-none"
                 >
                   <option value="">Leave Unassigned</option>
                   {drivers.map(d => (
@@ -1375,7 +1415,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                 <button
                   type="button"
                   onClick={() => setShowAddVehicleModal(false)}
-                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-2.5 rounded-lg text-xs transition-colors"
+                  className="flex-1 bg-slate-100 dark:bg-slate-700/60 hover:bg-slate-200 text-slate-600 font-semibold py-2.5 rounded-lg text-xs transition-colors"
                 >
                   Cancel
                 </button>
@@ -1391,16 +1431,16 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
           <motion.div 
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl"
+            className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl"
           >
             <CheckCircle className="h-12 w-12 text-emerald-500 mx-auto" />
             <div className="space-y-1">
-              <h3 className="text-base font-bold text-slate-900">Driver Onboarding Invite Code</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Driver Onboarding Invite Code</h3>
               <p className="text-xs text-slate-500">Provide this code to your drivers to let them register under your organization.</p>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl flex items-center justify-center gap-2">
-              <span className="text-2xl font-black text-slate-900 tracking-wider font-mono">{inviteCode}</span>
+            <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600 p-4 rounded-xl flex items-center justify-center gap-2">
+              <span className="text-2xl font-black text-slate-900 dark:text-white tracking-wider font-mono">{inviteCode}</span>
             </div>
 
             <p className="text-[10px] text-slate-400">
