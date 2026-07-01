@@ -613,6 +613,11 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       const data = await res.json();
       if (data.reply) {
         setChatMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+        if (data.action && data.action.type === 'OPEN_MAPS') {
+          setTimeout(() => {
+            window.location.assign(data.action.url);
+          }, 1500);
+        }
       } else {
         setChatMessages(prev => [...prev, { role: 'assistant', content: "Server side issue, please try again." }]);
       }
