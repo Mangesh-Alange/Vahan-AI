@@ -34,7 +34,7 @@ const parseJSON = (text: string) => {
 // 2. Define the Agent Nodes
 const supervisorAgent = async (state: typeof GraphState.State) => {
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.5-flash",
     apiKey: process.env.GEMINI_API_KEY,
     maxOutputTokens: 500,
   });
@@ -53,7 +53,7 @@ const supervisorAgent = async (state: typeof GraphState.State) => {
 
 const diagnosticAgent = async (state: typeof GraphState.State) => {
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.5-flash",
     apiKey: process.env.GEMINI_API_KEY,
     maxOutputTokens: 800,
   });
@@ -72,7 +72,7 @@ const diagnosticAgent = async (state: typeof GraphState.State) => {
 
 const triageAgent = async (state: typeof GraphState.State) => {
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.5-flash",
     apiKey: process.env.GEMINI_API_KEY,
     maxOutputTokens: 400,
   });
@@ -91,7 +91,7 @@ const triageAgent = async (state: typeof GraphState.State) => {
 
 const maintenanceAgent = async (state: typeof GraphState.State) => {
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.5-flash",
     apiKey: process.env.GEMINI_API_KEY,
     maxOutputTokens: 800,
   });

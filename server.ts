@@ -639,7 +639,7 @@ app.post('/api/transcribe-audio', async (req, res) => {
 
     const ai = getGeminiClient();
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       contents: [
         {
           inlineData: {
@@ -706,7 +706,7 @@ app.post('/api/driver-copilot', async (req, res) => {
     });
 
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       contents,
       config: {
         systemInstruction
@@ -798,7 +798,7 @@ app.post('/api/whatsapp/webhook', async (req, res) => {
         Keep it extremely concise (max 3 sentences) suitable for a WhatsApp reply.
       `;
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash",
         contents: prompt
       });
       diagnosisText = response.text || topMatch.symptom_english;
