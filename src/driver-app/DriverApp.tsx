@@ -5,7 +5,7 @@ import {
   Eye, RefreshCw, LogOut, ChevronDown, ChevronUp, UserPlus, 
   Truck, Settings, Lock, Phone, User, EyeOff, AlertOctagon, HelpCircle,
   Send, MessageSquare, Sun, Moon
-} from 'lucide-react';
+, Camera, X, MessageCircle, Map} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { User as UserType, Vehicle, FaultReport, FatigueEvent } from '../types.js';
 import { faultKnowledgeBase } from '../../server/faultKnowledgeBase.js';
@@ -36,6 +36,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
 
   // Voice & Input State
   const [symptomText, setSymptomText] = useState<string>('');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isRecordingVoice, setIsRecordingVoice] = useState<boolean>(false);
   const [speechStatus, setSpeechStatus] = useState<string>('');
   const [audioSignalClass, setAudioSignalClass] = useState<'normal' | 'knock' | 'squeal' | 'misfire'>('normal');
@@ -927,7 +928,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 flex flex-col font-sans max-w-md mx-auto relative border-x shadow-2xl overflow-hidden ${darkMode ? 'dark bg-slate-950 bg-gradient-to-tr from-slate-950 via-slate-900 to-black text-slate-200 border-white/10' : 'bg-slate-50 bg-gradient-to-tr from-slate-100 via-slate-50 to-slate-200 text-slate-800 border-slate-200'}`}>
+    <div className={`h-[100dvh] transition-colors duration-500 flex flex-col font-sans max-w-md mx-auto relative border-x shadow-2xl overflow-hidden ${darkMode ? 'dark bg-slate-950 bg-gradient-to-tr from-slate-950 via-slate-900 to-black text-slate-200 border-white/10' : 'bg-slate-50 bg-gradient-to-tr from-slate-100 via-slate-50 to-slate-200 text-slate-800 border-slate-200'}`}>
       {/* PWA Phone Header Frame */}
       <div className="bg-slate-950/90 backdrop-blur-xl border-b border-white/10 text-white px-4 py-4 flex items-center justify-between shadow-lg shrink-0 z-20 relative">
         <div className="flex items-center gap-2">
@@ -1216,6 +1217,51 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                 />
               </div>
 
+              
+              {/* Option C: Vision AI */}
+              <div className="glass dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-white/10 space-y-4 shadow-sm">
+                <label className="text-[10px] text-slate-800 dark:text-slate-200 font-black uppercase tracking-widest flex items-center gap-1.5">
+                  <Camera className="h-3.5 w-3.5 text-amber-500"/> ऑप्शन C: फ़ोटो खींचकर बताएं (Camera AI)
+                </label>
+                
+                <div className="flex flex-col gap-3">
+                  {!selectedImage ? (
+                    <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <Camera className="h-6 w-6 text-slate-400 mb-2" />
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">Tap to upload a photo of the broken part</p>
+                      </div>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        capture="environment" 
+                        className="hidden" 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => setSelectedImage(e.target.result);
+                            reader.readAsDataURL(e.target.files[0]);
+                          }
+                        }}
+                      />
+                    </label>
+                  ) : (
+                    <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+                      <img src={selectedImage} alt="Broken Part" className="w-full h-full object-cover" />
+                      <button 
+                        onClick={() => setSelectedImage(null)}
+                        className="absolute top-2 right-2 p-1.5 bg-black/50 text-white rounded-full hover:bg-red-500 transition-colors backdrop-blur-sm"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                      <div className="absolute bottom-2 left-2 px-2 py-1 bg-amber-500 text-black text-[9px] font-bold rounded flex items-center gap-1 shadow-lg">
+                        <Sparkles className="h-3 w-3" /> Gemini Vision Active
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Engine sound pairing selector */}
               <div className="flex items-center justify-between pt-1 border-t border-slate-200 dark:border-white/10">
                 <span className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">इंजन की आवाज़ (Engine Sound):</span>
@@ -1244,7 +1290,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
               {/* Action diagnose button */}
               <button
                 onClick={runDiagnosticPipeline}
-                disabled={isDiagnosing || !symptomText.trim()}
+                disabled={isDiagnosing || (!symptomText.trim() && !selectedImage)}
                 className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 disabled:from-slate-200 disabled:to-slate-300 dark:disabled:from-slate-800 dark:disabled:to-slate-800 text-slate-900 disabled:text-slate-400 font-bold py-3 px-4 rounded-xl text-xs transition-colors flex items-center justify-center gap-2 shadow-lg cursor-pointer"
               >
                 {isDiagnosing ? (
