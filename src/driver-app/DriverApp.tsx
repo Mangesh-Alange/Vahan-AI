@@ -17,7 +17,7 @@ interface DriverAppProps {
 
 export default function DriverApp({ user, onLogout }: DriverAppProps) {
   // Navigation
-  const [activeTab, setActiveTab] = useState<'diagnose' | 'acoustic' | 'fatigue' | 'history'>('diagnose');
+  const [activeTab, setActiveTab] = useState<'diagnose' | 'acoustic' | 'fatigue' | 'history' | 'wellness'>('diagnose');
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   
   // Network Simulation & Theme
@@ -1808,7 +1808,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       </div>
 
       {/* PWA bottom navbar */}
-      <div className="absolute bottom-0 inset-x-0 glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors border-t border-slate-200 dark:border-white/10 grid grid-cols-4 shrink-0 z-10">
+      <div className="absolute bottom-0 inset-x-0 glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors border-t border-slate-200 dark:border-white/10 grid grid-cols-5 shrink-0 z-10">
         <button 
           onClick={() => setActiveTab('diagnose')}
           className={`flex flex-col items-center justify-center py-2 gap-1 transition-colors ${
