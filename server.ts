@@ -332,12 +332,12 @@ app.post('/api/auth/signup', (req, res) => {
     // Generate a fresh organization for new fleet managers
     const newOrgName = org_name || `${name}'s Transport Fleet`;
     const newOrgId = "org_" + Math.random().toString(36).substring(2, 9);
-    db.getOrganizations().push({
-      id: newOrgId,
-      name: newOrgName,
-      plan_tier: "free",
-      created_at: new Date().toISOString()
-    });
+    db.createOrganization({
+        id: newOrgId,
+        name: newOrgName,
+        plan_tier: "free",
+        created_at: new Date().toISOString()
+      });
     orgId = newOrgId;
   }
 
@@ -374,9 +374,21 @@ app.post('/api/auth/invite', (req, res) => {
       const candidate1 = suffix;
       const candidate2 = "org_" + suffix;
       const matchedOrg = db.getOrganizations().find(o => o.id.toLowerCase() === candidate1.toLowerCase() || o.id.toLowerCase() === candidate2.toLowerCase());
-      if (matchedOrg) {
-        org_id = matchedOrg.id;
-      }
+        if (matchedOrg) {
+          org_id = matchedOrg.id;
+        } else {
+          // Self-healing fallback: Check if there's a fleet manager with this org_id
+          const matchedManager = db.getUsers().find(u => u.role === 'fleet_manager' && u.org_id && (u.org_id.toLowerCase() === candidate1.toLowerCase() || u.org_id.toLowerCase() === candidate2.toLowerCase()));
+          if (matchedManager && matchedManager.org_id) {
+            org_id = matchedManager.org_id;
+            db.createOrganization({
+              id: org_id,
+              name: `${matchedManager.name}'s Transport Fleet`,
+              plan_tier: "free",
+              created_at: new Date().toISOString()
+            });
+          }
+        }
     }
   }
 

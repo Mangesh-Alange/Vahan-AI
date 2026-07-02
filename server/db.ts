@@ -498,8 +498,18 @@ export class Database {
 
   // Organizations API
   public getOrganizations(): Organization[] {
-    return this.data.organizations;
-  }
+      return this.data.organizations;
+    }
+
+    public createOrganization(org: Organization): Organization {
+      // Avoid duplicate push if it already exists in cache
+      if (!this.data.organizations.find(o => o.id === org.id)) {
+        this.data.organizations.push(org);
+      }
+      this.asyncWrite('organizations', 'insert', null, org);
+      this.save();
+      return org;
+    }
 
   // Users API
   public getUsers(): User[] {
