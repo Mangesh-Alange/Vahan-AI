@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Truck, Users, Key, Phone, User, ShieldAlert, Sparkles, 
-  ArrowRight, Lock, Check, HelpCircle, MapPin, Play, Landmark 
+  ArrowRight, Lock, Check, HelpCircle, MapPin, Play, Landmark,
+  Mic, Eye, Cpu, BarChart3, Wifi, WifiOff, Volume2
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { User as UserType } from './types.js';
@@ -234,14 +235,41 @@ export default function App() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4 pb-8">
         
         {/* Hero Tagline above form */}
-        <div className="text-center mb-8 max-w-2xl">
-          <h1 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight drop-shadow-2xl">
-            Predictive Intelligence for
-            <span className="text-amber-400"> Indian Fleets</span>
+        <div className="text-center mb-6 max-w-3xl">
+          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-1.5 mb-5 text-[11px] text-amber-400 font-bold uppercase tracking-widest">
+            <Cpu className="h-3 w-3" />
+            Edge AI · Works Offline · Hindi Voice-First
+          </div>
+          <h1 className="text-3xl md:text-[3.2rem] font-black text-white leading-[1.1] tracking-tight drop-shadow-2xl">
+            What if your truck could
+            <br />
+            <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent">tell you it's breaking down?</span>
           </h1>
-          <p className="text-slate-300/80 text-sm md:text-base mt-3 max-w-lg mx-auto font-light">
-            Voice-first diagnostics, real-time fatigue monitoring, and AI-powered fleet analytics — all on one platform.
+          <p className="text-slate-300/70 text-sm md:text-[15px] mt-4 max-w-xl mx-auto font-light leading-relaxed">
+            Your driver speaks Hindi into their phone. AI listens to the engine. The camera watches for fatigue.
+            <span className="text-white font-medium"> No internet needed.</span>
           </p>
+          
+          {/* Live Edge-AI Stats */}
+          <div className="flex items-center justify-center gap-6 mt-5">
+            <div className="flex items-center gap-2 text-[11px]">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+              <span className="text-emerald-400 font-mono font-bold">3 AI Agents</span>
+              <span className="text-slate-500">active</span>
+            </div>
+            <div className="w-px h-4 bg-slate-700"></div>
+            <div className="flex items-center gap-2 text-[11px]">
+              <WifiOff className="h-3 w-3 text-amber-400" />
+              <span className="text-amber-400 font-mono font-bold">Offline-First</span>
+              <span className="text-slate-500">edge compute</span>
+            </div>
+            <div className="w-px h-4 bg-slate-700 hidden sm:block"></div>
+            <div className="hidden sm:flex items-center gap-2 text-[11px]">
+              <Volume2 className="h-3 w-3 text-cyan-400" />
+              <span className="text-cyan-400 font-mono font-bold">Hindi + Acoustic</span>
+              <span className="text-slate-500">RAG</span>
+            </div>
+          </div>
         </div>
 
         {/* Auth Card - Floating Glassmorphic */}
@@ -381,19 +409,35 @@ export default function App() {
           </form>
         </div>
 
-        {/* Feature Pills - Below Card */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-8 max-w-xl">
-          <div className="flex items-center gap-2 bg-slate-950/50 backdrop-blur-sm border border-white/8 rounded-full px-4 py-2 text-[11px] text-slate-300">
-            <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-            <span>Voice Diagnostics in Hindi</span>
+        {/* What Makes Us Different - Differentiator Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 max-w-3xl w-full">
+          <div className="bg-slate-950/60 backdrop-blur-sm border border-white/8 rounded-2xl p-3.5 text-center group hover:border-amber-500/30 transition-all hover:-translate-y-1">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-amber-500/20 transition-colors">
+              <Mic className="h-4 w-4 text-amber-400" />
+            </div>
+            <p className="text-[11px] font-bold text-white leading-tight">Hindi Voice</p>
+            <p className="text-[9px] text-slate-500 mt-0.5">"Gaadi se dhuan" → instant diagnosis</p>
           </div>
-          <div className="flex items-center gap-2 bg-slate-950/50 backdrop-blur-sm border border-white/8 rounded-full px-4 py-2 text-[11px] text-slate-300">
-            <ShieldAlert className="h-3.5 w-3.5 text-cyan-400" />
-            <span>Real-time Fatigue Detection</span>
+          <div className="bg-slate-950/60 backdrop-blur-sm border border-white/8 rounded-2xl p-3.5 text-center group hover:border-cyan-500/30 transition-all hover:-translate-y-1">
+            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-cyan-500/20 transition-colors">
+              <Eye className="h-4 w-4 text-cyan-400" />
+            </div>
+            <p className="text-[11px] font-bold text-white leading-tight">Drowsiness AI</p>
+            <p className="text-[9px] text-slate-500 mt-0.5">Webcam EAR detection saves lives</p>
           </div>
-          <div className="flex items-center gap-2 bg-slate-950/50 backdrop-blur-sm border border-white/8 rounded-full px-4 py-2 text-[11px] text-slate-300">
-            <MapPin className="h-3.5 w-3.5 text-emerald-400" />
-            <span>Fleet Pattern Alerts</span>
+          <div className="bg-slate-950/60 backdrop-blur-sm border border-white/8 rounded-2xl p-3.5 text-center group hover:border-emerald-500/30 transition-all hover:-translate-y-1">
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-emerald-500/20 transition-colors">
+              <Volume2 className="h-4 w-4 text-emerald-400" />
+            </div>
+            <p className="text-[11px] font-bold text-white leading-tight">Engine Sound FFT</p>
+            <p className="text-[9px] text-slate-500 mt-0.5">Phone mic detects faults acoustically</p>
+          </div>
+          <div className="bg-slate-950/60 backdrop-blur-sm border border-white/8 rounded-2xl p-3.5 text-center group hover:border-purple-500/30 transition-all hover:-translate-y-1">
+            <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-purple-500/20 transition-colors">
+              <BarChart3 className="h-4 w-4 text-purple-400" />
+            </div>
+            <p className="text-[11px] font-bold text-white leading-tight">Fleet Pattern AI</p>
+            <p className="text-[9px] text-slate-500 mt-0.5">Cross-vehicle breakdown correlation</p>
           </div>
         </div>
 
