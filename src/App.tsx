@@ -409,35 +409,52 @@ export default function App() {
           </form>
         </div>
 
-        {/* What Makes Us Different - Differentiator Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 max-w-3xl w-full">
-          <div className="bg-slate-950/60 backdrop-blur-sm border border-white/8 rounded-2xl p-3.5 text-center group hover:border-amber-500/30 transition-all hover:-translate-y-1">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-amber-500/20 transition-colors">
-              <Mic className="h-4 w-4 text-amber-400" />
+        {/* 🔥 What Makes Us Different - BOLD Differentiator Strip */}
+        <div className="mt-8 w-full max-w-4xl">
+          <p className="text-center text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold mb-4">
+            ⚡ Not another dashboard — This is <span className="text-amber-400">Edge AI that works at 0 bars</span>
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
+            {/* Hindi Voice Card */}
+            <div className="relative overflow-hidden rounded-2xl p-[1px] group" style={{background: 'linear-gradient(135deg, rgba(245,158,11,0.4), rgba(245,158,11,0.05), rgba(245,158,11,0.3))'}}>
+              <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-4 h-full relative overflow-hidden">
+                <div className="absolute -top-6 -right-6 w-20 h-20 bg-amber-500/10 rounded-full blur-xl group-hover:bg-amber-500/20 transition-all duration-500"></div>
+                <div className="text-3xl mb-2">🎤</div>
+                <p className="text-sm font-black text-white">Hindi Voice RAG</p>
+                <p className="text-[11px] text-amber-400/80 font-medium mt-1">"गाड़ी से धुआं आ रहा है"</p>
+                <p className="text-[10px] text-slate-400 mt-1">Speak → AI diagnoses in seconds</p>
+              </div>
             </div>
-            <p className="text-[11px] font-bold text-white leading-tight">Hindi Voice</p>
-            <p className="text-[9px] text-slate-500 mt-0.5">"Gaadi se dhuan" → instant diagnosis</p>
-          </div>
-          <div className="bg-slate-950/60 backdrop-blur-sm border border-white/8 rounded-2xl p-3.5 text-center group hover:border-cyan-500/30 transition-all hover:-translate-y-1">
-            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-cyan-500/20 transition-colors">
-              <Eye className="h-4 w-4 text-cyan-400" />
+            {/* Drowsiness Card */}
+            <div className="relative overflow-hidden rounded-2xl p-[1px] group" style={{background: 'linear-gradient(135deg, rgba(6,182,212,0.4), rgba(6,182,212,0.05), rgba(6,182,212,0.3))'}}>
+              <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-4 h-full relative overflow-hidden">
+                <div className="absolute -top-6 -right-6 w-20 h-20 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/20 transition-all duration-500"></div>
+                <div className="text-3xl mb-2">👁️</div>
+                <p className="text-sm font-black text-white">Drowsiness Watch</p>
+                <p className="text-[11px] text-cyan-400/80 font-medium mt-1">EAR {"<"} 0.25 → ALERT!</p>
+                <p className="text-[10px] text-slate-400 mt-1">Webcam saves lives in real-time</p>
+              </div>
             </div>
-            <p className="text-[11px] font-bold text-white leading-tight">Drowsiness AI</p>
-            <p className="text-[9px] text-slate-500 mt-0.5">Webcam EAR detection saves lives</p>
-          </div>
-          <div className="bg-slate-950/60 backdrop-blur-sm border border-white/8 rounded-2xl p-3.5 text-center group hover:border-emerald-500/30 transition-all hover:-translate-y-1">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-emerald-500/20 transition-colors">
-              <Volume2 className="h-4 w-4 text-emerald-400" />
+            {/* Engine Sound Card */}
+            <div className="relative overflow-hidden rounded-2xl p-[1px] group" style={{background: 'linear-gradient(135deg, rgba(16,185,129,0.4), rgba(16,185,129,0.05), rgba(16,185,129,0.3))'}}>
+              <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-4 h-full relative overflow-hidden">
+                <div className="absolute -top-6 -right-6 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
+                <div className="text-3xl mb-2">🔊</div>
+                <p className="text-sm font-black text-white">Acoustic FFT</p>
+                <p className="text-[11px] text-emerald-400/80 font-medium mt-1">Engine knock? Bearing fail?</p>
+                <p className="text-[10px] text-slate-400 mt-1">Phone mic → frequency analysis</p>
+              </div>
             </div>
-            <p className="text-[11px] font-bold text-white leading-tight">Engine Sound FFT</p>
-            <p className="text-[9px] text-slate-500 mt-0.5">Phone mic detects faults acoustically</p>
-          </div>
-          <div className="bg-slate-950/60 backdrop-blur-sm border border-white/8 rounded-2xl p-3.5 text-center group hover:border-purple-500/30 transition-all hover:-translate-y-1">
-            <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-purple-500/20 transition-colors">
-              <BarChart3 className="h-4 w-4 text-purple-400" />
+            {/* Fleet Pattern Card */}
+            <div className="relative overflow-hidden rounded-2xl p-[1px] group" style={{background: 'linear-gradient(135deg, rgba(168,85,247,0.4), rgba(168,85,247,0.05), rgba(168,85,247,0.3))'}}>
+              <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-4 h-full relative overflow-hidden">
+                <div className="absolute -top-6 -right-6 w-20 h-20 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all duration-500"></div>
+                <div className="text-3xl mb-2">🧠</div>
+                <p className="text-sm font-black text-white">Fleet Brain</p>
+                <p className="text-[11px] text-purple-400/80 font-medium mt-1">3 trucks same fault = alert</p>
+                <p className="text-[10px] text-slate-400 mt-1">Cross-vehicle pattern detection</p>
+              </div>
             </div>
-            <p className="text-[11px] font-bold text-white leading-tight">Fleet Pattern AI</p>
-            <p className="text-[9px] text-slate-500 mt-0.5">Cross-vehicle breakdown correlation</p>
           </div>
         </div>
 
