@@ -27,6 +27,8 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>('');
   const [registrationMode, setRegistrationMode] = useState<boolean>(false);
+  const [isInspectionScheduled, setIsInspectionScheduled] = useState<boolean>(false);
+  const [isInspectionDismissed, setIsInspectionDismissed] = useState<boolean>(false);
   const [newVehicle, setNewVehicle] = useState({
     registration_number: '',
     make: 'Tata' as 'Tata' | 'Ashok Leyland' | 'Mahindra',
@@ -1513,7 +1515,8 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
           <div className="space-y-4">
             
             {/* Predictive AI Health Widget */}
-            <div className="glass dark:bg-slate-800/50 p-4 rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 relative overflow-hidden">
+              {!isInspectionDismissed && !isInspectionScheduled && (
+              <div className="glass dark:bg-slate-800/50 p-4 rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-2 opacity-10">
                 <Activity className="h-16 w-16" />
               </div>
@@ -1543,19 +1546,35 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                       })
                     });
                     if (res.ok) {
-                      alert('Inspection scheduled successfully! The fleet manager has been notified.');
-                      btn.parentElement?.parentElement?.remove();
-                    } else { throw new Error('fail'); }
+                        setIsInspectionScheduled(true);
+                        alert('Inspection scheduled successfully! The fleet manager has been notified.');
+                      } else { throw new Error('fail'); }
                   } catch (err) { alert('Error scheduling inspection: ' + (err.message || JSON.stringify(err)));
                     btn.disabled = false;
                     btn.textContent = originalText;
                   }
                 }} className="bg-amber-500 text-slate-950 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-amber-400 transition-colors disabled:opacity-50">Schedule Inspection</button>
-                <button onClick={(e) => (e.target as HTMLElement).parentElement?.parentElement?.remove()} className="glass dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-slate-700 transition-colors">Dismiss</button>
+                <button onClick={() => setIsInspectionDismissed(true)} className="glass dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-slate-700 transition-colors">Dismiss</button>
+                </div>
               </div>
-            </div>
+              )}
             
-            {/* Onboarding Diagnostic input box */}
+            {isInspectionScheduled && (
+                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 shadow-sm flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 bg-emerald-500 rounded-full flex items-center justify-center text-white">
+                      <Check className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-emerald-700 dark:text-emerald-500">Inspection Scheduled</h4>
+                      <p className="text-[10px] text-emerald-600 dark:text-emerald-400">The fleet manager has been notified and service is logged.</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setIsInspectionScheduled(false)} className="text-emerald-600 dark:text-emerald-500 hover:text-emerald-800 dark:hover:text-emerald-300 font-bold text-xs px-2">Hide</button>
+                </div>
+              )}
+              
+              {/* Onboarding Diagnostic input box */}
             <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-3.5">
               <h3 className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
                 <Sparkles className="h-3.5 w-3.5 text-amber-600 dark:text-amber-500 animate-pulse" /> Diagnose Issue

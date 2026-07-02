@@ -212,6 +212,9 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   const loadSosAlertsOnly = async () => {
     if (!user.org_id) return;
     try {
+      const schedRes = await fetch(`/api/scheduled-services?org_id=${user.org_id}`);
+      const schedData = await schedRes.json();
+      if (schedData.services) setScheduledServices(schedData.services);
       const res = await fetch(`/api/sos-alerts?org_id=${user.org_id}`);
       const data = await res.json();
       if (data.alerts) {
