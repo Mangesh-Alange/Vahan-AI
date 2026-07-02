@@ -4,13 +4,39 @@
       "id": "org_rajpath",
       "name": "Rajpath Roadways Logistics",
       "plan_tier": "pro",
-      "created_at": "2026-01-10T10:00:00Z"
+      "created_at": "2026-01-10T10:00:00Z",
+      "_id": "6a453740e3ab3e0780a66bcb"
     },
     {
       "id": "org_kedar",
       "name": "Kedar Inter-State Logistics",
       "plan_tier": "pro",
-      "created_at": "2026-02-15T12:00:00Z"
+      "created_at": "2026-02-15T12:00:00Z",
+      "_id": "6a453740e3ab3e0780a66bcc"
+    },
+    {
+      "id": "org_ceslh33",
+      "name": "Mangesh's Fleet",
+      "plan_tier": "free",
+      "created_at": "2026-07-01T15:52:02.035Z"
+    },
+    {
+      "id": "org_4q2kyg4",
+      "name": "Yamunanagar logistics",
+      "plan_tier": "free",
+      "created_at": "2026-07-01T17:41:17.559Z"
+    },
+    {
+      "id": "org_b4tidli",
+      "name": "OWNE-INV-4q2kyg4",
+      "plan_tier": "free",
+      "created_at": "2026-07-01T18:47:43.045Z"
+    },
+    {
+      "id": "org_dw2ji3m",
+      "name": "pccoer",
+      "plan_tier": "free",
+      "created_at": "2026-07-01T18:49:14.636Z"
     }
   ],
   "users": [
@@ -22,7 +48,30 @@
       "phone": "9876543210",
       "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
       "preferred_language": "en",
-      "created_at": "2026-01-11T09:00:00Z"
+      "created_at": "2026-01-11T09:00:00Z",
+      "_id": "6a453741e3ab3e0780a66bcd"
+    },
+    {
+      "id": "user_kedar_mgr",
+      "org_id": "org_kedar",
+      "role": "fleet_manager",
+      "name": "Suresh Kedar",
+      "phone": "9988776655",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "preferred_language": "en",
+      "created_at": "2026-02-16T09:30:00Z",
+      "_id": "6a453741e3ab3e0780a66bce"
+    },
+    {
+      "id": "driver_rajesh",
+      "org_id": "org_rajpath",
+      "role": "driver",
+      "name": "Rajesh Kumar",
+      "phone": "9123456780",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "preferred_language": "hi",
+      "created_at": "2026-01-12T08:00:00Z",
+      "_id": "6a453741e3ab3e0780a66bcf"
     },
     {
       "id": "driver_gurpreet",
@@ -32,7 +81,8 @@
       "phone": "9123456781",
       "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
       "preferred_language": "hi",
-      "created_at": "2026-01-15T08:30:00Z"
+      "created_at": "2026-01-15T08:30:00Z",
+      "_id": "6a453741e3ab3e0780a66bd0"
     },
     {
       "id": "driver_amit",
@@ -42,7 +92,8 @@
       "phone": "9123456782",
       "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
       "preferred_language": "hi",
-      "created_at": "2026-01-20T08:15:00Z"
+      "created_at": "2026-01-20T08:15:00Z",
+      "_id": "6a453741e3ab3e0780a66bd1"
     },
     {
       "id": "driver_sunil",
@@ -52,7 +103,8 @@
       "phone": "9123456783",
       "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
       "preferred_language": "hi",
-      "created_at": "2026-02-17T08:45:00Z"
+      "created_at": "2026-02-17T08:45:00Z",
+      "_id": "6a453741e3ab3e0780a66bd2"
     },
     {
       "id": "driver_harpreet",
@@ -62,7 +114,19 @@
       "phone": "9123456784",
       "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
       "preferred_language": "hi",
-      "created_at": "2026-02-20T08:00:00Z"
+      "created_at": "2026-02-20T08:00:00Z",
+      "_id": "6a453741e3ab3e0780a66bd3"
+    },
+    {
+      "id": "user_admin",
+      "org_id": null,
+      "role": "admin",
+      "name": "VahanAI Admin Support",
+      "phone": "9000000000",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "preferred_language": "en",
+      "created_at": "2026-01-01T00:00:00Z",
+      "_id": "6a453741e3ab3e0780a66bd4"
     },
     {
       "org_id": "org_ceslh33",
@@ -72,7 +136,8 @@
       "preferred_language": "hindi",
       "id": "user_pk1w9oz",
       "password_hash": "5e7ef6a5edfc297a246e6da95fd591f161d93b75c699d010c1bf5463a97bef45",
-      "created_at": "2026-07-01T15:52:02.035Z"
+      "created_at": "2026-07-01T15:52:02.035Z",
+      "_id": "6a4537a2e3ab3e0780a66bf7"
     },
     {
       "org_id": "org_ceslh33",
@@ -82,7 +147,78 @@
       "preferred_language": "hindi",
       "id": "user_ndm4xbq",
       "password_hash": "494d022492052a06f8f81949639a1d148c1051fa3d4e4688fbd96efe649cd382",
-      "created_at": "2026-07-01T15:54:50.236Z"
+      "created_at": "2026-07-01T15:54:50.236Z",
+      "_id": "6a45384ae3ab3e0780a66bf9"
+    },
+    {
+      "org_id": "org_4q2kyg4",
+      "role": "fleet_manager",
+      "name": "Owner1",
+      "phone": "123456789",
+      "preferred_language": "hindi",
+      "id": "user_b48ina3",
+      "password_hash": "43a0d17178a9d26c9e0fe9a74b0b45e38d32f27aed887a008a54bf6e033bf7b9",
+      "created_at": "2026-07-01T17:41:17.560Z"
+    },
+    {
+      "org_id": "org_4q2kyg4",
+      "role": "driver",
+      "name": "driver1",
+      "phone": "123456700",
+      "preferred_language": "hindi",
+      "id": "user_fvle50m",
+      "password_hash": "43a0d17178a9d26c9e0fe9a74b0b45e38d32f27aed887a008a54bf6e033bf7b9",
+      "created_at": "2026-07-01T18:26:03.527Z"
+    },
+    {
+      "org_id": "org_b4tidli",
+      "role": "fleet_manager",
+      "name": "driver2",
+      "phone": "123456778",
+      "preferred_language": "hindi",
+      "id": "user_4ef0zlc",
+      "password_hash": "da4b3ff1c6297947d1cc6041fdb4b1a44a76c80d7f4b637e5a76f3c3c12dacb5",
+      "created_at": "2026-07-01T18:47:43.056Z"
+    },
+    {
+      "org_id": "org_4q2kyg4",
+      "role": "driver",
+      "name": "driver2",
+      "phone": "123456766",
+      "preferred_language": "hindi",
+      "id": "user_tcu1wm4",
+      "password_hash": "da4b3ff1c6297947d1cc6041fdb4b1a44a76c80d7f4b637e5a76f3c3c12dacb5",
+      "created_at": "2026-07-01T18:48:15.913Z"
+    },
+    {
+      "org_id": "org_dw2ji3m",
+      "role": "fleet_manager",
+      "name": "owner3",
+      "phone": "123456466",
+      "preferred_language": "hindi",
+      "id": "user_grgruv4",
+      "password_hash": "da4b3ff1c6297947d1cc6041fdb4b1a44a76c80d7f4b637e5a76f3c3c12dacb5",
+      "created_at": "2026-07-01T18:49:14.636Z"
+    },
+    {
+      "org_id": "org_dw2ji3m",
+      "role": "driver",
+      "name": "test",
+      "phone": "000000000",
+      "preferred_language": "hindi",
+      "id": "user_1cgvj1z",
+      "password_hash": "da4b3ff1c6297947d1cc6041fdb4b1a44a76c80d7f4b637e5a76f3c3c12dacb5",
+      "created_at": "2026-07-01T19:47:09.494Z"
+    },
+    {
+      "org_id": "org_dw2ji3m",
+      "role": "driver",
+      "name": "test2",
+      "phone": "1234566",
+      "preferred_language": "hindi",
+      "id": "user_zysyobs",
+      "password_hash": "da4b3ff1c6297947d1cc6041fdb4b1a44a76c80d7f4b637e5a76f3c3c12dacb5",
+      "created_at": "2026-07-01T21:21:15.586Z"
     }
   ],
   "vehicles": [
@@ -95,7 +231,8 @@
       "year": 2023,
       "assigned_driver_id": "driver_rajesh",
       "mileage": 124500,
-      "last_service_date": "2026-05-10"
+      "last_service_date": "2026-05-10",
+      "_id": "6a453741e3ab3e0780a66bd5"
     },
     {
       "id": "veh_2",
@@ -106,7 +243,8 @@
       "year": 2024,
       "assigned_driver_id": "driver_gurpreet",
       "mileage": 86200,
-      "last_service_date": "2026-04-12"
+      "last_service_date": "2026-04-12",
+      "_id": "6a453741e3ab3e0780a66bd6"
     },
     {
       "id": "veh_3",
@@ -117,7 +255,8 @@
       "year": 2022,
       "assigned_driver_id": "driver_amit",
       "mileage": 154000,
-      "last_service_date": "2026-05-18"
+      "last_service_date": "2026-05-18",
+      "_id": "6a453741e3ab3e0780a66bd7"
     },
     {
       "id": "veh_4",
@@ -128,7 +267,8 @@
       "year": 2023,
       "assigned_driver_id": null,
       "mileage": 98000,
-      "last_service_date": "2026-05-02"
+      "last_service_date": "2026-05-02",
+      "_id": "6a453741e3ab3e0780a66bd8"
     },
     {
       "id": "veh_5",
@@ -139,7 +279,8 @@
       "year": 2021,
       "assigned_driver_id": null,
       "mileage": 210000,
-      "last_service_date": "2026-03-30"
+      "last_service_date": "2026-03-30",
+      "_id": "6a453741e3ab3e0780a66bd9"
     },
     {
       "id": "veh_6",
@@ -150,7 +291,8 @@
       "year": 2022,
       "assigned_driver_id": "driver_sunil",
       "mileage": 112000,
-      "last_service_date": "2026-05-15"
+      "last_service_date": "2026-05-15",
+      "_id": "6a453741e3ab3e0780a66bda"
     },
     {
       "id": "veh_7",
@@ -161,7 +303,8 @@
       "year": 2023,
       "assigned_driver_id": "driver_harpreet",
       "mileage": 94500,
-      "last_service_date": "2026-05-20"
+      "last_service_date": "2026-05-20",
+      "_id": "6a453741e3ab3e0780a66bdb"
     },
     {
       "id": "veh_8",
@@ -172,7 +315,8 @@
       "year": 2023,
       "assigned_driver_id": null,
       "mileage": 101000,
-      "last_service_date": "2026-04-05"
+      "last_service_date": "2026-04-05",
+      "_id": "6a453741e3ab3e0780a66bdc"
     },
     {
       "org_id": "org_ceslh33",
@@ -183,7 +327,19 @@
       "assigned_driver_id": "user_ndm4xbq",
       "mileage": 500,
       "last_service_date": "2026-07-01",
-      "id": "veh_icvnigx"
+      "id": "veh_icvnigx",
+      "_id": "6a453815e3ab3e0780a66bf8"
+    },
+    {
+      "org_id": "org_dw2ji3m",
+      "registration_number": "MH-14-XU-3455",
+      "make": "Tata",
+      "model": "Ashok Leyland",
+      "year": 2024,
+      "assigned_driver_id": "user_zysyobs",
+      "mileage": 50000,
+      "last_service_date": "2026-07-01",
+      "id": "veh_rlzmgy7"
     }
   ],
   "fault_reports": [
@@ -200,7 +356,8 @@
       "recommended_action": "Change front brake pads, replace caliper seal kits, bleed brake system.",
       "estimated_cost_range": "₹4,500 - ₹9,500",
       "synced_at": "2026-06-15T10:14:00Z",
-      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing brake failure symptom to Triage and Maintenance specialists.\"},\"DiagnosticAgent\":{\"log\":\"Matched symptom with knowledge base kb_02 (brake squealing and pedal vibration). High confidence.\"},\"TriageAgent\":{\"log\":\"Braking fluid pressure dropping. Setting severity to STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Estimated cost ₹4,500 - ₹9,500. Directing to Sanjay Gandhi Hub SC (sc_01).\"}}"
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing brake failure symptom to Triage and Maintenance specialists.\"},\"DiagnosticAgent\":{\"log\":\"Matched symptom with knowledge base kb_02 (brake squealing and pedal vibration). High confidence.\"},\"TriageAgent\":{\"log\":\"Braking fluid pressure dropping. Setting severity to STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Estimated cost ₹4,500 - ₹9,500. Directing to Sanjay Gandhi Hub SC (sc_01).\"}}",
+      "_id": "6a453741e3ab3e0780a66bdd"
     },
     {
       "id": "rep_hist_2",
@@ -215,7 +372,8 @@
       "recommended_action": "Tighten heat shield clamping bolts and inspect exhaust mounting rubber.",
       "estimated_cost_range": "₹800 - ₹1,800",
       "synced_at": "2026-06-20T14:45:00Z",
-      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Identified accessory rattle.\"},\"DiagnosticAgent\":{\"log\":\"Non-critical tapping. Matches kb_36 (exhaust rattling).\"},\"TriageAgent\":{\"log\":\"Safe to drive to dispatch point. Severity: CAUTION.\"},\"MaintenanceAgent\":{\"log\":\"Estimate ₹800. Simple bolt fastening.\"}}"
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Identified accessory rattle.\"},\"DiagnosticAgent\":{\"log\":\"Non-critical tapping. Matches kb_36 (exhaust rattling).\"},\"TriageAgent\":{\"log\":\"Safe to drive to dispatch point. Severity: CAUTION.\"},\"MaintenanceAgent\":{\"log\":\"Estimate ₹800. Simple bolt fastening.\"}}",
+      "_id": "6a453741e3ab3e0780a66bde"
     },
     {
       "id": "rep_hist_3",
@@ -230,7 +388,8 @@
       "recommended_action": "Do not drive. Check engine oil level using dipstick. If empty, inspect sump. Top up with 15W-40 truck oil immediately.",
       "estimated_cost_range": "₹6,000 - ₹12,000",
       "synced_at": "2026-06-22T08:30:00Z",
-      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing critical warning dashboard light.\"},\"DiagnosticAgent\":{\"log\":\"Engine running dry leads to catastrophic piston seizure. Matches kb_15 partially.\"},\"TriageAgent\":{\"log\":\"Absolute safety hazard. Severity: STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Sump gaskets and fresh oil required.\"}}"
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing critical warning dashboard light.\"},\"DiagnosticAgent\":{\"log\":\"Engine running dry leads to catastrophic piston seizure. Matches kb_15 partially.\"},\"TriageAgent\":{\"log\":\"Absolute safety hazard. Severity: STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Sump gaskets and fresh oil required.\"}}",
+      "_id": "6a453741e3ab3e0780a66bdf"
     },
     {
       "id": "rep_hist_4",
@@ -245,7 +404,8 @@
       "recommended_action": "Refill clutch fluid DOT-4 reservoir, inspect secondary hose lines, bleed master cylinder.",
       "estimated_cost_range": "₹2,500 - ₹5,500",
       "synced_at": "2026-06-25T11:20:00Z",
-      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Symptom mapped to clutch actuation hydraulic loop.\"},\"DiagnosticAgent\":{\"log\":\"Matches kb_06 (clutch master cylinder leak). Moderate confidence.\"},\"TriageAgent\":{\"log\":\"Vehicle can drive with rev-matching or cautious single-gear crawl. Severity: CAUTION.\"},\"MaintenanceAgent\":{\"log\":\"Estimate ₹2,500. Hydraulic seal repair.\"}}"
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Symptom mapped to clutch actuation hydraulic loop.\"},\"DiagnosticAgent\":{\"log\":\"Matches kb_06 (clutch master cylinder leak). Moderate confidence.\"},\"TriageAgent\":{\"log\":\"Vehicle can drive with rev-matching or cautious single-gear crawl. Severity: CAUTION.\"},\"MaintenanceAgent\":{\"log\":\"Estimate ₹2,500. Hydraulic seal repair.\"}}",
+      "_id": "6a453741e3ab3e0780a66be0"
     },
     {
       "id": "rep_hist_5",
@@ -260,7 +420,8 @@
       "recommended_action": "Perform wheel balancing and wheel alignment. Inspect front steel rims for oval deflection.",
       "estimated_cost_range": "₹1,200 - ₹2,800",
       "synced_at": "2026-06-28T16:10:00Z",
-      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing steering wheel instability.\"},\"DiagnosticAgent\":{\"log\":\"Matches kb_13 (front tire alignment/imbalance). High confidence.\"},\"TriageAgent\":{\"log\":\"Safe to drive at moderate speed. Severity: DRIVE.\"},\"MaintenanceAgent\":{\"log\":\"Wheel balancing. Directing to sc_09 (Vijayawada).\"}}"
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing steering wheel instability.\"},\"DiagnosticAgent\":{\"log\":\"Matches kb_13 (front tire alignment/imbalance). High confidence.\"},\"TriageAgent\":{\"log\":\"Safe to drive at moderate speed. Severity: DRIVE.\"},\"MaintenanceAgent\":{\"log\":\"Wheel balancing. Directing to sc_09 (Vijayawada).\"}}",
+      "_id": "6a453741e3ab3e0780a66be1"
     },
     {
       "id": "rep_pattern_1",
@@ -275,7 +436,8 @@
       "recommended_action": "Inspect fuel injector nozzles, flush the common rail fuel delivery system, replace fuel filter.",
       "estimated_cost_range": "₹9,000 - ₹20,000",
       "synced_at": "2026-06-29T10:00:00Z",
-      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Analyzing fuel rail pressure drop.\"},\"DiagnosticAgent\":{\"log\":\"Corresponds directly to common rail fuel injector blockage (kb_01).\"},\"TriageAgent\":{\"log\":\"Risk of engine cylinder damage. Severity: STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Common rail cleaning required. Estimate ₹12,000.\"}}"
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Analyzing fuel rail pressure drop.\"},\"DiagnosticAgent\":{\"log\":\"Corresponds directly to common rail fuel injector blockage (kb_01).\"},\"TriageAgent\":{\"log\":\"Risk of engine cylinder damage. Severity: STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Common rail cleaning required. Estimate ₹12,000.\"}}",
+      "_id": "6a453741e3ab3e0780a66be2"
     },
     {
       "id": "rep_pattern_2",
@@ -290,7 +452,8 @@
       "recommended_action": "Change fuel filter, perform injector nozzle cleaning, test fuel common rail pressure.",
       "estimated_cost_range": "₹8,500 - ₹18,000",
       "synced_at": "2026-06-29T15:30:00Z",
-      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing exhaust smoke anomaly.\"},\"DiagnosticAgent\":{\"log\":\"Matches kb_01 (injector clogging). High confidence.\"},\"TriageAgent\":{\"log\":\"Urgent. Severity: STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Injectors require testing on Bosch calibration bench.\"}}"
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing exhaust smoke anomaly.\"},\"DiagnosticAgent\":{\"log\":\"Matches kb_01 (injector clogging). High confidence.\"},\"TriageAgent\":{\"log\":\"Urgent. Severity: STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Injectors require testing on Bosch calibration bench.\"}}",
+      "_id": "6a453741e3ab3e0780a66be3"
     },
     {
       "vehicle_id": "veh_icvnigx",
@@ -305,52 +468,8 @@
       "estimated_cost_range": "₹2,500 - ₹12,000",
       "synced_at": "2026-07-01T16:00:29.744Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_05 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Coolant leak / radiator puncture. Cost estimate standard: ₹2,500 - ₹12,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
-      "id": "rep_xelzg3t"
-    },
-    {
-      "vehicle_id": "veh_icvnigx",
-      "driver_id": "user_ndm4xbq",
-      "timestamp": "2026-07-01T18:13:15.832Z",
-      "symptom_text_hindi": "meri gadi nahi chal rahi",
-      "acoustic_signal_class": "normal",
-      "severity": "caution",
-      "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
-      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
-      "estimated_cost_range": "N/A",
-      "synced_at": "2026-07-01T18:13:15.832Z",
-      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
-      "id": "rep_3sfnwpd",
-      "_id": "6a4558cc7e1abc6eb15dac83"
-    },
-    {
-      "vehicle_id": "veh_icvnigx",
-      "driver_id": "user_ndm4xbq",
-      "timestamp": "2026-07-01T18:17:22.065Z",
-      "symptom_text_hindi": "gadi nahi cahl rahi meri\n",
-      "acoustic_signal_class": "normal",
-      "severity": "caution",
-      "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
-      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
-      "estimated_cost_range": "N/A",
-      "synced_at": "2026-07-01T18:17:22.065Z",
-      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
-      "id": "rep_ddiufto",
-      "_id": "6a4559c47e1abc6eb15dac84"
-    },
-    {
-      "vehicle_id": "veh_icvnigx",
-      "driver_id": "user_ndm4xbq",
-      "timestamp": "2026-07-01T18:31:23.931Z",
-      "symptom_text_hindi": "where is my nearby service station\n",
-      "acoustic_signal_class": "normal",
-      "severity": "caution",
-      "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
-      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
-      "estimated_cost_range": "N/A",
-      "synced_at": "2026-07-01T18:31:23.931Z",
-      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
-      "id": "rep_nveoagd",
-      "_id": "6a455d787e1abc6eb15dac85"
+      "id": "rep_xelzg3t",
+      "_id": "6a4539a5e3ab3e0780a66bfa"
     }
   ],
   "fleet_alerts": [
@@ -363,7 +482,8 @@
         "rep_pattern_2"
       ],
       "created_at": "2026-06-29T16:00:00Z",
-      "resolved": true
+      "resolved": false,
+      "_id": "6a453741e3ab3e0780a66be4"
     }
   ],
   "service_centers": [
@@ -373,7 +493,8 @@
       "location": "Sanjay Gandhi National Transport Hub, Mumbai, MH",
       "vehicle_makes_supported": [
         "Tata"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66be5"
     },
     {
       "id": "sc_02",
@@ -381,7 +502,8 @@
       "location": "Okhla Industrial Area Phase-III, New Delhi, DL",
       "vehicle_makes_supported": [
         "Ashok Leyland"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66be6"
     },
     {
       "id": "sc_03",
@@ -389,7 +511,8 @@
       "location": "Sriperumbudur High Road, Chennai, TN",
       "vehicle_makes_supported": [
         "Mahindra"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66be7"
     },
     {
       "id": "sc_04",
@@ -397,7 +520,8 @@
       "location": "NH-44 Bypass, Shamshabad, Hyderabad, TS",
       "vehicle_makes_supported": [
         "Tata"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66be8"
     },
     {
       "id": "sc_05",
@@ -405,7 +529,8 @@
       "location": "NH-8, Kukas Industrial Area, Jaipur, RJ",
       "vehicle_makes_supported": [
         "Ashok Leyland"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66be9"
     },
     {
       "id": "sc_06",
@@ -413,7 +538,8 @@
       "location": "Tumkur Road, Yashwantpur, Bangalore, KA",
       "vehicle_makes_supported": [
         "Mahindra"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66bea"
     },
     {
       "id": "sc_07",
@@ -422,7 +548,8 @@
       "vehicle_makes_supported": [
         "Tata",
         "Ashok Leyland"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66beb"
     },
     {
       "id": "sc_08",
@@ -431,7 +558,8 @@
       "vehicle_makes_supported": [
         "Tata",
         "Ashok Leyland"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66bec"
     },
     {
       "id": "sc_09",
@@ -440,7 +568,8 @@
       "vehicle_makes_supported": [
         "Mahindra",
         "Tata"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66bed"
     },
     {
       "id": "sc_10",
@@ -451,7 +580,8 @@
         "Ashok Leyland",
         "Mahindra",
         "Other"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66bee"
     },
     {
       "id": "sc_11",
@@ -460,7 +590,8 @@
       "vehicle_makes_supported": [
         "Tata",
         "Ashok Leyland"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66bef"
     },
     {
       "id": "sc_12",
@@ -469,7 +600,8 @@
       "vehicle_makes_supported": [
         "Mahindra",
         "Ashok Leyland"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66bf0"
     },
     {
       "id": "sc_13",
@@ -480,7 +612,8 @@
         "Ashok Leyland",
         "Mahindra",
         "Other"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66bf1"
     },
     {
       "id": "sc_14",
@@ -489,7 +622,8 @@
       "vehicle_makes_supported": [
         "Ashok Leyland",
         "Tata"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66bf2"
     },
     {
       "id": "sc_15",
@@ -498,7 +632,8 @@
       "vehicle_makes_supported": [
         "Mahindra",
         "Tata"
-      ]
+      ],
+      "_id": "6a453741e3ab3e0780a66bf3"
     }
   ],
   "fatigue_events": [
@@ -508,7 +643,8 @@
       "timestamp": "2026-06-28T02:14:00Z",
       "ear_value": 0.18,
       "duration_seconds": 12,
-      "severity": "critical"
+      "severity": "critical",
+      "_id": "6a453741e3ab3e0780a66bf4"
     },
     {
       "id": "fe_2",
@@ -516,7 +652,8 @@
       "timestamp": "2026-06-28T04:20:00Z",
       "ear_value": 0.22,
       "duration_seconds": 5,
-      "severity": "caution"
+      "severity": "caution",
+      "_id": "6a453741e3ab3e0780a66bf5"
     },
     {
       "id": "fe_3",
@@ -524,25 +661,8 @@
       "timestamp": "2026-06-29T23:45:00Z",
       "ear_value": 0.15,
       "duration_seconds": 18,
-      "severity": "critical"
-    },
-    {
-      "driver_id": "user_ndm4xbq",
-      "timestamp": "2026-07-01T18:10:00.224Z",
-      "ear_value": 0.20400000000000001,
-      "duration_seconds": 6,
       "severity": "critical",
-      "id": "fe_yaszmex",
-      "_id": "6a4557f87e1abc6eb15dac81"
-    },
-    {
-      "driver_id": "user_ndm4xbq",
-      "timestamp": "2026-07-01T18:10:06.954Z",
-      "ear_value": 0.20587569121475022,
-      "duration_seconds": 6,
-      "severity": "critical",
-      "id": "fe_jf29d0y",
-      "_id": "6a4557fe7e1abc6eb15dac82"
+      "_id": "6a453741e3ab3e0780a66bf6"
     }
   ]
 }
