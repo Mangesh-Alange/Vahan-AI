@@ -311,18 +311,19 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
     if (!user.org_id) return;
     setIsRefreshing(true);
     try {
-      const [vRes, dRes, rRes, aRes, wRes, sRes, sosRes] = await Promise.all([
+      const [vRes, dRes, rRes, aRes, wRes, sRes, sosRes, schedRes] = await Promise.all([
         fetch(`/api/vehicles?org_id=${user.org_id}`),
         fetch(`/api/drivers?org_id=${user.org_id}`),
         fetch(`/api/fault-reports?org_id=${user.org_id}`),
         fetch(`/api/fleet-alerts?org_id=${user.org_id}`),
         fetch('/api/service-centers'),
         fetch(`/api/fatigue-events?org_id=${user.org_id}`),
-        fetch(`/api/sos-alerts?org_id=${user.org_id}`)
+        fetch(`/api/sos-alerts?org_id=${user.org_id}`),
+        fetch(`/api/scheduled-services?org_id=${user.org_id}`)
       ]);
 
-      const [vData, dData, rData, aData, wData, sData, sosData] = await Promise.all([
-        vRes.json(), dRes.json(), rRes.json(), aRes.json(), wRes.json(), sRes.json(), sosRes.json()
+      const [vData, dData, rData, aData, wData, sData, sosData, schedData] = await Promise.all([
+        vRes.json(), dRes.json(), rRes.json(), aRes.json(), wRes.json(), sRes.json(), sosRes.json(), schedRes.json()
       ]);
 
       if (vData.vehicles) setVehicles(vData.vehicles);
@@ -330,7 +331,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
       if (rData.reports) setReports(rData.reports);
       if (aData.alerts) setAlerts(aData.alerts);
       if (wData.centers) setWorkshops(wData.centers);
-      if (servData && servData.services) setScheduledServices(servData.services);
+      if (schedData.services) setScheduledServices(schedData.services);
       if (sData.events) {
         setSafetyLogs(sData.events);
         // Initialize processed set with existing IDs so only NEW ones trigger the alarm!
@@ -516,6 +517,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
 
   // Notification badges
   const activeAlertsCount = alerts.filter(a => !a.resolved).length;
+  const resolvedAlertsCount = alerts.filter(a => a.resolved).length;
   const criticalReportsCount = reports.filter(r => r.severity === 'stop_immediately').length;
 
   // Filter reports
@@ -951,7 +953,10 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                   </div>
                   <div>
                     <span className="text-[10px] sm:text-xs text-slate-400 font-semibold block uppercase leading-tight">Active Patterns</span>
-                    <span className="text-lg sm:text-2xl font-black text-red-600">{activeAlertsCount} Unresolved</span>
+                    <div className="flex items-baseline gap-1.5 mt-0.5">
+                      <span className="text-lg sm:text-2xl font-black text-red-600 leading-none">{activeAlertsCount} <span className="text-sm">Unresolved</span></span>
+                      {resolvedAlertsCount > 0 && <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">{resolvedAlertsCount} Resolved</span>}
+                    </div>
                   </div>
                 </div>
 
@@ -1035,6 +1040,31 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
                   </div>
                 </div>
               </div>
+
+
+              {/* Scheduled Services Widget */}
+              {scheduledServices.length > 0 && (
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-5 shadow-sm mt-6 mb-6">
+                  <h3 className="text-sm font-bold text-amber-700 dark:text-amber-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <Wrench className="h-4.5 w-4.5" /> Scheduled Predictive Maintenance
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {scheduledServices.map((svc, i) => (
+                      <div key={i} className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                        <div>
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="text-xs font-black bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded text-slate-800 dark:text-slate-200">{svc.vehicle_id}</span>
+                            <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full uppercase">Upcoming</span>
+                          </div>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium mb-1 line-clamp-2">{svc.reason}</p>
+                          <p className="text-[10px] text-slate-500 font-mono">{new Date(svc.scheduled_date).toLocaleString()}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
 
               {/* Dynamic Grid: Recent Faults + Low EAR warnings */}
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
