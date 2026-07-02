@@ -76,6 +76,19 @@ export interface FatigueEvent {
   severity: "caution" | "critical";
 }
 
+export interface SosAlert {
+  id: string;
+  org_id: string;
+  driver_id: string;
+  driver_name: string;
+  truck_number: string;
+  current_route: string;
+  latitude: number;
+  longitude: number;
+  timestamp: string;
+  status: "SOS" | "RESOLVED";
+}
+
 interface DatabaseSchema {
   organizations: Organization[];
   users: User[];
@@ -84,6 +97,7 @@ interface DatabaseSchema {
   fleet_alerts: FleetAlert[];
   service_centers: ServiceCenter[];
   fatigue_events: FatigueEvent[];
+  sos_alerts: SosAlert[];
 }
 
 const DB_DIR = path.resolve(process.cwd(), 'data');
@@ -108,7 +122,8 @@ export class Database {
       fault_reports: [],
       fleet_alerts: [],
       service_centers: [],
-      fatigue_events: []
+      fatigue_events: [],
+      sos_alerts: []
     };
     this.init();
   }
@@ -148,7 +163,7 @@ export class Database {
     if (!this.mongoDb) return;
 
     try {
-      const collections = ['organizations', 'users', 'vehicles', 'fault_reports', 'fleet_alerts', 'service_centers', 'fatigue_events'];
+      const collections = ['organizations', 'users', 'vehicles', 'fault_reports', 'fleet_alerts', 'service_centers', 'fatigue_events', 'sos_alerts'];
       const userCount = await this.mongoDb.collection('users').countDocuments();
       
       if (userCount === 0) {
@@ -460,7 +475,8 @@ export class Database {
       fault_reports: mockReports,
       fleet_alerts,
       service_centers,
-      fatigue_events
+      fatigue_events,
+      sos_alerts: []
     };
 
     this.save();
@@ -678,6 +694,38 @@ export class Database {
       }
     }
     this.save();
+  }
+
+  // SOS Alerts API
+  public getSosAlerts(orgId: string): SosAlert[] {
+    if (!this.data.sos_alerts) {
+      this.data.sos_alerts = [];
+    }
+    return this.data.sos_alerts.filter(a => a.org_id === orgId);
+  }
+
+  public addSosAlert(alert: Omit<SosAlert, "id">): SosAlert {
+    const id = "sos_" + Math.random().toString(36).substring(2, 9);
+    const newAlert = { ...alert, id };
+    if (!this.data.sos_alerts) {
+      this.data.sos_alerts = [];
+    }
+    this.data.sos_alerts.push(newAlert);
+    this.save();
+    this.asyncWrite('sos_alerts', 'insert', undefined, newAlert);
+    return newAlert;
+  }
+
+  public resolveSosAlert(id: string): boolean {
+    if (!this.data.sos_alerts) {
+      this.data.sos_alerts = [];
+    }
+    const alert = this.data.sos_alerts.find(a => a.id === id);
+    if (!alert) return false;
+    alert.status = "RESOLVED";
+    this.save();
+    this.asyncWrite('sos_alerts', 'update', { id }, { status: "RESOLVED" });
+    return true;
   }
 }
 

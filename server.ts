@@ -836,6 +836,40 @@ app.post('/api/whatsapp/webhook', async (req, res) => {
 });
 
 // -----------------------------------------------------
+// 9.5. EMERGENCY SOS ENDPOINTS
+// -----------------------------------------------------
+app.get('/api/sos-alerts', (req, res) => {
+  const { org_id } = req.query;
+  if (!org_id) return res.status(400).json({ error: "org_id is required." });
+  res.json({ alerts: db.getSosAlerts(org_id as string) });
+});
+
+app.post('/api/sos-alerts', (req, res) => {
+  const { org_id, driver_id, driver_name, truck_number, current_route, latitude, longitude, timestamp, status } = req.body;
+  if (!org_id || !driver_id || !driver_name || !truck_number) {
+    return res.status(400).json({ error: "Missing required parameters." });
+  }
+  const newAlert = db.addSosAlert({
+    org_id,
+    driver_id,
+    driver_name,
+    truck_number,
+    current_route: current_route || "Unknown Route",
+    latitude: parseFloat(latitude) || 0,
+    longitude: parseFloat(longitude) || 0,
+    timestamp: timestamp || new Date().toISOString(),
+    status: status || "SOS"
+  });
+  res.json({ alert: newAlert });
+});
+
+app.post('/api/sos-alerts/:id/resolve', (req, res) => {
+  const resolved = db.resolveSosAlert(req.params.id);
+  if (!resolved) return res.status(404).json({ error: "SOS alert not found." });
+  res.json({ success: true });
+});
+
+// -----------------------------------------------------
 // 10. VITE MIDDLEWARE & STATIC SERVING
 // -----------------------------------------------------
 async function startServer() {

@@ -157,6 +157,72 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   const [chatInput, setChatInput] = useState<string>('');
   const [isSendingToCopilot, setIsSendingToCopilot] = useState<boolean>(false);
 
+  // SOS State
+  const [isSendingSos, setIsSendingSos] = useState<boolean>(false);
+  const [sosSuccessMessage, setSosSuccessMessage] = useState<string>('');
+
+  const handleSOS = async () => {
+    const confirmMessage = "⚠️ क्या आप आपातकालीन स्थिति (SOS) घोषित करना चाहते हैं? इससे फ्लीट मैनेजर को सूचित किया जाएगा।\n\n(Do you want to declare an emergency? This will notify your Fleet Manager.)";
+    if (!window.confirm(confirmMessage)) {
+      return;
+    }
+
+    setIsSendingSos(true);
+    setSosSuccessMessage('');
+
+    const sendSosPayload = async (lat: number, lng: number) => {
+      try {
+        const activeVehicle = vehicles.find(v => v.id === selectedVehicleId);
+        const truckNumber = activeVehicle ? activeVehicle.registration_number : "MH-12-UNKNOWN";
+        const currentRoute = "NH-48, Pune Hwy"; // Default current route
+
+        const res = await fetch('/api/sos-alerts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            org_id: user.org_id,
+            driver_id: user.id,
+            driver_name: user.name,
+            truck_number: truckNumber,
+            current_route: currentRoute,
+            latitude: lat,
+            longitude: lng,
+            timestamp: new Date().toISOString(),
+            status: "SOS"
+          })
+        });
+
+        if (res.ok) {
+          setSosSuccessMessage("🚨 फ्लीट मैनेजर को सूचित कर दिया गया है! सहायता जल्द आ रही है। (Fleet Manager notified!)");
+          setTimeout(() => setSosSuccessMessage(''), 5000);
+        } else {
+          alert("Failed to send SOS. Please check your internet connection.");
+        }
+      } catch (err) {
+        console.error("SOS call failed", err);
+        alert("Failed to send SOS due to connection error.");
+      } finally {
+        setIsSendingSos(false);
+      }
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          sendSosPayload(position.coords.latitude, position.coords.longitude);
+        },
+        (error) => {
+          console.warn("Geolocation failed. Sending with default coordinates.", error);
+          sendSosPayload(19.0760, 72.8777); // Default fallback (Mumbai highway coordinates)
+        },
+        { timeout: 8000 }
+      );
+    } else {
+      console.warn("Geolocation not supported. Sending with default coordinates.");
+      sendSosPayload(19.0760, 72.8777);
+    }
+  };
+
   // Demo scenarios
   const demoScenarios = [
     { title: "सफ़ेद धुआं (White Smoke)", text: "Exhaust se bohot tez safed dhua nikal raha hai jisme mithi sweet smell hai", desc: "Engine burning coolant", sound: "normal" as const },
@@ -1358,6 +1424,41 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
               {registrationMode ? "Cancel" : "Change"}
             </button>
           </div>
+
+          {/* Emergency SOS Button Card */}
+          <div className="bg-red-500/10 dark:bg-red-500/5 border border-red-500/20 dark:border-red-500/10 rounded-3xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="h-10 w-10 rounded-2xl bg-red-600 text-white flex items-center justify-center shrink-0 animate-pulse">
+                <AlertOctagon className="h-5.5 w-5.5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-black text-red-600 dark:text-red-400">Emergency SOS</h4>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">In danger or broke down? Notify Fleet Manager instantly.</p>
+              </div>
+            </div>
+            <button 
+              onClick={handleSOS}
+              disabled={isSendingSos}
+              className={`w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-xs font-black px-5 py-3 rounded-2xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 ${isSendingSos ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <span>🆘 Send SOS Alert</span>
+            </button>
+          </div>
+
+          {/* SOS Success Message */}
+          <AnimatePresence>
+            {sosSuccessMessage && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-2xl p-3 text-xs font-bold text-emerald-800 dark:text-emerald-400 flex items-center gap-2 mt-2 shadow-sm"
+              >
+                <Check className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                <span>{sosSuccessMessage}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Minimalist Registration Form */}
           {registrationMode && (

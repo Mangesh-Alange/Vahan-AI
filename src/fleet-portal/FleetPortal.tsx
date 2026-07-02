@@ -8,7 +8,7 @@ import {
   Trash2, Mail, Link, AlertOctagon, Eye, MapPin, ChevronRight, FileText, Search, 
   ShieldAlert, Settings, Info, Check, Calendar, Sun, Moon
 } from 'lucide-react';
-import { User, Vehicle, FaultReport, FleetAlert, ServiceCenter, FatigueEvent } from '../types.js';
+import { User, Vehicle, FaultReport, FleetAlert, ServiceCenter, FatigueEvent, SosAlert } from '../types.js';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface FleetPortalProps {
@@ -45,6 +45,60 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   const [activeFatigueAlerts, setActiveFatigueAlerts] = useState<FatigueEvent[]>([]);
   // Store processed fatigue alert IDs so we don't trigger alerts multiple times
   const [processedFatigueAlertIds, setProcessedFatigueAlertIds] = useState<Set<string>>(new Set());
+
+  // SOS Alert States
+  const [sosAlerts, setSosAlerts] = useState<SosAlert[]>([]);
+  const [activeSosAlert, setActiveSosAlert] = useState<SosAlert | null>(null);
+  const [processedSosAlertIds, setProcessedSosAlertIds] = useState<Set<string>>(new Set());
+
+  // Refs for SOS siren alarm audio
+  const sosAlarmContextRef = React.useRef<AudioContext | null>(null);
+  const sosAlarmIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const startSosAlarm = () => {
+    if (sosAlarmIntervalRef.current) return;
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      sosAlarmContextRef.current = ctx;
+
+      let toggle = false;
+      sosAlarmIntervalRef.current = setInterval(() => {
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(toggle ? 700 : 1000, ctx.currentTime);
+        gain.gain.setValueAtTime(0.5, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.45);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.5);
+        toggle = !toggle;
+      }, 450);
+    } catch (e) {
+      console.error("Failed to play SOS siren", e);
+    }
+  };
+
+  const stopSosAlarm = () => {
+    if (sosAlarmIntervalRef.current) {
+      clearInterval(sosAlarmIntervalRef.current);
+      sosAlarmIntervalRef.current = null;
+    }
+    if (sosAlarmContextRef.current) {
+      try {
+        sosAlarmContextRef.current.close();
+      } catch (e) {}
+      sosAlarmContextRef.current = null;
+    }
+  };
 
   // Refs to manage the live portal siren audio and recurring loop
   const portalAlarmContextRef = React.useRef<AudioContext | null>(null);
@@ -154,6 +208,78 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
     };
   }, [user, processedFatigueAlertIds]);
 
+  const loadSosAlertsOnly = async () => {
+    if (!user.org_id) return;
+    try {
+      const res = await fetch(`/api/sos-alerts?org_id=${user.org_id}`);
+      const data = await res.json();
+      if (data.alerts) {
+        setSosAlerts(data.alerts);
+
+        // Find if there is any active SOS (status === "SOS")
+        const active = data.alerts.find((a: SosAlert) => a.status === 'SOS');
+        if (active) {
+          setActiveSosAlert(active);
+          startSosAlarm();
+
+          // Fire browser notification if not processed yet
+          if (!processedSosAlertIds.has(active.id)) {
+            if (Notification.permission === 'granted') {
+              new Notification("🚨 EMERGENCY SOS ALERT!", {
+                body: `Driver ${active.driver_name} in truck ${active.truck_number} needs urgent help!`,
+                icon: '/favicon.ico'
+              });
+            }
+            setProcessedSosAlertIds(prev => new Set([...prev, active.id]));
+          }
+        } else {
+          setActiveSosAlert(null);
+          stopSosAlarm();
+        }
+      }
+    } catch (e) {
+      console.error("Failed to poll SOS alerts.", e);
+    }
+  };
+
+  const handleResolveSos = async (alertId: string) => {
+    try {
+      const res = await fetch(`/api/sos-alerts/${alertId}/resolve`, {
+        method: 'POST'
+      });
+      if (res.ok) {
+        setActiveSosAlert(null);
+        stopSosAlarm();
+        setSosAlerts(prev => prev.map(a => a.id === alertId ? { ...a, status: "RESOLVED" } : a));
+      } else {
+        alert("Failed to resolve SOS alert.");
+      }
+    } catch (err) {
+      console.error("Error resolving SOS", err);
+      alert("Error resolving SOS alert due to connection issue.");
+    }
+  };
+
+  // Request browser notification permissions on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+  }, []);
+
+  // Poll SOS alerts every 3 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      loadSosAlertsOnly();
+    }, 3000);
+    return () => {
+      clearInterval(timer);
+      stopSosAlarm();
+    };
+  }, [user, processedSosAlertIds]);
+
   // Filters & Selected Items
   const [severityFilter, setSeverityFilter] = useState<string>('all');
   const [vehicleSearch, setVehicleSearch] = useState<string>('');
@@ -184,17 +310,18 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
     if (!user.org_id) return;
     setIsRefreshing(true);
     try {
-      const [vRes, dRes, rRes, aRes, wRes, sRes] = await Promise.all([
+      const [vRes, dRes, rRes, aRes, wRes, sRes, sosRes] = await Promise.all([
         fetch(`/api/vehicles?org_id=${user.org_id}`),
         fetch(`/api/drivers?org_id=${user.org_id}`),
         fetch(`/api/fault-reports?org_id=${user.org_id}`),
         fetch(`/api/fleet-alerts?org_id=${user.org_id}`),
         fetch('/api/service-centers'),
-        fetch(`/api/fatigue-events?org_id=${user.org_id}`)
+        fetch(`/api/fatigue-events?org_id=${user.org_id}`),
+        fetch(`/api/sos-alerts?org_id=${user.org_id}`)
       ]);
 
-      const [vData, dData, rData, aData, wData, sData] = await Promise.all([
-        vRes.json(), dRes.json(), rRes.json(), aRes.json(), wRes.json(), sRes.json()
+      const [vData, dData, rData, aData, wData, sData, sosData] = await Promise.all([
+        vRes.json(), dRes.json(), rRes.json(), aRes.json(), wRes.json(), sRes.json(), sosRes.json()
       ]);
 
       if (vData.vehicles) setVehicles(vData.vehicles);
@@ -206,6 +333,15 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
         setSafetyLogs(sData.events);
         // Initialize processed set with existing IDs so only NEW ones trigger the alarm!
         setProcessedFatigueAlertIds(new Set(sData.events.map((e: FatigueEvent) => e.id)));
+      }
+      if (sosData.alerts) {
+        setSosAlerts(sosData.alerts);
+        const active = sosData.alerts.find((a: SosAlert) => a.status === 'SOS');
+        if (active) {
+          setActiveSosAlert(active);
+          startSosAlarm();
+          setProcessedSosAlertIds(new Set(sosData.alerts.map((a: SosAlert) => a.id)));
+        }
       }
 
     } catch (err) {
@@ -446,6 +582,78 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
               >
                 💬 WhatsApp Warning
               </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Real-time Emergency SOS Alert Overlay Panel */}
+      <AnimatePresence>
+        {activeSosAlert && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-[#D32F2F] text-white flex flex-col items-center justify-center p-6 text-center animate-pulse"
+            style={{ animationDuration: '3s' }}
+          >
+            <div className="absolute inset-0 bg-red-900/10 pointer-events-none animate-ping" style={{ animationDuration: '1.5s' }} />
+
+            <div className="max-w-2xl w-full bg-red-950/90 backdrop-blur-md border border-red-500/30 p-8 rounded-3xl shadow-2xl flex flex-col items-center z-10 space-y-6">
+              <div className="p-4 bg-white rounded-full text-[#D32F2F] animate-bounce shadow-xl">
+                <AlertOctagon className="h-16 w-16" />
+              </div>
+
+              <div className="space-y-2">
+                <h2 className="text-3xl sm:text-4xl font-black tracking-wider text-yellow-400 uppercase">
+                  🚨 YOUR DRIVER NEEDS URGENT HELP!
+                </h2>
+                <span className="inline-block bg-white text-[#D32F2F] text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-widest shadow-md">
+                  ACTIVE EMERGENCY
+                </span>
+              </div>
+
+              <div className="w-full border-t border-b border-red-500/20 py-4 grid grid-cols-2 gap-4 text-left text-sm">
+                <div>
+                  <p className="text-[10px] text-red-300 font-bold uppercase">Driver Name</p>
+                  <p className="font-extrabold text-lg text-white">{activeSosAlert.driver_name}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-red-300 font-bold uppercase">Truck Registration</p>
+                  <p className="font-mono font-extrabold text-lg text-white">{activeSosAlert.truck_number}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-red-300 font-bold uppercase">Current Route</p>
+                  <p className="font-extrabold text-white">{activeSosAlert.current_route}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-red-300 font-bold uppercase">Time of Alert</p>
+                  <p className="font-extrabold text-white">{new Date(activeSosAlert.timestamp).toLocaleTimeString()}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-[10px] text-red-300 font-bold uppercase">GPS Coordinates</p>
+                  <p className="font-mono text-xs font-extrabold text-white">
+                    Lat: {activeSosAlert.latitude.toFixed(6)}, Lng: {activeSosAlert.longitude.toFixed(6)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <a
+                  href={`https://www.google.com/maps?q=${activeSosAlert.latitude},${activeSosAlert.longitude}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 bg-white hover:bg-slate-100 text-[#D32F2F] font-black py-4 rounded-2xl text-sm uppercase tracking-wider shadow-lg transition-colors flex items-center justify-center gap-2 animate-none"
+                >
+                  <span>🗺 Open in Google Maps</span>
+                </a>
+                <button
+                  onClick={() => handleResolveSos(activeSosAlert.id)}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 rounded-2xl text-sm uppercase tracking-wider shadow-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  <span>✅ Mark as Resolved</span>
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

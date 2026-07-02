@@ -69,3 +69,17 @@ export interface FatigueEvent {
   driver_name?: string;
   vehicle_reg?: string;
 }
+
+export interface SosAlert {
+  id: string;
+  org_id: string;
+  driver_id: string;
+  driver_name: string;
+  truck_number: string;
+  current_route: string;
+  latitude: number;
+  longitude: number;
+  timestamp: string;
+  status: "SOS" | "RESOLVED";
+}
+

@@ -37,6 +37,12 @@
       "name": "pccoer",
       "plan_tier": "free",
       "created_at": "2026-07-01T18:49:14.636Z"
+    },
+    {
+      "id": "org_b5nt8m9",
+      "name": "Ilabad roadways",
+      "plan_tier": "free",
+      "created_at": "2026-07-02T07:03:54.733Z"
     }
   ],
   "users": [
@@ -219,6 +225,36 @@
       "id": "user_zysyobs",
       "password_hash": "da4b3ff1c6297947d1cc6041fdb4b1a44a76c80d7f4b637e5a76f3c3c12dacb5",
       "created_at": "2026-07-01T21:21:15.586Z"
+    },
+    {
+      "org_id": "org_b5nt8m9",
+      "role": "fleet_manager",
+      "name": "Sam",
+      "phone": "123212321",
+      "preferred_language": "hindi",
+      "id": "user_2a6dunb",
+      "password_hash": "9a900403ac313ba27a1bc81f0932652b8020dac92c234d98fa0b06bf0040ecfd",
+      "created_at": "2026-07-02T07:03:54.733Z"
+    },
+    {
+      "org_id": "org_b5nt8m9",
+      "role": "driver",
+      "name": "Rabbit ",
+      "phone": "123654",
+      "preferred_language": "hindi",
+      "id": "user_lq5315h",
+      "password_hash": "9a900403ac313ba27a1bc81f0932652b8020dac92c234d98fa0b06bf0040ecfd",
+      "created_at": "2026-07-02T07:04:56.696Z"
+    },
+    {
+      "org_id": "org_b5nt8m9",
+      "role": "driver",
+      "name": "Rabbit",
+      "phone": "123653",
+      "preferred_language": "hindi",
+      "id": "user_qa3htxq",
+      "password_hash": "9a900403ac313ba27a1bc81f0932652b8020dac92c234d98fa0b06bf0040ecfd",
+      "created_at": "2026-07-02T07:25:21.561Z"
     }
   ],
   "vehicles": [
@@ -678,6 +714,44 @@
       "duration_seconds": 18,
       "severity": "critical",
       "_id": "6a453741e3ab3e0780a66bf6"
+    }
+  ],
+  "sos_alerts": [
+    {
+      "org_id": "org_rajpath",
+      "driver_id": "driver_rajesh",
+      "driver_name": "Rajesh Kumar",
+      "truck_number": "MH-12-QW-5678",
+      "current_route": "NH-48",
+      "latitude": 19.076,
+      "longitude": 72.8777,
+      "timestamp": "2026-07-02T07:24:15.634Z",
+      "status": "SOS",
+      "id": "sos_00trp83"
+    },
+    {
+      "org_id": "org_b5nt8m9",
+      "driver_id": "user_qa3htxq",
+      "driver_name": "Rabbit",
+      "truck_number": "MH-12-UNKNOWN",
+      "current_route": "NH-48, Pune Hwy",
+      "latitude": 18.664476,
+      "longitude": 73.775742,
+      "timestamp": "2026-07-02T07:25:25.908Z",
+      "status": "RESOLVED",
+      "id": "sos_8jkwaxs"
+    },
+    {
+      "org_id": "org_b5nt8m9",
+      "driver_id": "user_qa3htxq",
+      "driver_name": "Rabbit",
+      "truck_number": "MH-12-UNKNOWN",
+      "current_route": "NH-48, Pune Hwy",
+      "latitude": 18.664476,
+      "longitude": 73.775742,
+      "timestamp": "2026-07-02T07:26:22.166Z",
+      "status": "RESOLVED",
+      "id": "sos_t28z6t2"
     }
   ]
 }
