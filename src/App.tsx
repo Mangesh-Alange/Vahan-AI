@@ -202,8 +202,21 @@ export default function App() {
       </div>
 
       {/* Brand & Concept Introduction Left Panel */}
-      <div className="flex-1 p-8 md:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/5 z-10 relative">
-        <div className="space-y-6 max-w-lg">
+      <div className="flex-1 p-8 md:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/5 z-10 relative overflow-hidden">
+        
+        {/* Video Background Layer */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+          <iframe
+            src="https://www.youtube.com/embed/f-o0b68YxGk?autoplay=1&mute=1&loop=1&playlist=f-o0b68YxGk&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
+            title="Tata Trucks Background"
+            className="w-[100vw] h-[100vh] min-w-[200%] min-h-[200%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.22] pointer-events-none scale-[1.3] aspect-video object-cover"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          ></iframe>
+          <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[1px]"></div>
+        </div>
+
+        <div className="space-y-6 max-w-lg relative z-10">
           <div className="bg-amber-500 text-slate-950 px-4 py-2 rounded-xl font-black w-fit text-xl flex items-center gap-2 shadow-lg shadow-amber-500/10">
             <Truck className="h-6 w-6" />
             VahanAI
@@ -231,7 +244,7 @@ export default function App() {
         </div>
 
         {/* Footnote branding */}
-        <div className="mt-12 text-[11px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="mt-12 text-[11px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-2 relative z-10">
           <div className="flex items-center gap-4">
             <span>© 2027 VahanAI Inc.</span>
             <span>•</span>
