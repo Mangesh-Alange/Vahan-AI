@@ -11,12 +11,6 @@
       "name": "Kedar Inter-State Logistics",
       "plan_tier": "pro",
       "created_at": "2026-02-15T12:00:00Z"
-    },
-    {
-      "id": "org_h5kip75",
-      "name": "OWNE-INV-4q2kyg4",
-      "plan_tier": "free",
-      "created_at": "2026-07-02T13:48:45.121Z"
     }
   ],
   "users": [
@@ -678,8 +672,7 @@
       "ear_value": 0.20400000000000001,
       "duration_seconds": 6,
       "severity": "critical",
-      "id": "fe_gunoej5",
-      "_id": "6a466bbd31f00d7cea7aeea9"
+      "id": "fe_gunoej5"
     },
     {
       "driver_id": "user_ndm4xbq",
@@ -687,8 +680,7 @@
       "ear_value": 0.20400000000000001,
       "duration_seconds": 6,
       "severity": "critical",
-      "id": "fe_ricvpef",
-      "_id": "6a466bcf31f00d7cea7aeeaa"
+      "id": "fe_ricvpef"
     }
   ],
   "sos_alerts": [
@@ -702,8 +694,7 @@
       "longitude": 73.96103020708796,
       "timestamp": "2026-07-02T13:45:17.915Z",
       "status": "RESOLVED",
-      "id": "sos_pcnyihz",
-      "_id": "6a466b6d31f00d7cea7aeea7"
+      "id": "sos_pcnyihz"
     },
     {
       "org_id": "org_ceslh33",
@@ -715,8 +706,7 @@
       "longitude": 73.96103020708796,
       "timestamp": "2026-07-02T13:45:19.340Z",
       "status": "RESOLVED",
-      "id": "sos_xm93hui",
-      "_id": "6a466b6f31f00d7cea7aeea8"
+      "id": "sos_xm93hui"
     },
     {
       "org_id": "org_ceslh33",
@@ -728,8 +718,7 @@
       "longitude": 73.961125899529,
       "timestamp": "2026-07-02T13:47:15.641Z",
       "status": "RESOLVED",
-      "id": "sos_wz89hbs",
-      "_id": "6a466be331f00d7cea7aeeab"
+      "id": "sos_wz89hbs"
     },
     {
       "org_id": "org_ceslh33",
@@ -741,8 +730,38 @@
       "longitude": 73.961125899529,
       "timestamp": "2026-07-02T13:47:17.436Z",
       "status": "RESOLVED",
-      "id": "sos_gjenlgb",
-      "_id": "6a466be531f00d7cea7aeeac"
+      "id": "sos_gjenlgb"
+    }
+  ],
+  "scheduled_services": [
+    {
+      "org_id": "org_rajpath",
+      "vehicle_id": "MH-12-YK-3561",
+      "driver_id": "u_driver1",
+      "reason": "Test",
+      "scheduled_date": "2026-07-02T14:26:53.435Z",
+      "id": "svc_1783002413650"
+    },
+    {
+      "org_id": "org_solo",
+      "vehicle_id": "MH-12-AB-1234",
+      "driver_id": "u_driver1",
+      "reason": "Test",
+      "scheduled_date": "2026-07-02T14:27:01.502Z",
+      "id": "svc_1783002421559"
+    },
+    {
+      "org_id": "org_rajpath",
+      "vehicle_id": "MH-12-YK-3561",
+      "driver_id": "u_driver1",
+      "reason": "Test",
+      "scheduled_date": "2026-07-02T14:30:59.036Z",
+      "id": "svc_1783002659131"
+    },
+    {
+      "org_id": "test",
+      "vehicle_id": "test",
+      "id": "svc_1783002907844"
     }
   ]
 }

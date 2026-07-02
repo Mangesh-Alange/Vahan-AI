@@ -1546,8 +1546,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                       alert('Inspection scheduled successfully! The fleet manager has been notified.');
                       btn.parentElement?.parentElement?.remove();
                     } else { throw new Error('fail'); }
-                  } catch (err) {
-                    alert('Error scheduling inspection.');
+                  } catch (err) { alert('Error scheduling inspection: ' + (err.message || JSON.stringify(err)));
                     btn.disabled = false;
                     btn.textContent = originalText;
                   }
