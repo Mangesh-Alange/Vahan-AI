@@ -153,8 +153,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   const loadSafetyDataOnly = async () => {
     if (!user.org_id) return;
     try {
-      const res = await fetch(`/api/fatigue-events?org_id=${user.org_id}`),
-        fetch(`/api/scheduled-services?org_id=${user.org_id}`);
+      const res = await fetch(`/api/fatigue-events?org_id=${user.org_id}`);
       const data = await res.json();
       if (data.events) {
         setSafetyLogs(data.events);
