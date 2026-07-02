@@ -12,6 +12,17 @@ export interface KnowledgeBaseEntry {
 
 export const faultKnowledgeBase: KnowledgeBaseEntry[] = [
   {
+    id: "kb_00",
+    symptom_hindi: "यह वाहन की खराबी नहीं है, यह एक सामान्य प्रश्न है (स्थान, अभिवादन, आदि)।",
+    symptom_english: "This is not a vehicle fault, it is a general question (locations, greetings, etc.).",
+    likely_causes: ["General inquiry", "Location search", "Chat"],
+    severity: "drive",
+    typical_cost_range: "N/A",
+    vehicle_types: ["All"],
+    recommended_action: "इस सवाल का जवाब देने के लिए कृपया को-पायलट चैट का उपयोग करें। (Please use the Copilot chat to answer this question.)",
+    acoustic_signal_class: "normal"
+  },
+  {
     id: "kb_01",
     symptom_hindi: "Gaadi ka engine band ho raha hai baar baar, thoda kaala dhua bhi aa raha hai",
     symptom_english: "The engine stalls repeatedly, and some black smoke is coming out",

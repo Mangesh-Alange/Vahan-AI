@@ -7,6 +7,7 @@ export const GraphState = Annotation.Root({
   symptom_hindi: Annotation<string>(),
   acoustic_signal: Annotation<string>(),
   kb_matches: Annotation<any[]>(),
+  image_base64: Annotation<string>(),
   
   // Populated by agents
   symptom_english: Annotation<string>(),
@@ -34,7 +35,7 @@ const parseJSON = (text: string) => {
 // 2. Define the Agent Nodes
 const supervisorAgent = async (state: typeof GraphState.State) => {
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-3.5-flash",
+    model: "gemini-2.5-flash",
     apiKey: process.env.GEMINI_API_KEY,
     maxOutputTokens: 500,
   });
@@ -53,7 +54,7 @@ const supervisorAgent = async (state: typeof GraphState.State) => {
 
 const diagnosticAgent = async (state: typeof GraphState.State) => {
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-3.5-flash",
+    model: "gemini-2.5-flash",
     apiKey: process.env.GEMINI_API_KEY,
     maxOutputTokens: 800,
   });
@@ -61,8 +62,16 @@ const diagnosticAgent = async (state: typeof GraphState.State) => {
   const prompt = `You are the Diagnostic Agent. 
     Based on the symptom: "${state.symptom_hindi}", acoustic signal: "${state.acoustic_signal}", and local RAG context: ${kbCtx}. 
     Provide a precise engineering diagnosis strictly in Devanagari Hindi. 
+    IMPORTANT: If the symptom is a general query (like asking for locations, service centers, greetings) and NOT a vehicle fault, set diagnosis to 'यह एक सामान्य प्रश्न है, वाहन की खराबी नहीं' (This is a general question, not a vehicle fault).
     Return ONLY a JSON object: { "diagnosis": "string", "reasoning": "string" }`;
-  const res = await model.invoke([new HumanMessage(prompt)]);
+  let contentMsg: any = prompt;
+  if (state.image_base64) {
+    contentMsg = [
+      { type: "text", text: prompt },
+      { type: "image_url", image_url: state.image_base64 }
+    ];
+  }
+  const res = await model.invoke([new HumanMessage({ content: contentMsg })]);
   const parsed = parseJSON(res.content.toString());
   return {
     diagnosis: parsed.diagnosis || "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
@@ -72,13 +81,14 @@ const diagnosticAgent = async (state: typeof GraphState.State) => {
 
 const triageAgent = async (state: typeof GraphState.State) => {
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-3.5-flash",
+    model: "gemini-2.5-flash",
     apiKey: process.env.GEMINI_API_KEY,
     maxOutputTokens: 400,
   });
   const prompt = `You are the Triage Agent. 
     Given the diagnosis: "${state.diagnosis}". 
     Establish road safety severity. Must be exactly one of: "drive", "caution", or "stop_immediately". 
+    IMPORTANT: If the diagnosis indicates it is not a vehicle fault, ALWAYS return "drive".
     Return ONLY a JSON object: { "severity": "string", "reasoning": "string" }`;
   const res = await model.invoke([new HumanMessage(prompt)]);
   const parsed = parseJSON(res.content.toString());
@@ -91,14 +101,15 @@ const triageAgent = async (state: typeof GraphState.State) => {
 
 const maintenanceAgent = async (state: typeof GraphState.State) => {
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-3.5-flash",
+    model: "gemini-2.5-flash",
     apiKey: process.env.GEMINI_API_KEY,
     maxOutputTokens: 800,
   });
   const prompt = `You are the Maintenance Agent. 
     Given diagnosis: "${state.diagnosis}". 
     Outline actionable roadside instructions strictly in Devanagari Hindi. 
-    Also estimate repair cost in Indian Rupees (e.g. ₹5,000 - ₹10,000). 
+    IMPORTANT: If the diagnosis indicates it is a general question or not a vehicle fault, just reply conversationally to their question in Devanagari Hindi instead of giving maintenance steps, and set cost to "N/A".
+    Also estimate repair cost in Indian Rupees (e.g. ₹5,000 - ₹10,000) or "N/A".
     Return ONLY a JSON object: { "recommended_action": "string", "estimated_cost_range": "string", "reasoning": "string" }`;
   const res = await model.invoke([new HumanMessage(prompt)]);
   const parsed = parseJSON(res.content.toString());

@@ -5,7 +5,7 @@ import {
   Eye, RefreshCw, LogOut, ChevronDown, ChevronUp, UserPlus, 
   Truck, Settings, Lock, Phone, User, EyeOff, AlertOctagon, HelpCircle,
   Send, MessageSquare, Sun, Moon
-, Camera, X, MessageCircle, Map, MapPin} from 'lucide-react';
+, Camera, X, MessageCircle, Map, MapPin, Navigation} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { User as UserType, Vehicle, FaultReport, FatigueEvent } from '../types.js';
 import { faultKnowledgeBase } from '../../server/faultKnowledgeBase.js';
@@ -17,7 +17,7 @@ interface DriverAppProps {
 
 export default function DriverApp({ user, onLogout }: DriverAppProps) {
   // Navigation
-  const [activeTab, setActiveTab] = useState<'diagnose' | 'acoustic' | 'fatigue' | 'history'>('diagnose');
+  const [activeTab, setActiveTab] = useState<'diagnose' | 'acoustic' | 'fatigue' | 'history' | 'wellness'>('diagnose');
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   
   // Network Simulation & Theme
@@ -335,7 +335,11 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       ].filter(k => k.length > 3);
 
       keywords.forEach(kw => {
-        if (query.includes(kw)) matches++;
+        try {
+          if (new RegExp('\\b' + kw + '\\b', 'i').test(query)) matches++;
+        } catch(e) {
+          if (query.includes(kw)) matches++;
+        }
       });
 
       if (matches > maxMatches) {
@@ -394,7 +398,10 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     } else {
       // Online mode: call backend Express multi-agent LLM route
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
         const res = await fetch('/api/fault-reports', {
+          signal: controller.signal,
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -402,7 +409,8 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             driver_id: user.id,
             symptom_text_hindi: symptomText,
             symptom_text_english: symptomText, // Server will translate
-            acoustic_signal_class: audioSignalClass
+            acoustic_signal_class: audioSignalClass,
+            image_base64: selectedImage
           })
         });
         const data = await res.json();
@@ -637,7 +645,11 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
           const keywords = [...fault.symptoms_hindi, ...fault.symptoms_english].flatMap(s => s.toLowerCase().split(/\s+/));
           let matches = 0;
           for (const w of words) {
-            if (w.length > 3 && keywords.some(k => k.includes(w))) matches++;
+            try {
+              if (w.length > 3 && keywords.some(k => new RegExp('\\b' + w + '\\b', 'i').test(k))) matches++;
+            } catch(e) {
+              if (w.length > 3 && keywords.some(k => k.includes(w))) matches++;
+            }
           }
           if (matches > maxMatches) {
             maxMatches = matches;
@@ -657,7 +669,10 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     }
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
       const res = await fetch('/api/driver-copilot', {
+        signal: controller.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -668,6 +683,11 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       const data = await res.json();
       if (data.reply) {
         setChatMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+        if (data.action && data.action.type === 'OPEN_MAPS') {
+          setTimeout(() => {
+            window.location.assign(data.action.url);
+          }, 1500);
+        }
       } else {
         setChatMessages(prev => [...prev, { role: 'assistant', content: "Server side issue, please try again." }]);
       }
@@ -1008,6 +1028,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     if (audioContextRef.current) {
       audioContextRef.current.close();
     }
+    analyserRef.current = null;
   };
 
   const exportAcousticCSV = () => {
@@ -1482,6 +1503,24 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
         {activeTab === 'diagnose' && (
           <div className="space-y-4">
             
+            {/* Predictive AI Health Widget */}
+            <div className="glass dark:bg-slate-800/50 p-4 rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-2 opacity-10">
+                <Activity className="h-16 w-16" />
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-500" />
+                <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200">AI Predictive Health (BETA)</h3>
+              </div>
+              <p className="text-[10px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                Based on 85,400km mileage and recent overheating pattern across 4 Tata Prima trucks in Rajpath Logistics, your <strong className="text-amber-600 dark:text-amber-400">Radiator Coolant Pump</strong> has a 78% probability of failure in the next 450km.
+              </p>
+              <div className="mt-3 flex gap-2">
+                <button onClick={() => alert('Inspection scheduled for tomorrow morning at Hub #14!')} className="bg-amber-500 text-slate-950 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-amber-400 transition-colors">Schedule Inspection</button>
+                <button onClick={(e) => (e.target as HTMLElement).parentElement?.parentElement?.remove()} className="glass dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-slate-700 transition-colors">Dismiss</button>
+              </div>
+            </div>
+            
             {/* Onboarding Diagnostic input box */}
             <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-4 rounded-xl border border-slate-200 dark:border-white/10 space-y-3.5">
               <h3 className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
@@ -1539,6 +1578,14 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                   <textarea 
                     value={symptomText}
                     onChange={(e) => setSymptomText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        if (!isDiagnosing && (symptomText.trim() || selectedImage)) {
+                          runDiagnosticPipeline();
+                        }
+                      }
+                    }}
                     placeholder={isRecordingRealVoice ? "[RECORDING ACTIVE...] Speak now" : "Type a message or use the mic..."}
                     className="w-full bg-transparent text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none min-h-[44px] max-h-[120px] px-2 py-2.5 resize-none leading-relaxed"
                     rows={1}
@@ -1757,6 +1804,26 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                       {msg.role === 'user' ? 'Aap' : 'VahanAI Copilot'}
                     </span>
                     <p className="leading-relaxed whitespace-pre-line">{msg.content}</p>
+                    {(msg as any).action && (msg as any).action.type === 'OPEN_MAPS' && (
+                      <div className="mt-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded bg-amber-500/20 flex items-center justify-center shrink-0">
+                            <MapPin className="h-5 w-5 text-amber-500" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-slate-900 dark:text-white text-[11px]">Tata Motors Service Hub</h4>
+                            <p className="text-[9px] text-slate-500 mt-0.5">NH-44 Bypass Road • 2.4 km away</p>
+                            <button 
+                              onClick={() => window.location.assign((msg as any).action.url)}
+                              className="mt-2 bg-amber-500 hover:bg-amber-600 text-slate-950 px-3 py-1.5 rounded-full font-bold text-[9px] flex items-center gap-1.5 transition-colors shadow-sm"
+                            >
+                              <Navigation className="h-3 w-3" />
+                              Start Navigation
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
                 {isSendingToCopilot && (
@@ -2088,10 +2155,49 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
           </div>
         )}
 
+        {activeTab === 'wellness' && (
+          <div className="space-y-4">
+            <div className="glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-black text-slate-900 dark:text-white">Safety Score</h3>
+                  <p className="text-[10px] text-slate-500">Based on Fatigue AI & Telematics</p>
+                </div>
+                <div className="h-16 w-16 rounded-full border-4 border-emerald-500 flex items-center justify-center bg-emerald-500/10">
+                  <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">92</span>
+                </div>
+              </div>
+              
+              <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="text-slate-600 dark:text-slate-400">Total Safe KMS</span>
+                  <span className="font-bold text-slate-900 dark:text-white">45,210 km</span>
+                </div>
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="text-slate-600 dark:text-slate-400">Fatigue Interventions</span>
+                  <span className="font-bold text-slate-900 dark:text-white">2 (Followed Protocol)</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-5 rounded-xl text-slate-950 shadow-xl relative overflow-hidden">
+              <div className="absolute top-[-20px] right-[-20px] opacity-20">
+                <Sparkles className="h-32 w-32" />
+              </div>
+              <h3 className="text-lg font-black mb-1">Rajpath Rewards</h3>
+              <div className="text-3xl font-black mb-3">1,450 pts</div>
+              <p className="text-[10px] font-bold opacity-80 mb-4 max-w-[200px]">You are 50 points away from a free Hot Meal at NH-44 Dhaba!</p>
+              <button className="bg-slate-950 text-amber-500 font-bold text-[10px] px-4 py-2 rounded-full shadow-lg">
+                Redeem Rewards
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
 
       {/* PWA bottom navbar */}
-      <div className="absolute bottom-0 inset-x-0 glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors border-t border-slate-200 dark:border-white/10 grid grid-cols-4 shrink-0 z-10">
+      <div className="absolute bottom-0 inset-x-0 glass dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 shadow-sm transition-colors border-t border-slate-200 dark:border-white/10 grid grid-cols-5 shrink-0 z-10">
         <button 
           onClick={() => setActiveTab('diagnose')}
           className={`flex flex-col items-center justify-center py-2 gap-1 transition-colors ${
@@ -2140,7 +2246,21 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
           }`}
         >
           <FileText className="h-4.5 w-4.5" />
-          <span className="text-[10px] font-bold">पिछला इतिहास</span>
+          <span className="text-[10px] font-bold">इतिहास</span>
+        </button>
+
+        <button 
+          onClick={() => {
+            setActiveTab('wellness');
+            stopAcousticCapture();
+            stopFatigueMonitoring();
+          }}
+          className={`flex flex-col items-center justify-center py-2 gap-1 transition-colors ${
+            activeTab === 'wellness' ? 'text-amber-600 bg-amber-50 dark:bg-slate-800/80 rounded-xl' : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-600 dark:text-amber-500 transition-colors'
+          }`}
+        >
+          <Sparkles className="h-4.5 w-4.5" />
+          <span className="text-[10px] font-bold">वेलनेस</span>
         </button>
       </div>
 

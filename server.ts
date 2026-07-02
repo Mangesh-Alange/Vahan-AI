@@ -92,7 +92,7 @@ function performRAGLookup(queryHindi: string, queryEnglish: string): any[] {
     .map(w => w.trim().toLowerCase())
     .filter(w => w.length > 2 && !STOP_WORDS.has(w));
   
-  if (keywords.length === 0) return faultKnowledgeBase.slice(0, 2);
+  if (keywords.length === 0) return [faultKnowledgeBase.find(f => f.id === "kb_00")];
 
   const scored = faultKnowledgeBase.map(entry => {
     let score = 0;
@@ -105,8 +105,12 @@ function performRAGLookup(queryHindi: string, queryEnglish: string): any[] {
 
     keywords.forEach(kw => {
       targets.forEach(target => {
-        if (target.includes(kw)) {
-          score += 1;
+        try {
+          if (new RegExp('\\\\b' + kw + '\\\\b', 'i').test(target)) {
+            score += 1;
+          }
+        } catch (e) {
+          if (target.includes(kw)) score += 1;
         }
       });
     });
@@ -118,7 +122,7 @@ function performRAGLookup(queryHindi: string, queryEnglish: string): any[] {
     .sort((a, b) => b.score - a.score)
     .map(s => s.entry);
 
-  return sorted.length > 0 ? sorted.slice(0, 3) : faultKnowledgeBase.slice(0, 2);
+  return sorted.length > 0 ? sorted.slice(0, 3) : [faultKnowledgeBase.find(f => f.id === "kb_00")];
 }
 
 function translateKnowledgeBaseToHindi(id: string, defaultDiag: string, defaultAction: string): { diagnosis: string, recommended_action: string, estimated_cost_range: string } {
@@ -455,7 +459,7 @@ app.get('/api/drivers', (req, res) => {
 // 5. DIAGNOSTIC PIPELINE (Multi-Agent Reasoning)
 // -----------------------------------------------------
 app.post('/api/fault-reports', async (req, res) => {
-  const { vehicle_id, driver_id, symptom_text_hindi, symptom_text_english, acoustic_signal_class } = req.body;
+  const { vehicle_id, driver_id, symptom_text_hindi, symptom_text_english, acoustic_signal_class, image_base64 } = req.body;
   
   if (!driver_id || !symptom_text_hindi) {
     return res.status(400).json({ error: "Driver ID and symptom text are required." });
@@ -530,6 +534,7 @@ app.post('/api/fault-reports', async (req, res) => {
     // Execute the LangGraph workflow
     const parsed = await diagnosticGraph.invoke({
       symptom_hindi: symptom_text_hindi,
+      image_base64: image_base64,
       acoustic_signal: acoustic_signal_class || "normal",
       kb_matches: kbMatches
     });
@@ -639,7 +644,7 @@ app.post('/api/transcribe-audio', async (req, res) => {
 
     const ai = getGeminiClient();
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: [
         {
           inlineData: {
@@ -706,12 +711,68 @@ app.post('/api/driver-copilot', async (req, res) => {
     });
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents,
       config: {
-        systemInstruction
+        systemInstruction,
+        tools: [{
+          functionDeclarations: [
+            {
+              name: "log_sos_alert",
+              description: "Logs an SOS emergency alert to the fleet manager. Use this when the driver is in danger, stranded in an unsafe location, or explicitly asks for emergency help.",
+              parameters: {
+                type: Type.OBJECT,
+                properties: {
+                  reason: { type: Type.STRING, description: "Reason for the SOS alert" }
+                },
+                required: ["reason"]
+              }
+            },
+            {
+              name: "find_service_station",
+              description: "Finds the nearest authorized service station. Use this when the driver asks for a nearby mechanic or service center.",
+              parameters: {
+                type: Type.OBJECT,
+                properties: {
+                  location: { type: Type.STRING, description: "Approximate location or 'current'" }
+                }
+              }
+            },
+            {
+              name: "log_maintenance_request",
+              description: "Logs a routine maintenance request. Use this when the driver asks to schedule a service, oil change, or non-urgent repair.",
+              parameters: {
+                type: Type.OBJECT,
+                properties: {
+                  issue: { type: Type.STRING, description: "The maintenance issue" }
+                },
+                required: ["issue"]
+              }
+            }
+          ]
+        }]
       }
     });
+
+    if (response.functionCalls && response.functionCalls.length > 0) {
+      const call = response.functionCalls[0];
+      let toolResponseStr = "";
+      let actionObj = null;
+
+      if (call.name === "log_sos_alert") {
+        const reason = call.args && call.args.reason ? call.args.reason : "Driver requested emergency SOS via Copilot";
+        db.addSosAlert("org_rajpath", reason);
+        toolResponseStr = "[🚨 SOS ALERT SENT] आपकी आपातकालीन स्थिति फ्लीट मैनेजर को भेज दी गई है। कृपया सुरक्षित स्थान पर रहें, मदद जल्द ही आ रही है।";
+      } else if (call.name === "find_service_station") {
+        toolResponseStr = "[📍 SERVICE STATION FOUND] मैंने आपके आस-पास 3 Tata Motors ऑथराइज्ड सर्विस स्टेशन खोजे हैं। आपकी स्क्रीन पर नेविगेशन लिंक भेजा जा रहा है।";
+        actionObj = { type: "OPEN_MAPS", url: "https://www.google.com/maps/search/Tata+Motors+Authorized+Service+Station" };
+      } else if (call.name === "log_maintenance_request") {
+        const issue = call.args && call.args.issue ? call.args.issue : "सामान्य सर्विस";
+        toolResponseStr = `[⚙️ MAINTENANCE LOGGED] आपका सर्विस रिक्वेस्ट ("${issue}") फ्लीट मैनेजर को भेज दिया गया है। इसे अगली ट्रिप के बाद शेड्यूल किया जाएगा।`;
+      }
+      
+      return res.json({ reply: toolResponseStr, action: actionObj });
+    }
 
     res.json({ reply: response.text });
   } catch (error: any) {
@@ -798,7 +859,7 @@ app.post('/api/whatsapp/webhook', async (req, res) => {
         Keep it extremely concise (max 3 sentences) suitable for a WhatsApp reply.
       `;
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.5-flash",
         contents: prompt
       });
       diagnosisText = response.text || topMatch.symptom_english;
@@ -849,7 +910,7 @@ app.post('/api/sos-alerts', (req, res) => {
   if (!org_id || !driver_id || !driver_name || !truck_number) {
     return res.status(400).json({ error: "Missing required parameters." });
   }
-  const newAlert = db.addSosAlert({
+  const newAlert = db.addSosAlertRecord({
     org_id,
     driver_id,
     driver_name,
