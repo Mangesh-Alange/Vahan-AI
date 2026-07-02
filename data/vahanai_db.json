@@ -470,6 +470,21 @@
       "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_05 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Coolant leak / radiator puncture. Cost estimate standard: ₹2,500 - ₹12,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
       "id": "rep_xelzg3t",
       "_id": "6a4539a5e3ab3e0780a66bfa"
+    },
+    {
+      "vehicle_id": "veh_unknown",
+      "driver_id": "user_wkprxoz",
+      "timestamp": "2026-07-02T06:25:07.803Z",
+      "symptom_text_hindi": "engine ki awaj me gadbad\n",
+      "symptom_text_english": "engine ki awaj me gadbad\n",
+      "acoustic_signal_class": "knock",
+      "severity": "stop_immediately",
+      "diagnosis": "हेड गैस्केट फटना या इंजन ब्लॉक में क्रैक (Blown head gasket / Coolant mixing with engine oil)",
+      "recommended_action": "1. इंजन को भूलकर भी स्टार्ट न करें।\n2. कूलेंट और इंजन ऑयल आपस में मिल रहे हैं, जिससे इंजन पूरी तरह सीज हो सकता है।\n3. गाड़ी को टो करके सीधे गैरेज ले जाएं।",
+      "estimated_cost_range": "₹18,000 - ₹45,000",
+      "synced_at": "2026-07-02T06:25:07.803Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_15 based on keywords and acoustical pattern of \\\"knock\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Blown head gasket. Cost estimate standard: ₹18,000 - ₹45,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_z463zev"
     }
   ],
   "fleet_alerts": [
