@@ -205,15 +205,16 @@ export default function App() {
       <div className="flex-1 p-8 md:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/5 z-10 relative overflow-hidden">
         
         {/* Video Background Layer */}
-        <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
           <iframe
-            src="https://www.youtube.com/embed/vqQHrnItbV0?autoplay=1&mute=1&loop=1&playlist=vqQHrnItbV0&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
+            src="https://www.youtube.com/embed/ZCYSQRepus8?autoplay=1&mute=1&loop=1&playlist=ZCYSQRepus8&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
             title="Tata Trucks Background"
-            className="w-[100vw] h-[100vh] min-w-[200%] min-h-[200%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.22] pointer-events-none scale-[1.3] aspect-video object-cover"
+            className="w-[120%] h-[120%] min-w-[150%] min-h-[150%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.45] pointer-events-none scale-[1.3] aspect-video object-cover"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           ></iframe>
-          <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[1px]"></div>
+          {/* Click Shield to block any hover/click interactions with the YouTube player */}
+          <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[0.5px] pointer-events-auto z-10"></div>
         </div>
 
         <div className="space-y-6 max-w-lg relative z-10">
