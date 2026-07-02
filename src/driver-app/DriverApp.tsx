@@ -1536,7 +1536,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({
                         org_id: user?.org_id || 'org_rajpath',
-                          vehicle_id: activeVehicle?.registration_number || 'MH-12-YK-3561',
+                          vehicle_id: vehicles.find(v => v.id === selectedVehicleId)?.registration_number || 'MH-12-YK-3561',
                           driver_id: user?.id || 'u_driver1',
                         reason: 'Predictive AI Recommendation: Radiator Coolant Pump',
                         scheduled_date: new Date(Date.now() + 86400000).toISOString()
