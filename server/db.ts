@@ -755,6 +755,17 @@ export class Database {
     this.asyncWrite('sos_alerts', 'update', { id }, { status: "RESOLVED" });
     return true;
   }
+
+  public getScheduledServices(orgId: string): any[] {
+    return (this.data.scheduled_services || []).filter((s: any) => s.org_id === orgId);
+  }
+
+  public addScheduledService(service: any): void {
+    if (!this.data.scheduled_services) this.data.scheduled_services = [];
+    service.id = 'svc_' + Date.now();
+    this.data.scheduled_services.push(service);
+    this.saveData();
+  }
 }
 
 // Global DB instance

@@ -407,6 +407,23 @@ app.get('/api/db-status', (req, res) => {
   res.json(db.getStatus());
 });
 
+
+app.get('/api/scheduled-services', (req, res) => {
+  const { org_id } = req.query;
+  if (!org_id) return res.status(400).json({ error: "org_id is required." });
+  const services = db.getScheduledServices(org_id as string);
+  res.json({ services });
+});
+
+app.post('/api/schedule-service', (req, res) => {
+  const data = req.body;
+  if (!data.org_id || !data.vehicle_id) {
+    return res.status(400).json({ error: "org_id and vehicle_id are required." });
+  }
+  db.addScheduledService(data);
+  res.json({ success: true });
+});
+
 app.get('/api/vehicles', (req, res) => {
   const { org_id } = req.query;
   if (!org_id) return res.status(400).json({ error: "org_id is required." });

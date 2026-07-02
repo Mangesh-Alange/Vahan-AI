@@ -72,6 +72,15 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   const simulateDrowsyRef = useRef<boolean>(false);
   const isCriticalRef = useRef<boolean>(false);
 
+  
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
   useEffect(() => {
     simulateDrowsyRef.current = simulateDrowsy;
   }, [simulateDrowsy]);
@@ -1367,7 +1376,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
             {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           
-          <div className="h-9 w-9 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-full flex shadow-md items-center justify-center text-white font-bold border-2 border-white dark:border-slate-900 cursor-pointer" onClick={onLogout}>
+          <div className="h-9 w-9 bg-gradient-to-tr from-amber-500 to-orange-600 rounded-full flex shadow-md items-center justify-center text-white font-bold border-2 border-white dark:border-slate-900 cursor-pointer" onClick={() => setIsProfileOpen(true)}>
             {user.name.charAt(0)}
           </div>
         </div>
