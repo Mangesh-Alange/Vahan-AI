@@ -6,7 +6,7 @@ import {
 import { 
   TrendingUp, Truck, Users, AlertTriangle, CheckCircle, RefreshCw, Plus, 
   Trash2, Mail, Link, AlertOctagon, Eye, MapPin, ChevronRight, FileText, Search, 
-  ShieldAlert, Settings, Info, Check, Calendar, Sun, Moon
+  ShieldAlert, Settings, Info, Check, Calendar, Sun, Moon, Wrench
 } from 'lucide-react';
 import { User, Vehicle, FaultReport, FleetAlert, ServiceCenter, FatigueEvent, SosAlert } from '../types.js';
 import { motion, AnimatePresence } from 'motion/react';
