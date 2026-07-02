@@ -83,3 +83,13 @@ export interface SosAlert {
   status: "SOS" | "RESOLVED";
 }
 
+export interface ScheduledService {
+  id: string;
+  org_id: string;
+  vehicle_id: string;
+  driver_id: string;
+  scheduled_date: string;
+  reason: string;
+  status: "scheduled" | "completed";
+}
+

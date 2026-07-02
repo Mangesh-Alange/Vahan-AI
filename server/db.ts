@@ -89,6 +89,16 @@ export interface SosAlert {
   status: "SOS" | "RESOLVED";
 }
 
+export interface ScheduledService {
+  id: string;
+  org_id: string;
+  vehicle_id: string;
+  driver_id: string;
+  scheduled_date: string;
+  reason: string;
+  status: "scheduled" | "completed";
+}
+
 interface DatabaseSchema {
   organizations: Organization[];
   users: User[];
@@ -98,6 +108,7 @@ interface DatabaseSchema {
   service_centers: ServiceCenter[];
   fatigue_events: FatigueEvent[];
   sos_alerts: SosAlert[];
+  scheduled_services: ScheduledService[];
 }
 
 const DB_DIR = path.resolve(process.cwd(), 'data');
@@ -123,7 +134,8 @@ export class Database {
       fleet_alerts: [],
       service_centers: [],
       fatigue_events: [],
-      sos_alerts: []
+      sos_alerts: [],
+      scheduled_services: []
     };
     this.init();
   }

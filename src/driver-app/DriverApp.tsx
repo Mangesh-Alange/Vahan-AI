@@ -1516,7 +1516,33 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                 Based on 85,400km mileage and recent overheating pattern across 4 Tata Prima trucks in Rajpath Logistics, your <strong className="text-amber-600 dark:text-amber-400">Radiator Coolant Pump</strong> has a 78% probability of failure in the next 450km.
               </p>
               <div className="mt-3 flex gap-2">
-                <button onClick={() => alert('Inspection scheduled for tomorrow morning at Hub #14!')} className="bg-amber-500 text-slate-950 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-amber-400 transition-colors">Schedule Inspection</button>
+                <button onClick={async (e) => {
+                  const btn = e.currentTarget;
+                  const originalText = btn.textContent;
+                  btn.disabled = true;
+                  btn.textContent = "Scheduling...";
+                  try {
+                    const res = await fetch('/api/schedule-service', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        org_id: 'org_solo',
+                        vehicle_id: 'MH-12-AB-1234',
+                        driver_id: 'u_driver1',
+                        reason: 'Predictive AI Recommendation: Radiator Coolant Pump',
+                        scheduled_date: new Date(Date.now() + 86400000).toISOString()
+                      })
+                    });
+                    if (res.ok) {
+                      alert('Inspection scheduled successfully! The fleet manager has been notified.');
+                      btn.parentElement?.parentElement?.remove();
+                    } else { throw new Error('fail'); }
+                  } catch (err) {
+                    alert('Error scheduling inspection.');
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                  }
+                }} className="bg-amber-500 text-slate-950 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-amber-400 transition-colors disabled:opacity-50">Schedule Inspection</button>
                 <button onClick={(e) => (e.target as HTMLElement).parentElement?.parentElement?.remove()} className="glass dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 text-[9px] font-bold px-3 py-1.5 rounded-full hover:bg-slate-700 transition-colors">Dismiss</button>
               </div>
             </div>
