@@ -562,9 +562,9 @@ app.post('/api/fault-reports', async (req, res) => {
       driver_id,
       timestamp,
       symptom_text_hindi,
-      symptom_text_english: parsed.symptom_text_english,
+      symptom_text_english: (parsed as any).symptom_text_english || (parsed as any).symptom_english,
       acoustic_signal_class: acoustic_signal_class || null,
-      severity: parsed.severity,
+      severity: parsed.severity as any,
       diagnosis: parsed.diagnosis,
       recommended_action: parsed.recommended_action,
       estimated_cost_range: parsed.estimated_cost_range,
@@ -778,7 +778,7 @@ app.post('/api/driver-copilot', async (req, res) => {
 
       if (call.name === "log_sos_alert") {
         const reason = call.args && call.args.reason ? call.args.reason : "Driver requested emergency SOS via Copilot";
-        db.addSosAlert("org_rajpath", reason);
+        db.addSosAlert("org_rajpath", reason as string);
         toolResponseStr = "[🚨 SOS ALERT SENT] आपकी आपातकालीन स्थिति फ्लीट मैनेजर को भेज दी गई है। कृपया सुरक्षित स्थान पर रहें, मदद जल्द ही आ रही है।";
       } else if (call.name === "find_service_station") {
         toolResponseStr = "[📍 SERVICE STATION FOUND] मैंने आपके आस-पास 3 Tata Motors ऑथराइज्ड सर्विस स्टेशन खोजे हैं। आपकी स्क्रीन पर नेविगेशन लिंक भेजा जा रहा है।";

@@ -488,7 +488,8 @@ export class Database {
       fleet_alerts,
       service_centers,
       fatigue_events,
-      sos_alerts: []
+      sos_alerts: [],
+      scheduled_services: []
     };
 
     this.save();
@@ -597,10 +598,9 @@ export class Database {
       id: 'sos_' + Math.random().toString(36).substring(2, 9),
       org_id,
       pattern_description: 'SOS EMERGENCY ALERT: ' + reason,
-      severity: 'high',
       related_fault_report_ids: [],
       resolved: false,
-      created_at: Date.now()
+      created_at: new Date().toISOString()
     };
     this.data.fleet_alerts.unshift(newAlert);
     this.save();
@@ -764,7 +764,7 @@ export class Database {
     if (!this.data.scheduled_services) this.data.scheduled_services = [];
     service.id = 'svc_' + Date.now();
     this.data.scheduled_services.push(service);
-    this.saveData();
+    this.save();
   }
 }
 
