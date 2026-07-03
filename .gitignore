@@ -1,8 +1,30 @@
+# Dependencies
 node_modules/
+
+# Build output
 build/
 dist/
 coverage/
-.DS_Store
-*.log
+
+# Environment variables
 .env*
 !.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+
+# Archives & artifacts
+*.zip
+*.tar.gz
+
+# AI Studio
+assets/.aistudio/

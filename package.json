@@ -1,7 +1,8 @@
 {
-  "name": "react-example",
+  "name": "vahanai",
+  "description": "AI-powered predictive maintenance and driver safety platform for Indian commercial vehicle fleets",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
