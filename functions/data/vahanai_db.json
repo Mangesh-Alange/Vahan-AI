@@ -23,6 +23,12 @@
       "name": "pccoer",
       "plan_tier": "free",
       "created_at": "2026-07-02T19:02:21.336Z"
+    },
+    {
+      "id": "org_80adua7",
+      "name": "werty",
+      "plan_tier": "free",
+      "created_at": "2026-07-03T14:42:44.040Z"
     }
   ],
   "users": [
@@ -195,6 +201,16 @@
       "id": "user_j3hp6ks",
       "password_hash": "43a0d17178a9d26c9e0fe9a74b0b45e38d32f27aed887a008a54bf6e033bf7b9",
       "created_at": "2026-07-02T19:02:45.046Z"
+    },
+    {
+      "org_id": "org_80adua7",
+      "role": "fleet_manager",
+      "name": "asdfghj",
+      "phone": "567",
+      "preferred_language": "hindi",
+      "id": "user_0lidqbh",
+      "password_hash": "43a0d17178a9d26c9e0fe9a74b0b45e38d32f27aed887a008a54bf6e033bf7b9",
+      "created_at": "2026-07-03T14:42:44.042Z"
     }
   ],
   "vehicles": [
