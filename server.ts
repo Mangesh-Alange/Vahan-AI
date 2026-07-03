@@ -516,10 +516,17 @@ app.post('/api/fault-reports', async (req, res) => {
 
   // Prepare fallback heuristic values in case Gemini fails or is not available
   const topMatch = kbMatches[0];
+  let finalSymptomEnglish = symptom_text_english || "The engine stalls and is releasing black smoke.";
+  if (acoustic_signal_class && acoustic_signal_class !== 'normal') {
+    if (!finalSymptomEnglish.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+      finalSymptomEnglish += " ENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+    }
+  }
+
   const fallbackResult = {
-    symptom_text_english: symptom_text_english || "The engine stalls and is releasing black smoke.",
+    symptom_text_english: finalSymptomEnglish,
     diagnosis: topMatch.symptom_english + ". " + topMatch.likely_causes.join(", ") + " suspected.",
-    severity: topMatch.severity,
+    severity: topMatch.severity as "drive" | "caution" | "stop_immediately",
     recommended_action: topMatch.recommended_action,
     estimated_cost_range: topMatch.typical_cost_range,
     agent_trace: {
@@ -536,6 +543,12 @@ app.post('/api/fault-reports', async (req, res) => {
   if (!key || key === 'MY_GEMINI_API_KEY') {
     console.log("INFO: Resolving via server-side Local RAG heuristic (Gemini API Key not set/using placeholder).");
     const hTranslation = translateKnowledgeBaseToHindi(topMatch.id, fallbackResult.diagnosis, fallbackResult.recommended_action);
+    let finalDiagnosis = hTranslation.diagnosis;
+    if (acoustic_signal_class && acoustic_signal_class !== 'normal') {
+      if (!finalDiagnosis.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+        finalDiagnosis += "\n\nENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+      }
+    }
     
     const saved = db.addFaultReport({
       vehicle_id: targetVehicleId,
@@ -545,7 +558,7 @@ app.post('/api/fault-reports', async (req, res) => {
       symptom_text_english: fallbackResult.symptom_text_english,
       acoustic_signal_class: acoustic_signal_class || null,
       severity: fallbackResult.severity,
-      diagnosis: hTranslation.diagnosis,
+      diagnosis: finalDiagnosis,
       recommended_action: hTranslation.recommended_action,
       estimated_cost_range: hTranslation.estimated_cost_range,
       synced_at: timestamp, // Mark synced since it hit server successfully
@@ -569,16 +582,27 @@ app.post('/api/fault-reports', async (req, res) => {
       kb_matches: kbMatches
     });
 
+    let finalDiagnosis = parsed.diagnosis;
+    let finalSymptomEng = parsed.symptom_english || "";
+    if (acoustic_signal_class && acoustic_signal_class !== 'normal') {
+      if (!finalDiagnosis.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+        finalDiagnosis += "\n\nENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+      }
+      if (!finalSymptomEng.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+        finalSymptomEng += " ENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+      }
+    }
+
     // Save report to database
     const saved = db.addFaultReport({
       vehicle_id: targetVehicleId,
       driver_id,
       timestamp,
       symptom_text_hindi,
-      symptom_text_english: (parsed as any).symptom_text_english || (parsed as any).symptom_english,
+      symptom_text_english: finalSymptomEng,
       acoustic_signal_class: acoustic_signal_class || null,
-      severity: parsed.severity as any,
-      diagnosis: parsed.diagnosis,
+      severity: parsed.severity as "drive" | "caution" | "stop_immediately",
+      diagnosis: finalDiagnosis,
       recommended_action: parsed.recommended_action,
       estimated_cost_range: parsed.estimated_cost_range,
       synced_at: timestamp,
@@ -590,6 +614,12 @@ app.post('/api/fault-reports', async (req, res) => {
   } catch (error: any) {
     console.warn("Gemini Multi-Agent API failed at runtime. Saving using local RAG fallback.", error.message);
     const hTranslation = translateKnowledgeBaseToHindi(topMatch.id, fallbackResult.diagnosis, fallbackResult.recommended_action);
+    let finalDiagnosis = hTranslation.diagnosis;
+    if (acoustic_signal_class && acoustic_signal_class !== 'normal') {
+      if (!finalDiagnosis.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+        finalDiagnosis += "\n\nENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+      }
+    }
 
     // Save report using local RAG fallback
     const saved = db.addFaultReport({
@@ -600,7 +630,7 @@ app.post('/api/fault-reports', async (req, res) => {
       symptom_text_english: fallbackResult.symptom_text_english,
       acoustic_signal_class: acoustic_signal_class || null,
       severity: fallbackResult.severity,
-      diagnosis: hTranslation.diagnosis,
+      diagnosis: finalDiagnosis,
       recommended_action: hTranslation.recommended_action,
       estimated_cost_range: hTranslation.estimated_cost_range,
       synced_at: timestamp, // Mark synced since it hit server successfully
@@ -790,14 +820,14 @@ app.post('/api/driver-copilot', async (req, res) => {
       let actionObj = null;
 
       if (call.name === "log_sos_alert") {
-        const reason = call.args && call.args.reason ? call.args.reason : "Driver requested emergency SOS via Copilot";
-        db.addSosAlert("org_rajpath", reason as string);
+        const reason = call.args && (call.args as any).reason ? ((call.args as any).reason as string) : "Driver requested emergency SOS via Copilot";
+        db.addSosAlert("org_rajpath", reason);
         toolResponseStr = "[🚨 SOS ALERT SENT] आपकी आपातकालीन स्थिति फ्लीट मैनेजर को भेज दी गई है। कृपया सुरक्षित स्थान पर रहें, मदद जल्द ही आ रही है।";
       } else if (call.name === "find_service_station") {
         toolResponseStr = "[📍 SERVICE STATION FOUND] मैंने आपके आस-पास 3 Tata Motors ऑथराइज्ड सर्विस स्टेशन खोजे हैं। आपकी स्क्रीन पर नेविगेशन लिंक भेजा जा रहा है।";
         actionObj = { type: "OPEN_MAPS", url: "https://www.google.com/maps/search/Tata+Motors+Authorized+Service+Station" };
       } else if (call.name === "log_maintenance_request") {
-        const issue = call.args && call.args.issue ? call.args.issue : "सामान्य सर्विस";
+        const issue = call.args && (call.args as any).issue ? ((call.args as any).issue as string) : "सामान्य सर्विस";
         toolResponseStr = `[⚙️ MAINTENANCE LOGGED] आपका सर्विस रिक्वेस्ट ("${issue}") फ्लीट मैनेजर को भेज दिया गया है। इसे अगली ट्रिप के बाद शेड्यूल किया जाएगा।`;
       }
       

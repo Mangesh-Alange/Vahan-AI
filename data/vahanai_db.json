@@ -11,6 +11,18 @@
       "name": "Kedar Inter-State Logistics",
       "plan_tier": "pro",
       "created_at": "2026-02-15T12:00:00Z"
+    },
+    {
+      "id": "org_0pim6ob",
+      "name": "pccoer",
+      "plan_tier": "free",
+      "created_at": "2026-07-02T18:22:54.698Z"
+    },
+    {
+      "id": "org_2yadadj",
+      "name": "pccoer",
+      "plan_tier": "free",
+      "created_at": "2026-07-02T19:02:21.336Z"
     }
   ],
   "users": [
@@ -133,6 +145,56 @@
       "id": "user_cyw0xeb",
       "password_hash": "2e2b24f8ee40bb847fe85bb23336a39ef5948e6b49d897419ced68766b16967a",
       "created_at": "2026-07-02T14:50:01.111Z"
+    },
+    {
+      "org_id": "org_0pim6ob",
+      "role": "fleet_manager",
+      "name": "qwerty",
+      "phone": "12345690",
+      "preferred_language": "hindi",
+      "id": "user_plg8fix",
+      "password_hash": "da4b3ff1c6297947d1cc6041fdb4b1a44a76c80d7f4b637e5a76f3c3c12dacb5",
+      "created_at": "2026-07-02T18:22:54.758Z"
+    },
+    {
+      "org_id": "org_0pim6ob",
+      "role": "driver",
+      "name": "d1",
+      "phone": "123690",
+      "preferred_language": "hindi",
+      "id": "user_lol2for",
+      "password_hash": "da4b3ff1c6297947d1cc6041fdb4b1a44a76c80d7f4b637e5a76f3c3c12dacb5",
+      "created_at": "2026-07-02T18:23:27.252Z"
+    },
+    {
+      "org_id": "org_0pim6ob",
+      "role": "driver",
+      "name": "d2",
+      "phone": "1290",
+      "preferred_language": "hindi",
+      "id": "user_nx1pxd4",
+      "password_hash": "da4b3ff1c6297947d1cc6041fdb4b1a44a76c80d7f4b637e5a76f3c3c12dacb5",
+      "created_at": "2026-07-02T18:47:46.622Z"
+    },
+    {
+      "org_id": "org_2yadadj",
+      "role": "fleet_manager",
+      "name": "Ram",
+      "phone": "56789",
+      "preferred_language": "hindi",
+      "id": "user_uu7gt4n",
+      "password_hash": "43a0d17178a9d26c9e0fe9a74b0b45e38d32f27aed887a008a54bf6e033bf7b9",
+      "created_at": "2026-07-02T19:02:21.346Z"
+    },
+    {
+      "org_id": "org_2yadadj",
+      "role": "driver",
+      "name": "d1",
+      "phone": "5679",
+      "preferred_language": "hindi",
+      "id": "user_j3hp6ks",
+      "password_hash": "43a0d17178a9d26c9e0fe9a74b0b45e38d32f27aed887a008a54bf6e033bf7b9",
+      "created_at": "2026-07-02T19:02:45.046Z"
     }
   ],
   "vehicles": [
@@ -256,6 +318,17 @@
       "mileage": 50000,
       "last_service_date": "2026-07-02",
       "id": "veh_b32mmxe"
+    },
+    {
+      "org_id": "org_0pim6ob",
+      "registration_number": "MH 12 ER 3456",
+      "make": "Tata",
+      "model": "Leyland",
+      "year": 2024,
+      "assigned_driver_id": "user_nx1pxd4",
+      "mileage": 50000,
+      "last_service_date": "2026-07-02",
+      "id": "veh_4jqqlp8"
     }
   ],
   "fault_reports": [
@@ -823,6 +896,18 @@
       "timestamp": "2026-07-02T13:47:17.436Z",
       "status": "RESOLVED",
       "id": "sos_gjenlgb"
+    },
+    {
+      "org_id": "org_2yadadj",
+      "driver_id": "user_j3hp6ks",
+      "driver_name": "d1",
+      "truck_number": "MH-12-UNKNOWN",
+      "current_route": "NH-48, Pune Hwy",
+      "latitude": 18.664476,
+      "longitude": 73.775742,
+      "timestamp": "2026-07-02T19:02:53.968Z",
+      "status": "RESOLVED",
+      "id": "sos_ye9xjyg"
     }
   ],
   "scheduled_services": [

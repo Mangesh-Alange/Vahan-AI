@@ -368,16 +368,19 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       ReportAgent: "OFFLINE MODE: Saved localized backup diagnosis index. Awaiting cloud re-analysis sync."
     };
 
+    const offlineSymptomEnglish = bestMatch.symptom_english + (audioSignalClass !== 'normal' ? " ENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER." : "");
+    const offlineDiagnosis = "OFFLINE MODE — Basic Local Diagnosis: " + bestMatch.symptom_english + " (Diagnosis run locally due to lack of network). Likely cause: " + bestMatch.likely_causes.join(", ") + (audioSignalClass !== 'normal' ? "\n\nENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER." : "");
+
     return {
       id: "offline_rep_" + Math.random().toString(36).substring(2, 9),
       vehicle_id: selectedVehicleId || "veh_unknown",
       driver_id: user.id,
       timestamp: new Date().toISOString(),
       symptom_text_hindi: hindiText,
-      symptom_text_english: bestMatch.symptom_english,
+      symptom_text_english: offlineSymptomEnglish,
       acoustic_signal_class: audioSignalClass,
       severity: bestMatch.severity,
-      diagnosis: "OFFLINE MODE — Basic Local Diagnosis: " + bestMatch.symptom_english + " (Diagnosis run locally due to lack of network). Likely cause: " + bestMatch.likely_causes.join(", "),
+      diagnosis: offlineDiagnosis,
       recommended_action: bestMatch.recommended_action,
       estimated_cost_range: bestMatch.typical_cost_range,
       synced_at: null, // null indicates offline pending sync
@@ -654,7 +657,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
         let maxMatches = 0;
 
         for (const fault of faultKnowledgeBase) {
-          const keywords = [...fault.symptoms_hindi, ...fault.symptoms_english].flatMap(s => s.toLowerCase().split(/\s+/));
+          const keywords = [fault.symptom_hindi, fault.symptom_english].flatMap(s => s.toLowerCase().split(/\s+/));
           let matches = 0;
           for (const w of words) {
             try {
@@ -1474,7 +1477,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
               disabled={isSendingSos}
               className={`w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-xs font-black px-5 py-3 rounded-2xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 ${isSendingSos ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              <span>🆘 Send SOS Alert</span>
+              <span>🆘 Emergency SOS</span>
             </button>
           </div>
 
@@ -1743,6 +1746,13 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                         "{diagnosisResult.symptom_text_english}"
                       </p>
                     </div>
+
+                    {diagnosisResult.acoustic_signal_class && diagnosisResult.acoustic_signal_class !== 'normal' && (
+                      <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-xs font-bold text-red-500 flex items-center gap-2 mt-2">
+                        <AlertTriangle className="h-4 w-4 shrink-0 text-red-500" />
+                        <span>⚠️ ENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.</span>
+                      </div>
+                    )}
 
                     <div className="border-t border-slate-200 dark:border-white/10 pt-3">
                       <p className="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-wider">Mechanical Diagnosis</p>
@@ -2195,6 +2205,12 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
 
                       <div className="glass dark:bg-slate-800/50 p-2.5 rounded border border-slate-200 dark:border-slate-700 space-y-1.5 text-[11px] leading-normal">
                         <p className="text-amber-400 font-bold">{report.diagnosis}</p>
+                        {report.acoustic_signal_class && report.acoustic_signal_class !== 'normal' && (
+                          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2 text-[10px] font-bold text-red-400 flex items-center gap-1.5 my-1">
+                            <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-red-500" />
+                            <span>ENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.</span>
+                          </div>
+                        )}
                         <p className="text-slate-600 dark:text-slate-400 font-medium">Action: {report.recommended_action}</p>
                         <p className="text-slate-900 dark:text-white font-black text-xs pt-1 border-t border-slate-200 dark:border-slate-800">
                           Est Cost: {report.estimated_cost_range}
