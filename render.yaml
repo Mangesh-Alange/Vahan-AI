@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: vahan-ai
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: node server-dist/server.cjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GEMINI_API_KEY
+        placeholder: "Enter your Gemini API Key"
+      - key: MONGODB_URI
+        placeholder: "Enter your MongoDB connection string (Optional)"
