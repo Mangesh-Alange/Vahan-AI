@@ -8,6 +8,7 @@ import { motion } from 'motion/react';
 import { User as UserType } from './types.js';
 import DriverApp from './driver-app/DriverApp.js';
 import FleetPortal from './fleet-portal/FleetPortal.js';
+import { API_URL } from './config.js';
 
 export default function App() {
   // Current session user
@@ -80,7 +81,7 @@ export default function App() {
 
   // Fetch Database connection/fallback status on mount
   useEffect(() => {
-    fetch('/api/db-status')
+    fetch(`${API_URL}/api/db-status`)
       .then(res => res.json())
       .then(data => setDbStatus(data))
       .catch(err => console.error("Failed to fetch database status", err));
@@ -109,7 +110,7 @@ export default function App() {
     }
 
     try {
-      const res = await fetch(url, {
+      const res = await fetch(`${API_URL}${url}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -146,7 +147,7 @@ export default function App() {
     setErrorMsg('');
     setIsLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

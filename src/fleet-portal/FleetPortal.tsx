@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { User, Vehicle, FaultReport, FleetAlert, ServiceCenter, FatigueEvent, SosAlert } from '../types.js';
 import { motion, AnimatePresence } from 'motion/react';
+import { API_URL } from '../config.js';
 
 interface FleetPortalProps {
   user: User;
@@ -153,7 +154,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   const loadSafetyDataOnly = async () => {
     if (!user.org_id) return;
     try {
-      const res = await fetch(`/api/fatigue-events?org_id=${user.org_id}`);
+      const res = await fetch(`${API_URL}/api/fatigue-events?org_id=${user.org_id}`);
       const data = await res.json();
       if (data.events) {
         setSafetyLogs(data.events);
@@ -212,10 +213,10 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   const loadSosAlertsOnly = async () => {
     if (!user.org_id) return;
     try {
-      const schedRes = await fetch(`/api/scheduled-services?org_id=${user.org_id}`);
+      const schedRes = await fetch(`${API_URL}/api/scheduled-services?org_id=${user.org_id}`);
       const schedData = await schedRes.json();
       if (schedData.services) setScheduledServices(schedData.services);
-      const res = await fetch(`/api/sos-alerts?org_id=${user.org_id}`);
+      const res = await fetch(`${API_URL}/api/sos-alerts?org_id=${user.org_id}`);
       const data = await res.json();
       if (data.alerts) {
         setSosAlerts(data.alerts);
@@ -248,7 +249,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
 
   const handleResolveSos = async (alertId: string) => {
     try {
-      const res = await fetch(`/api/sos-alerts/${alertId}/resolve`, {
+      const res = await fetch(`${API_URL}/api/sos-alerts/${alertId}/resolve`, {
         method: 'POST'
       });
       if (res.ok) {
@@ -315,14 +316,14 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
     setIsRefreshing(true);
     try {
       const [vRes, dRes, rRes, aRes, wRes, sRes, sosRes, schedRes] = await Promise.all([
-        fetch(`/api/vehicles?org_id=${user.org_id}`),
-        fetch(`/api/drivers?org_id=${user.org_id}`),
-        fetch(`/api/fault-reports?org_id=${user.org_id}`),
-        fetch(`/api/fleet-alerts?org_id=${user.org_id}`),
-        fetch('/api/service-centers'),
-        fetch(`/api/fatigue-events?org_id=${user.org_id}`),
-        fetch(`/api/sos-alerts?org_id=${user.org_id}`),
-        fetch(`/api/scheduled-services?org_id=${user.org_id}`)
+        fetch(`${API_URL}/api/vehicles?org_id=${user.org_id}`),
+        fetch(`${API_URL}/api/drivers?org_id=${user.org_id}`),
+        fetch(`${API_URL}/api/fault-reports?org_id=${user.org_id}`),
+        fetch(`${API_URL}/api/fleet-alerts?org_id=${user.org_id}`),
+        fetch(`${API_URL}/api/service-centers`),
+        fetch(`${API_URL}/api/fatigue-events?org_id=${user.org_id}`),
+        fetch(`${API_URL}/api/sos-alerts?org_id=${user.org_id}`),
+        fetch(`${API_URL}/api/scheduled-services?org_id=${user.org_id}`)
       ]);
 
       const [vData, dData, rData, aData, wData, sData, sosData, schedData] = await Promise.all([
@@ -365,7 +366,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
     if (!newVehicle.registration_number || !newVehicle.model) return;
 
     try {
-      const res = await fetch('/api/vehicles', {
+      const res = await fetch(`${API_URL}/api/vehicles`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -402,7 +403,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   const handleDeleteVehicle = async (id: string) => {
     if (!window.confirm("Are you sure you want to remove this vehicle from your fleet? This is irreversible.")) return;
     try {
-      const res = await fetch(`/api/vehicles/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/api/vehicles/${id}`, { method: 'DELETE' });
       if (res.ok) {
         setVehicles(prev => prev.filter(v => v.id !== id));
       }
@@ -413,7 +414,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
 
   const handleUpdateVehicleDriver = async (vehicleId: string, driverId: string) => {
     try {
-      const res = await fetch(`/api/vehicles/${vehicleId}`, {
+      const res = await fetch(`${API_URL}/api/vehicles/${vehicleId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ assigned_driver_id: driverId || null })
@@ -451,7 +452,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   // -----------------------------------------------------
   const handleResolveAlert = async (id: string) => {
     try {
-      const res = await fetch(`/api/fleet-alerts/${id}/resolve`, { method: 'POST' });
+      const res = await fetch(`${API_URL}/api/fleet-alerts/${id}/resolve`, { method: 'POST' });
       if (res.ok) {
         setAlerts(prev => prev.map(a => a.id === id ? { ...a, resolved: true } : a));
       }

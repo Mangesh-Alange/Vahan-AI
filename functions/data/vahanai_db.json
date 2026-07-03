@@ -1,0 +1,875 @@
+{
+  "organizations": [
+    {
+      "id": "org_rajpath",
+      "name": "Rajpath Roadways Logistics",
+      "plan_tier": "pro",
+      "created_at": "2026-01-10T10:00:00Z"
+    },
+    {
+      "id": "org_kedar",
+      "name": "Kedar Inter-State Logistics",
+      "plan_tier": "pro",
+      "created_at": "2026-02-15T12:00:00Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "user_mangesh",
+      "org_id": "org_rajpath",
+      "role": "fleet_manager",
+      "name": "Mangesh Alange",
+      "phone": "9876543210",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "preferred_language": "en",
+      "created_at": "2026-01-11T09:00:00Z"
+    },
+    {
+      "id": "driver_gurpreet",
+      "org_id": "org_rajpath",
+      "role": "driver",
+      "name": "Gurpreet Singh",
+      "phone": "9123456781",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "preferred_language": "hi",
+      "created_at": "2026-01-15T08:30:00Z"
+    },
+    {
+      "id": "driver_amit",
+      "org_id": "org_rajpath",
+      "role": "driver",
+      "name": "Amit Sharma",
+      "phone": "9123456782",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "preferred_language": "hi",
+      "created_at": "2026-01-20T08:15:00Z"
+    },
+    {
+      "id": "driver_sunil",
+      "org_id": "org_kedar",
+      "role": "driver",
+      "name": "Sunil Yadav",
+      "phone": "9123456783",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "preferred_language": "hi",
+      "created_at": "2026-02-17T08:45:00Z"
+    },
+    {
+      "id": "driver_harpreet",
+      "org_id": "org_kedar",
+      "role": "driver",
+      "name": "Harpreet Singh",
+      "phone": "9123456784",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "preferred_language": "hi",
+      "created_at": "2026-02-20T08:00:00Z"
+    },
+    {
+      "org_id": "org_ceslh33",
+      "role": "fleet_manager",
+      "name": "Mangesh Alange",
+      "phone": "8080393903",
+      "preferred_language": "hindi",
+      "id": "user_pk1w9oz",
+      "password_hash": "5e7ef6a5edfc297a246e6da95fd591f161d93b75c699d010c1bf5463a97bef45",
+      "created_at": "2026-07-01T15:52:02.035Z"
+    },
+    {
+      "org_id": "org_ceslh33",
+      "role": "driver",
+      "name": "Driver 1",
+      "phone": "1234567890",
+      "preferred_language": "hindi",
+      "id": "user_ndm4xbq",
+      "password_hash": "494d022492052a06f8f81949639a1d148c1051fa3d4e4688fbd96efe649cd382",
+      "created_at": "2026-07-01T15:54:50.236Z"
+    },
+    {
+      "org_id": "org_h5kip75",
+      "role": "fleet_manager",
+      "name": "TEST DRIVER",
+      "phone": "1234567895",
+      "preferred_language": "hindi",
+      "id": "user_ou1glbe",
+      "password_hash": "494d022492052a06f8f81949639a1d148c1051fa3d4e4688fbd96efe649cd382",
+      "created_at": "2026-07-02T13:48:45.121Z"
+    },
+    {
+      "org_id": "org_5bkmbcl",
+      "role": "fleet_manager",
+      "name": "Test Owner",
+      "phone": "9999900001",
+      "preferred_language": "hindi",
+      "id": "user_fypgh9n",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "created_at": "2026-07-02T14:38:20.070Z"
+    },
+    {
+      "org_id": "org_5bkmbcl",
+      "role": "driver",
+      "name": "Test Driver",
+      "phone": "9999900002",
+      "preferred_language": "hindi",
+      "id": "user_47cloul",
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "created_at": "2026-07-02T14:41:16.513Z"
+    },
+    {
+      "org_id": "org_i6avc95",
+      "role": "fleet_manager",
+      "name": "Rajpath Owner",
+      "phone": "9999900003",
+      "preferred_language": "hindi",
+      "id": "user_kkieev8",
+      "password_hash": "2e2b24f8ee40bb847fe85bb23336a39ef5948e6b49d897419ced68766b16967a",
+      "created_at": "2026-07-02T14:48:18.042Z"
+    },
+    {
+      "org_id": "org_rajpath",
+      "role": "driver",
+      "name": "Rajpath Driver",
+      "phone": "9999900004",
+      "preferred_language": "hindi",
+      "id": "user_cyw0xeb",
+      "password_hash": "2e2b24f8ee40bb847fe85bb23336a39ef5948e6b49d897419ced68766b16967a",
+      "created_at": "2026-07-02T14:50:01.111Z"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "veh_1",
+      "org_id": "org_rajpath",
+      "registration_number": "MH-12-QW-5678",
+      "make": "Tata",
+      "model": "Signa 4825.T",
+      "year": 2023,
+      "assigned_driver_id": "driver_rajesh",
+      "mileage": 124500,
+      "last_service_date": "2026-05-10"
+    },
+    {
+      "id": "veh_2",
+      "org_id": "org_rajpath",
+      "registration_number": "MH-14-ER-9012",
+      "make": "Tata",
+      "model": "Prima 5530.S",
+      "year": 2024,
+      "assigned_driver_id": "driver_gurpreet",
+      "mileage": 86200,
+      "last_service_date": "2026-04-12"
+    },
+    {
+      "id": "veh_3",
+      "org_id": "org_rajpath",
+      "registration_number": "DL-01-AB-1234",
+      "make": "Ashok Leyland",
+      "model": "Dost Strong",
+      "year": 2022,
+      "assigned_driver_id": "driver_amit",
+      "mileage": 154000,
+      "last_service_date": "2026-05-18"
+    },
+    {
+      "id": "veh_4",
+      "org_id": "org_rajpath",
+      "registration_number": "MH-12-ZY-9988",
+      "make": "Mahindra",
+      "model": "Blazo X 49",
+      "year": 2023,
+      "assigned_driver_id": null,
+      "mileage": 98000,
+      "last_service_date": "2026-05-02"
+    },
+    {
+      "id": "veh_5",
+      "org_id": "org_rajpath",
+      "registration_number": "MH-12-PL-3344",
+      "make": "Tata",
+      "model": "Ace Gold Diesel",
+      "year": 2021,
+      "assigned_driver_id": null,
+      "mileage": 210000,
+      "last_service_date": "2026-03-30"
+    },
+    {
+      "id": "veh_6",
+      "org_id": "org_kedar",
+      "registration_number": "HR-26-XY-9012",
+      "make": "Mahindra",
+      "model": "Bolero Maxx Pick-Up",
+      "year": 2022,
+      "assigned_driver_id": "driver_sunil",
+      "mileage": 112000,
+      "last_service_date": "2026-05-15"
+    },
+    {
+      "id": "veh_7",
+      "org_id": "org_kedar",
+      "registration_number": "HR-55-AB-7777",
+      "make": "Ashok Leyland",
+      "model": "U-Truck 4019.T",
+      "year": 2023,
+      "assigned_driver_id": "driver_harpreet",
+      "mileage": 94500,
+      "last_service_date": "2026-05-20"
+    },
+    {
+      "id": "veh_8",
+      "org_id": "org_kedar",
+      "registration_number": "HR-26-QQ-3344",
+      "make": "Tata",
+      "model": "Signa 2823.K",
+      "year": 2023,
+      "assigned_driver_id": null,
+      "mileage": 101000,
+      "last_service_date": "2026-04-05"
+    },
+    {
+      "org_id": "org_ceslh33",
+      "registration_number": "MH-12-YK-3561",
+      "make": "Ashok Leyland",
+      "model": "Signa",
+      "year": 2024,
+      "assigned_driver_id": "user_ndm4xbq",
+      "mileage": 500,
+      "last_service_date": "2026-07-01",
+      "id": "veh_icvnigx"
+    },
+    {
+      "org_id": "org_5bkmbcl",
+      "registration_number": "MH-12-YK-3561",
+      "make": "Tata",
+      "model": "Tata Prima",
+      "year": 2024,
+      "assigned_driver_id": "user_47cloul",
+      "mileage": 50000,
+      "last_service_date": "2026-07-02",
+      "id": "veh_c7hy2n0"
+    },
+    {
+      "org_id": "org_rajpath",
+      "registration_number": "MH-12-YK-3561",
+      "make": "Tata",
+      "model": "Tata Prima",
+      "year": 2024,
+      "assigned_driver_id": "user_cyw0xeb",
+      "mileage": 50000,
+      "last_service_date": "2026-07-02",
+      "id": "veh_b32mmxe"
+    }
+  ],
+  "fault_reports": [
+    {
+      "id": "rep_hist_1",
+      "vehicle_id": "veh_1",
+      "driver_id": "driver_rajesh",
+      "timestamp": "2026-06-15T10:14:00Z",
+      "symptom_text_hindi": "Break dabaane par dhum-dhum lag raha hai aur pedal dhas raha hai",
+      "symptom_text_english": "Thudding when pressing brakes and the pedal is sinking",
+      "acoustic_signal_class": "squeal",
+      "severity": "stop_immediately",
+      "diagnosis": "Front Brake Pads completely worn down to the backing plate, caliper seals leaking fluid.",
+      "recommended_action": "Change front brake pads, replace caliper seal kits, bleed brake system.",
+      "estimated_cost_range": "₹4,500 - ₹9,500",
+      "synced_at": "2026-06-15T10:14:00Z",
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing brake failure symptom to Triage and Maintenance specialists.\"},\"DiagnosticAgent\":{\"log\":\"Matched symptom with knowledge base kb_02 (brake squealing and pedal vibration). High confidence.\"},\"TriageAgent\":{\"log\":\"Braking fluid pressure dropping. Setting severity to STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Estimated cost ₹4,500 - ₹9,500. Directing to Sanjay Gandhi Hub SC (sc_01).\"}}"
+    },
+    {
+      "id": "rep_hist_2",
+      "vehicle_id": "veh_1",
+      "driver_id": "driver_rajesh",
+      "timestamp": "2026-06-20T14:45:00Z",
+      "symptom_text_hindi": "Engine se kharkhar aawaz aa rahi hai thodi speed badhne pe",
+      "symptom_text_english": "Rattling noise from the engine when speed increases slightly",
+      "acoustic_signal_class": "knock",
+      "severity": "caution",
+      "diagnosis": "Loose heat shield clamp vibrating near exhaust manifold and turbo joint.",
+      "recommended_action": "Tighten heat shield clamping bolts and inspect exhaust mounting rubber.",
+      "estimated_cost_range": "₹800 - ₹1,800",
+      "synced_at": "2026-06-20T14:45:00Z",
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Identified accessory rattle.\"},\"DiagnosticAgent\":{\"log\":\"Non-critical tapping. Matches kb_36 (exhaust rattling).\"},\"TriageAgent\":{\"log\":\"Safe to drive to dispatch point. Severity: CAUTION.\"},\"MaintenanceAgent\":{\"log\":\"Estimate ₹800. Simple bolt fastening.\"}}"
+    },
+    {
+      "id": "rep_hist_3",
+      "vehicle_id": "veh_2",
+      "driver_id": "driver_gurpreet",
+      "timestamp": "2026-06-22T08:30:00Z",
+      "symptom_text_hindi": "Dashboard par check engine aur low oil lights aa gayi hai",
+      "symptom_text_english": "Check engine and low oil indicators are on the dashboard",
+      "acoustic_signal_class": "normal",
+      "severity": "stop_immediately",
+      "diagnosis": "Severe engine lubrication depletion. Oil level is below minimum marker. Possible oil sump gasket leak.",
+      "recommended_action": "Do not drive. Check engine oil level using dipstick. If empty, inspect sump. Top up with 15W-40 truck oil immediately.",
+      "estimated_cost_range": "₹6,000 - ₹12,000",
+      "synced_at": "2026-06-22T08:30:00Z",
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing critical warning dashboard light.\"},\"DiagnosticAgent\":{\"log\":\"Engine running dry leads to catastrophic piston seizure. Matches kb_15 partially.\"},\"TriageAgent\":{\"log\":\"Absolute safety hazard. Severity: STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Sump gaskets and fresh oil required.\"}}"
+    },
+    {
+      "id": "rep_hist_4",
+      "vehicle_id": "veh_3",
+      "driver_id": "driver_amit",
+      "timestamp": "2026-06-25T11:20:00Z",
+      "symptom_text_hindi": "Gear badalne me thoda dubaav lag raha hai, clutch dheela hai",
+      "symptom_text_english": "Difficulty shifting gears, clutch pedal feels loose and spongy",
+      "acoustic_signal_class": "normal",
+      "severity": "caution",
+      "diagnosis": "Clutch master cylinder fluid leak. Air trapped in hydraulic clutch actuation loop.",
+      "recommended_action": "Refill clutch fluid DOT-4 reservoir, inspect secondary hose lines, bleed master cylinder.",
+      "estimated_cost_range": "₹2,500 - ₹5,500",
+      "synced_at": "2026-06-25T11:20:00Z",
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Symptom mapped to clutch actuation hydraulic loop.\"},\"DiagnosticAgent\":{\"log\":\"Matches kb_06 (clutch master cylinder leak). Moderate confidence.\"},\"TriageAgent\":{\"log\":\"Vehicle can drive with rev-matching or cautious single-gear crawl. Severity: CAUTION.\"},\"MaintenanceAgent\":{\"log\":\"Estimate ₹2,500. Hydraulic seal repair.\"}}"
+    },
+    {
+      "id": "rep_hist_5",
+      "vehicle_id": "veh_6",
+      "driver_id": "driver_sunil",
+      "timestamp": "2026-06-28T16:10:00Z",
+      "symptom_text_hindi": "Socks aur steering me thartharahat ho rahi hai NH-44 pe daudte waqt",
+      "symptom_text_english": "Vibrations in suspension and steering when cruising on NH-44",
+      "acoustic_signal_class": "normal",
+      "severity": "drive",
+      "diagnosis": "Front wheel dynamic imbalance or slightly bent wheel rim from impact.",
+      "recommended_action": "Perform wheel balancing and wheel alignment. Inspect front steel rims for oval deflection.",
+      "estimated_cost_range": "₹1,200 - ₹2,800",
+      "synced_at": "2026-06-28T16:10:00Z",
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing steering wheel instability.\"},\"DiagnosticAgent\":{\"log\":\"Matches kb_13 (front tire alignment/imbalance). High confidence.\"},\"TriageAgent\":{\"log\":\"Safe to drive at moderate speed. Severity: DRIVE.\"},\"MaintenanceAgent\":{\"log\":\"Wheel balancing. Directing to sc_09 (Vijayawada).\"}}"
+    },
+    {
+      "id": "rep_pattern_1",
+      "vehicle_id": "veh_1",
+      "driver_id": "driver_rajesh",
+      "timestamp": "2026-06-29T10:00:00Z",
+      "symptom_text_hindi": "Gaadi ka engine band ho raha hai baar baar, thoda kaala dhua bhi aa raha hai",
+      "symptom_text_english": "The engine stalls repeatedly, and some black smoke is coming out",
+      "acoustic_signal_class": "misfire",
+      "severity": "stop_immediately",
+      "diagnosis": "Common Rail Fuel Injector solenoid failure. Blocked injector nozzle in cylinder 3.",
+      "recommended_action": "Inspect fuel injector nozzles, flush the common rail fuel delivery system, replace fuel filter.",
+      "estimated_cost_range": "₹9,000 - ₹20,000",
+      "synced_at": "2026-06-29T10:00:00Z",
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Analyzing fuel rail pressure drop.\"},\"DiagnosticAgent\":{\"log\":\"Corresponds directly to common rail fuel injector blockage (kb_01).\"},\"TriageAgent\":{\"log\":\"Risk of engine cylinder damage. Severity: STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Common rail cleaning required. Estimate ₹12,000.\"}}"
+    },
+    {
+      "id": "rep_pattern_2",
+      "vehicle_id": "veh_2",
+      "driver_id": "driver_gurpreet",
+      "timestamp": "2026-06-29T15:30:00Z",
+      "symptom_text_hindi": "Engine jhatka le raha hai aur black smoke silencer se aa raha hai",
+      "symptom_text_english": "Engine is jerking and black smoke is coming from the silencer",
+      "acoustic_signal_class": "misfire",
+      "severity": "stop_immediately",
+      "diagnosis": "Fuel injector nozzle wear in cylinder 1 and 2, causing incomplete combustion.",
+      "recommended_action": "Change fuel filter, perform injector nozzle cleaning, test fuel common rail pressure.",
+      "estimated_cost_range": "₹8,500 - ₹18,000",
+      "synced_at": "2026-06-29T15:30:00Z",
+      "agent_trace_json": "{\"SupervisorAgent\":{\"log\":\"Routing exhaust smoke anomaly.\"},\"DiagnosticAgent\":{\"log\":\"Matches kb_01 (injector clogging). High confidence.\"},\"TriageAgent\":{\"log\":\"Urgent. Severity: STOP_IMMEDIATELY.\"},\"MaintenanceAgent\":{\"log\":\"Injectors require testing on Bosch calibration bench.\"}}"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T16:00:29.744Z",
+      "symptom_text_hindi": "gadi nahi chal rahi",
+      "symptom_text_english": "gadi nahi chal rahi",
+      "acoustic_signal_class": "normal",
+      "severity": "stop_immediately",
+      "diagnosis": "इंजन अत्यधिक गर्म (Overheat) होना - रेडिएटर लीक या थर्मास्टेट वाल्व जाम (Radiator leak / Thermostat failure)",
+      "recommended_action": "1. गाड़ी तुरंत किनारे लगाएं।\n2. गरम रेडिएटर कैप को कभी भी न खोलें (गंभीर रूप से जलने का खतरा)।\n3. इंजन को 30 मिनट ठंडा होने दें, फिर साफ़ पानी या कूलेंट डालें और लीक की जांच करें।",
+      "estimated_cost_range": "₹2,500 - ₹12,000",
+      "synced_at": "2026-07-01T16:00:29.744Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_05 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Coolant leak / radiator puncture. Cost estimate standard: ₹2,500 - ₹12,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_xelzg3t"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T18:13:15.832Z",
+      "symptom_text_hindi": "meri gadi nahi chal rahi",
+      "symptom_text_english": null,
+      "acoustic_signal_class": "normal",
+      "severity": "caution",
+      "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
+      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
+      "estimated_cost_range": "N/A",
+      "synced_at": "2026-07-01T18:13:15.832Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
+      "id": "rep_3sfnwpd"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T18:17:22.065Z",
+      "symptom_text_hindi": "gadi nahi cahl rahi meri\n",
+      "symptom_text_english": null,
+      "acoustic_signal_class": "normal",
+      "severity": "caution",
+      "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
+      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
+      "estimated_cost_range": "N/A",
+      "synced_at": "2026-07-01T18:17:22.065Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
+      "id": "rep_ddiufto"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T18:31:23.931Z",
+      "symptom_text_hindi": "where is my nearby service station\n",
+      "symptom_text_english": null,
+      "acoustic_signal_class": "normal",
+      "severity": "caution",
+      "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
+      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
+      "estimated_cost_range": "N/A",
+      "synced_at": "2026-07-01T18:31:23.931Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
+      "id": "rep_nveoagd"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:05:43.143Z",
+      "symptom_text_hindi": "mere paas service  center kidhar hee",
+      "symptom_text_english": null,
+      "acoustic_signal_class": "normal",
+      "severity": "caution",
+      "diagnosis": "अज्ञात तकनीकी समस्या। (Unknown technical issue.)",
+      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
+      "estimated_cost_range": "N/A",
+      "synced_at": "2026-07-01T19:05:43.143Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"Diagnostic theory applied.\",\"TriageAgent\":\"Severity assessed as caution\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
+      "id": "rep_oc0d91x"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:14:13.490Z",
+      "symptom_text_hindi": "gadi nahi chal rahi meri kya karu",
+      "symptom_text_english": "gadi nahi chal rahi meri kya karu",
+      "acoustic_signal_class": "normal",
+      "severity": "stop_immediately",
+      "diagnosis": "इंजन अत्यधिक गर्म (Overheat) होना - रेडिएटर लीक या थर्मास्टेट वाल्व जाम (Radiator leak / Thermostat failure)",
+      "recommended_action": "1. गाड़ी तुरंत किनारे लगाएं।\n2. गरम रेडिएटर कैप को कभी भी न खोलें (गंभीर रूप से जलने का खतरा)।\n3. इंजन को 30 मिनट ठंडा होने दें, फिर साफ़ पानी या कूलेंट डालें और लीक की जांच करें।",
+      "estimated_cost_range": "₹2,500 - ₹12,000",
+      "synced_at": "2026-07-01T19:14:13.490Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_05 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Coolant leak / radiator puncture. Cost estimate standard: ₹2,500 - ₹12,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_bf8ar0f"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:14:37.123Z",
+      "symptom_text_hindi": "gadi naih cahl rahi kya karu",
+      "symptom_text_english": "gadi naih cahl rahi kya karu",
+      "acoustic_signal_class": "normal",
+      "severity": "stop_immediately",
+      "diagnosis": "ब्रेक पैड पूरी तरह घिस गए हैं या ब्रेक डिस्क खराब है (Worn brake pads / Warped brake rotors)",
+      "recommended_action": "1. ब्रेक सिस्टम कमजोर हो गया है।\n2. गाड़ी की गति कम करें और सुरक्षित स्थान पर रोकें।\n3. ब्रेक पैड को तुरंत बदलवाएं, वरना ब्रेक पूरी तरह फेल हो सकते हैं।",
+      "estimated_cost_range": "₹3,500 - ₹9,000",
+      "synced_at": "2026-07-01T19:14:37.123Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_02 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Worn brake pads (metal-on-metal). Cost estimate standard: ₹3,500 - ₹9,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_sgs1shh"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:17:10.398Z",
+      "symptom_text_hindi": "gadi nahi chal rahi he kya karu",
+      "symptom_text_english": "gadi nahi chal rahi he kya karu",
+      "acoustic_signal_class": "normal",
+      "severity": "stop_immediately",
+      "diagnosis": "इंजन अत्यधिक गर्म (Overheat) होना - रेडिएटर लीक या थर्मास्टेट वाल्व जाम (Radiator leak / Thermostat failure)",
+      "recommended_action": "1. गाड़ी तुरंत किनारे लगाएं।\n2. गरम रेडिएटर कैप को कभी भी न खोलें (गंभीर रूप से जलने का खतरा)।\n3. इंजन को 30 मिनट ठंडा होने दें, फिर साफ़ पानी या कूलेंट डालें और लीक की जांच करें।",
+      "estimated_cost_range": "₹2,500 - ₹12,000",
+      "synced_at": "2026-07-01T19:17:10.398Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_05 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Coolant leak / radiator puncture. Cost estimate standard: ₹2,500 - ₹12,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_ll00rsx"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:17:31.681Z",
+      "symptom_text_hindi": "mere paas service station kaha milega",
+      "symptom_text_english": "mere paas service station kaha milega",
+      "acoustic_signal_class": "normal",
+      "severity": "caution",
+      "diagnosis": "गियर शिफ्टर लिंकेज या क्लच सिलेंडर लीक होना (Clutch cylinder leak / Gearbox synchronizer wear)",
+      "recommended_action": "1. क्लच ऑयल रिज़र्वोइर (clutch oil reservoir) चेक करें।\n2. यदि खाली है, तो ब्रेक/क्लच ऑयल डालें और क्लच पेडल को दबाएं।\n3. धीरे-धीरे बिना बार-बार गियर बदले पास के गैरेज में पहुंचें।",
+      "estimated_cost_range": "₹6,000 - ₹18,000",
+      "synced_at": "2026-07-01T19:17:31.681Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_06 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: CAUTION. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Clutch master or slave cylinder leak. Cost estimate standard: ₹6,000 - ₹18,000.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_lrzbmz1"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:22:47.011Z",
+      "symptom_text_hindi": "mere pas service sattion kidhar he",
+      "symptom_text_english": "mere pas service sattion kidhar he",
+      "acoustic_signal_class": "normal",
+      "severity": "stop_immediately",
+      "diagnosis": "रियर ब्रेक चैंबर डायाफ्राम खराब या लीक (Damaged rear brake chamber diaphragm)",
+      "recommended_action": "1. अचानक रियर ब्रेक जाम हो सकते हैं।\n2. गाड़ी को सुरक्षित किनारे लगाएं।\n3. रियर व्हील के पीछे जाने वाले एयर होज़ पाइप की जांच करें। ब्रेक एयर बाईपास न करें।",
+      "estimated_cost_range": "₹2,800 - ₹7,500",
+      "synced_at": "2026-07-01T19:22:47.011Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_30 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: STOP_IMMEDIATELY. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of Damaged air brake chamber diaphragm. Cost estimate standard: ₹2,800 - ₹7,500.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_3mnazp4"
+    },
+    {
+      "vehicle_id": "veh_icvnigx",
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T19:27:06.362Z",
+      "symptom_text_hindi": "mere pas service station kidhar he",
+      "symptom_text_english": null,
+      "acoustic_signal_class": "normal",
+      "severity": "drive",
+      "diagnosis": "यह एक सामान्य प्रश्न है, वाहन की खराबी नहीं",
+      "recommended_action": "कृपया नजदीकी मैकेनिक से संपर्क करें।",
+      "estimated_cost_range": "N/A",
+      "synced_at": "2026-07-01T19:27:06.362Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"पूछा गया प्रश्न 'मेरे पास सर्विस स्टेशन किधर है' वाहन में किसी खराबी से संबंधित नहीं है, बल्कि यह एक स्थान संबंधी सामान्य पूछताछ है। उपलब्ध संदर्भ जानकारी भी इसे एक सामान्य प्रश्न (स्थान संबंधी खोज) के रूप में पहचानती है।\",\"TriageAgent\":\"The diagnosis explicitly states 'वाहन की खराबी नहीं' (not a vehicle fault). Per instructions, if the diagnosis indicates it is not a vehicle fault, the severity is always 'drive'.\",\"MaintenanceAgent\":\"Maintenance protocol drafted.\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
+      "id": "rep_kb8eieu"
+    },
+    {
+      "vehicle_id": "veh_c7hy2n0",
+      "driver_id": "user_47cloul",
+      "timestamp": "2026-07-02T14:45:07.734Z",
+      "symptom_text_hindi": "What error do you get when you click Schedule Inspection?",
+      "symptom_text_english": "Translation failed",
+      "acoustic_signal_class": "normal",
+      "severity": "drive",
+      "diagnosis": "यह एक सामान्य प्रश्न है, वाहन की खराबी नहीं",
+      "recommended_action": "नमस्ते! आपकी दी गई जानकारी के अनुसार, यह वाहन से संबंधित कोई खराबी नहीं लगती, बल्कि एक सामान्य प्रश्न है। कृपया अपना प्रश्न विस्तार से बताएं ताकि मैं आपकी बेहतर सहायता कर सकूँ।",
+      "estimated_cost_range": "N/A",
+      "synced_at": "2026-07-02T14:45:07.734Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Routing handled.\",\"DiagnosticAgent\":\"प्रदान किया गया लक्षण 'शेड्यूल इंस्पेक्शन' पर क्लिक करने पर संभावित त्रुटि के बारे में एक प्रश्न है, न कि किसी वास्तविक वाहन खराबी या त्रुटि की रिपोर्ट। यह स्थानीय RAG संदर्भ (kb_00) में वर्णित एक सामान्य प्रश्न (General inquiry) की श्रेणी में आता है।\",\"TriageAgent\":\"The diagnosis explicitly states 'वाहन की खराबी नहीं' (not a vehicle fault), indicating that the issue is a general question and not related to vehicle malfunction. According to the instructions, if the diagnosis indicates it is not a vehicle fault, the severity must always be 'drive'.\",\"MaintenanceAgent\":\"दिए गए निदान के अनुसार, समस्या वाहन की खराबी नहीं बल्कि एक सामान्य प्रश्न है। इसलिए, तकनीकी रखरखाव चरणों की आवश्यकता नहीं है।\",\"ReportAgent\":\"Compiled structured diagnostic workflow from LangGraph agents successfully.\"}",
+      "id": "rep_umpidic"
+    },
+    {
+      "vehicle_id": "veh_c7hy2n0",
+      "driver_id": "user_47cloul",
+      "timestamp": "2026-07-02T14:45:21.688Z",
+      "symptom_text_hindi": "What error do you get when you click Schedule Inspection?",
+      "symptom_text_english": "What error do you get when you click Schedule Inspection?",
+      "acoustic_signal_class": "normal",
+      "severity": "drive",
+      "diagnosis": "संभावित खराबी: This is not a vehicle fault, it is a general question (locations, greetings, etc.).. General inquiry, Location search, Chat suspected.",
+      "recommended_action": "सुझाव: इस सवाल का जवाब देने के लिए कृपया को-पायलट चैट का उपयोग करें। (Please use the Copilot chat to answer this question.)",
+      "estimated_cost_range": "₹2,500 - ₹15,000",
+      "synced_at": "2026-07-02T14:45:21.688Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_00 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: DRIVE. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of General inquiry. Cost estimate standard: N/A.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_zh6izd0"
+    }
+  ],
+  "fleet_alerts": [
+    {
+      "id": "alert_1",
+      "org_id": "org_rajpath",
+      "pattern_description": "Fuel System Issues (Fuel Injector failures / Black smoke) detected on multiple Tata Signa/Prima vehicles within a 24-hour window. Possible adulterated diesel batch at NH-44 fueling hub.",
+      "related_fault_report_ids": [
+        "rep_pattern_1",
+        "rep_pattern_2"
+      ],
+      "created_at": "2026-06-29T16:00:00Z",
+      "resolved": true
+    },
+    {
+      "id": "sos_7irmfo9",
+      "org_id": "org_rajpath",
+      "pattern_description": "SOS EMERGENCY ALERT: गाड़ी ख़राब है और ड्राइवर हाईवे पर फंसा हुआ है",
+      "severity": "high",
+      "related_fault_report_ids": [],
+      "resolved": false,
+      "created_at": 1782934471946
+    }
+  ],
+  "service_centers": [
+    {
+      "id": "sc_01",
+      "name": "Tata Motors Authorized Service Center",
+      "location": "Sanjay Gandhi National Transport Hub, Mumbai, MH",
+      "vehicle_makes_supported": [
+        "Tata"
+      ]
+    },
+    {
+      "id": "sc_02",
+      "name": "Ashok Leyland Dost Care Workshop",
+      "location": "Okhla Industrial Area Phase-III, New Delhi, DL",
+      "vehicle_makes_supported": [
+        "Ashok Leyland"
+      ]
+    },
+    {
+      "id": "sc_03",
+      "name": "Mahindra Truck & Bus Care Point",
+      "location": "Sriperumbudur High Road, Chennai, TN",
+      "vehicle_makes_supported": [
+        "Mahindra"
+      ]
+    },
+    {
+      "id": "sc_04",
+      "name": "Tata Express Highway Support",
+      "location": "NH-44 Bypass, Shamshabad, Hyderabad, TS",
+      "vehicle_makes_supported": [
+        "Tata"
+      ]
+    },
+    {
+      "id": "sc_05",
+      "name": "Ashok Leyland Highway Care Clinic",
+      "location": "NH-8, Kukas Industrial Area, Jaipur, RJ",
+      "vehicle_makes_supported": [
+        "Ashok Leyland"
+      ]
+    },
+    {
+      "id": "sc_06",
+      "name": "Mahindra Rise Heavy Vehicle Garage",
+      "location": "Tumkur Road, Yashwantpur, Bangalore, KA",
+      "vehicle_makes_supported": [
+        "Mahindra"
+      ]
+    },
+    {
+      "id": "sc_07",
+      "name": "Kolkata Truck Junction Workshop",
+      "location": "Dankuni Toll Plaza, NH-19, Kolkata, WB",
+      "vehicle_makes_supported": [
+        "Tata",
+        "Ashok Leyland"
+      ]
+    },
+    {
+      "id": "sc_08",
+      "name": "Ganga Highway Heavy Repair Depot",
+      "location": "NH-19 Bypass, Mughal Sarai, Varanasi, UP",
+      "vehicle_makes_supported": [
+        "Tata",
+        "Ashok Leyland"
+      ]
+    },
+    {
+      "id": "sc_09",
+      "name": "Golden Quadrilateral Logistics Service",
+      "location": "NH-16 Bypass, Vijayawada, AP",
+      "vehicle_makes_supported": [
+        "Mahindra",
+        "Tata"
+      ]
+    },
+    {
+      "id": "sc_10",
+      "name": "Western India Multi-Brand Garage",
+      "location": "Kalamboli Steel Market, Navi Mumbai, MH",
+      "vehicle_makes_supported": [
+        "Tata",
+        "Ashok Leyland",
+        "Mahindra",
+        "Other"
+      ]
+    },
+    {
+      "id": "sc_11",
+      "name": "Central India North-South Service Hub",
+      "location": "NH-44, Kamptee Road, Nagpur, MH",
+      "vehicle_makes_supported": [
+        "Tata",
+        "Ashok Leyland"
+      ]
+    },
+    {
+      "id": "sc_12",
+      "name": "East-West Corridor Crossroad Garage",
+      "location": "NH-27 Junction, Jhansi, UP",
+      "vehicle_makes_supported": [
+        "Mahindra",
+        "Ashok Leyland"
+      ]
+    },
+    {
+      "id": "sc_13",
+      "name": "Gujarat Commercial Truck Clinic",
+      "location": "NH-48 Bypass, Surat, GJ",
+      "vehicle_makes_supported": [
+        "Tata",
+        "Ashok Leyland",
+        "Mahindra",
+        "Other"
+      ]
+    },
+    {
+      "id": "sc_14",
+      "name": "Sher-E-Punjab Truck Maintenance",
+      "location": "NH-44 GT Road, Ludhiana, PB",
+      "vehicle_makes_supported": [
+        "Ashok Leyland",
+        "Tata"
+      ]
+    },
+    {
+      "id": "sc_15",
+      "name": "South Corridor Express Garage",
+      "location": "NH-544 Bypass, Kalamassery, Kochi, KL",
+      "vehicle_makes_supported": [
+        "Mahindra",
+        "Tata"
+      ]
+    }
+  ],
+  "fatigue_events": [
+    {
+      "id": "fe_1",
+      "driver_id": "driver_rajesh",
+      "timestamp": "2026-06-28T02:14:00Z",
+      "ear_value": 0.18,
+      "duration_seconds": 12,
+      "severity": "critical"
+    },
+    {
+      "id": "fe_2",
+      "driver_id": "driver_rajesh",
+      "timestamp": "2026-06-28T04:20:00Z",
+      "ear_value": 0.22,
+      "duration_seconds": 5,
+      "severity": "caution"
+    },
+    {
+      "id": "fe_3",
+      "driver_id": "driver_amit",
+      "timestamp": "2026-06-29T23:45:00Z",
+      "ear_value": 0.15,
+      "duration_seconds": 18,
+      "severity": "critical"
+    },
+    {
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T18:10:00.224Z",
+      "ear_value": 0.20400000000000001,
+      "duration_seconds": 6,
+      "severity": "critical",
+      "id": "fe_yaszmex"
+    },
+    {
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-01T18:10:06.954Z",
+      "ear_value": 0.20587569121475022,
+      "duration_seconds": 6,
+      "severity": "critical",
+      "id": "fe_jf29d0y"
+    },
+    {
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-02T13:46:37.076Z",
+      "ear_value": 0.20400000000000001,
+      "duration_seconds": 6,
+      "severity": "critical",
+      "id": "fe_gunoej5"
+    },
+    {
+      "driver_id": "user_ndm4xbq",
+      "timestamp": "2026-07-02T13:46:55.987Z",
+      "ear_value": 0.20400000000000001,
+      "duration_seconds": 6,
+      "severity": "critical",
+      "id": "fe_ricvpef"
+    }
+  ],
+  "sos_alerts": [
+    {
+      "org_id": "org_ceslh33",
+      "driver_id": "user_ndm4xbq",
+      "driver_name": "Driver 1",
+      "truck_number": "MH-12-YK-3561",
+      "current_route": "NH-48, Pune Hwy",
+      "latitude": 18.524948370824273,
+      "longitude": 73.96103020708796,
+      "timestamp": "2026-07-02T13:45:17.915Z",
+      "status": "RESOLVED",
+      "id": "sos_pcnyihz"
+    },
+    {
+      "org_id": "org_ceslh33",
+      "driver_id": "user_ndm4xbq",
+      "driver_name": "Driver 1",
+      "truck_number": "MH-12-YK-3561",
+      "current_route": "NH-48, Pune Hwy",
+      "latitude": 18.524948370824273,
+      "longitude": 73.96103020708796,
+      "timestamp": "2026-07-02T13:45:19.340Z",
+      "status": "RESOLVED",
+      "id": "sos_xm93hui"
+    },
+    {
+      "org_id": "org_ceslh33",
+      "driver_id": "user_ndm4xbq",
+      "driver_name": "Driver 1",
+      "truck_number": "MH-12-YK-3561",
+      "current_route": "NH-48, Pune Hwy",
+      "latitude": 18.525047669976264,
+      "longitude": 73.961125899529,
+      "timestamp": "2026-07-02T13:47:15.641Z",
+      "status": "RESOLVED",
+      "id": "sos_wz89hbs"
+    },
+    {
+      "org_id": "org_ceslh33",
+      "driver_id": "user_ndm4xbq",
+      "driver_name": "Driver 1",
+      "truck_number": "MH-12-YK-3561",
+      "current_route": "NH-48, Pune Hwy",
+      "latitude": 18.525047669976264,
+      "longitude": 73.961125899529,
+      "timestamp": "2026-07-02T13:47:17.436Z",
+      "status": "RESOLVED",
+      "id": "sos_gjenlgb"
+    }
+  ],
+  "scheduled_services": [
+    {
+      "org_id": "org_rajpath",
+      "vehicle_id": "MH-12-YK-3561",
+      "driver_id": "u_driver1",
+      "reason": "Test",
+      "scheduled_date": "2026-07-02T14:26:53.435Z",
+      "id": "svc_1783002413650"
+    },
+    {
+      "org_id": "org_solo",
+      "vehicle_id": "MH-12-AB-1234",
+      "driver_id": "u_driver1",
+      "reason": "Test",
+      "scheduled_date": "2026-07-02T14:27:01.502Z",
+      "id": "svc_1783002421559"
+    },
+    {
+      "org_id": "org_rajpath",
+      "vehicle_id": "MH-12-YK-3561",
+      "driver_id": "u_driver1",
+      "reason": "Test",
+      "scheduled_date": "2026-07-02T14:30:59.036Z",
+      "id": "svc_1783002659131"
+    },
+    {
+      "org_id": "test",
+      "vehicle_id": "test",
+      "id": "svc_1783002907844"
+    },
+    {
+      "org_id": "org_rajpath",
+      "vehicle_id": "MH-12-YK-3561",
+      "driver_id": "user_cyw0xeb",
+      "reason": "Predictive AI Recommendation: Radiator Coolant Pump",
+      "scheduled_date": "2026-07-03T14:56:03.301Z",
+      "id": "svc_1783004163612"
+    },
+    {
+      "org_id": "org_ceslh33",
+      "vehicle_id": "MH-12-YK-3561",
+      "driver_id": "user_ndm4xbq",
+      "reason": "Predictive AI Recommendation: Radiator Coolant Pump",
+      "scheduled_date": "2026-07-03T14:56:20.036Z",
+      "id": "svc_1783004180037"
+    }
+  ]
+}

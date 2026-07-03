@@ -9,6 +9,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { User as UserType, Vehicle, FaultReport, FatigueEvent } from '../types.js';
 import { faultKnowledgeBase } from '../../server/faultKnowledgeBase.js';
+import { API_URL } from '../config.js';
 
 interface DriverAppProps {
   user: UserType;
@@ -187,7 +188,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
         const truckNumber = activeVehicle ? activeVehicle.registration_number : "MH-12-UNKNOWN";
         const currentRoute = "NH-48, Pune Hwy"; // Default current route
 
-        const res = await fetch('/api/sos-alerts', {
+        const res = await fetch(`${API_URL}/api/sos-alerts`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -286,7 +287,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   const fetchVehicles = async () => {
     try {
       if (!user.org_id) return;
-      const res = await fetch(`/api/vehicles?org_id=${user.org_id}`);
+      const res = await fetch(`${API_URL}/api/vehicles?org_id=${user.org_id}`);
       const data = await res.json();
       if (data.vehicles) {
         setVehicles(data.vehicles);
@@ -306,7 +307,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   // Load history
   const fetchHistory = async () => {
     try {
-      const res = await fetch(`/api/fault-reports/driver/${user.id}`);
+      const res = await fetch(`${API_URL}/api/fault-reports/driver/${user.id}`);
       const data = await res.json();
       if (data.reports) {
         setHistoryReports(data.reports);
@@ -411,7 +412,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
-        const res = await fetch('/api/fault-reports', {
+        const res = await fetch(`${API_URL}/api/fault-reports`, {
           signal: controller.signal,
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -453,7 +454,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     console.log(`Starting background sync of ${list.length} offline diagnostic reports...`);
 
     try {
-      const res = await fetch('/api/fault-reports/sync', {
+      const res = await fetch(`${API_URL}/api/fault-reports/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reports: list })
@@ -481,7 +482,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     if (!newVehicle.registration_number || !newVehicle.model) return;
 
     try {
-      const res = await fetch('/api/vehicles', {
+      const res = await fetch(`${API_URL}/api/vehicles`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -510,7 +511,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   // Bind driver to an existing unassigned org vehicle
   const handleBindExistingVehicle = async (vehicleId: string) => {
     try {
-      const res = await fetch(`/api/vehicles/${vehicleId}`, {
+      const res = await fetch(`${API_URL}/api/vehicles/${vehicleId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ assigned_driver_id: user.id })
@@ -592,7 +593,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
         reader.onloadend = async () => {
           const base64Data = (reader.result as string).split(',')[1];
           try {
-            const res = await fetch('/api/transcribe-audio', {
+            const res = await fetch(`${API_URL}/api/transcribe-audio`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -682,7 +683,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
-      const res = await fetch('/api/driver-copilot', {
+      const res = await fetch(`${API_URL}/api/driver-copilot`, {
         signal: controller.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1241,7 +1242,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     try {
       const finalEar = customEar !== undefined ? customEar : earValue;
       const finalSeverity = customSeverity || (simulateDrowsyRef.current ? "critical" : "caution");
-      await fetch('/api/fatigue-events', {
+      await fetch(`${API_URL}/api/fatigue-events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1534,7 +1535,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                   btn.disabled = true;
                   btn.textContent = "Scheduling...";
                   try {
-                    const res = await fetch('/api/schedule-service', {
+                    const res = await fetch(`${API_URL}/api/schedule-service`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({

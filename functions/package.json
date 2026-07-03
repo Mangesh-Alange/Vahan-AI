@@ -1,0 +1,21 @@
+{
+  "name": "vahanai-functions",
+  "description": "VahanAI Cloud Functions Backend",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": "20"
+  },
+  "dependencies": {
+    "@google/genai": "^2.4.0",
+    "@langchain/core": "^1.2.1",
+    "@langchain/google-genai": "^2.2.0",
+    "@langchain/langgraph": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "mongodb": "^7.4.0",
+    "firebase-functions": "^6.3.1",
+    "firebase-admin": "^13.0.2"
+  }
+}
