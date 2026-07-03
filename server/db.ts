@@ -111,7 +111,8 @@ interface DatabaseSchema {
   scheduled_services: ScheduledService[];
 }
 
-const DB_DIR = path.resolve(process.cwd(), 'data');
+const IS_SERVERLESS = !!(process.env.VERCEL || process.env.FIREBASE_FUNCTIONS || process.env.LAMBDA_TASK_ROOT);
+const DB_DIR = IS_SERVERLESS ? path.resolve('/tmp', 'data') : path.resolve(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'vahanai_db.json');
 
 function hashPassword(password: string): string {
@@ -234,7 +235,24 @@ export class Database {
 
   private init() {
     if (!fs.existsSync(DB_DIR)) {
-      fs.mkdirSync(DB_DIR, { recursive: true });
+      try {
+        fs.mkdirSync(DB_DIR, { recursive: true });
+      } catch (err) {
+        console.error("Failed to create database directory:", err);
+      }
+    }
+
+    // In serverless, if the writable DB file doesn't exist in /tmp, copy the bundled one
+    if (IS_SERVERLESS && !fs.existsSync(DB_FILE)) {
+      const bundledDbFile = path.resolve(process.cwd(), 'data', 'vahanai_db.json');
+      if (fs.existsSync(bundledDbFile)) {
+        try {
+          fs.copyFileSync(bundledDbFile, DB_FILE);
+          console.log("Copied bundled database file to writable /tmp path.");
+        } catch (err) {
+          console.error("Failed to copy bundled database file to writable path:", err);
+        }
+      }
     }
 
     if (fs.existsSync(DB_FILE)) {
@@ -251,7 +269,11 @@ export class Database {
   }
 
   private save() {
-    fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+    } catch (err) {
+      console.warn("Local database file write ignored (normal in serverless/read-only environments):", err.message);
+    }
   }
 
   public seed() {
