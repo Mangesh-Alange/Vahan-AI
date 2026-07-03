@@ -1,6 +1,5 @@
 import express from 'express';
 import path from 'path';
-import { createServer as createViteServer } from 'vite';
 import { db } from './server/db.js';
 import { faultKnowledgeBase } from './server/faultKnowledgeBase.js';
 import { GoogleGenAI, Type } from '@google/genai';
@@ -964,6 +963,7 @@ app.post('/api/sos-alerts/:id/resolve', (req, res) => {
 // -----------------------------------------------------
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
