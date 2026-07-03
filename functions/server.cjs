@@ -1702,8 +1702,14 @@ app.post("/api/fault-reports", async (req, res) => {
   const kbMatches = performRAGLookup(symptom_text_hindi, symptom_text_english || "");
   console.log(`RAG matched ${kbMatches.length} faults from database for diagnosis.`);
   const topMatch = kbMatches[0];
+  let finalSymptomEnglish = symptom_text_english || "The engine stalls and is releasing black smoke.";
+  if (acoustic_signal_class && acoustic_signal_class !== "normal") {
+    if (!finalSymptomEnglish.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+      finalSymptomEnglish += " ENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+    }
+  }
   const fallbackResult = {
-    symptom_text_english: symptom_text_english || "The engine stalls and is releasing black smoke.",
+    symptom_text_english: finalSymptomEnglish,
     diagnosis: topMatch.symptom_english + ". " + topMatch.likely_causes.join(", ") + " suspected.",
     severity: topMatch.severity,
     recommended_action: topMatch.recommended_action,
@@ -1720,6 +1726,12 @@ app.post("/api/fault-reports", async (req, res) => {
   if (!key || key === "MY_GEMINI_API_KEY") {
     console.log("INFO: Resolving via server-side Local RAG heuristic (Gemini API Key not set/using placeholder).");
     const hTranslation = translateKnowledgeBaseToHindi(topMatch.id, fallbackResult.diagnosis, fallbackResult.recommended_action);
+    let finalDiagnosis = hTranslation.diagnosis;
+    if (acoustic_signal_class && acoustic_signal_class !== "normal") {
+      if (!finalDiagnosis.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+        finalDiagnosis += "\n\nENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+      }
+    }
     const saved = db.addFaultReport({
       vehicle_id: targetVehicleId,
       driver_id,
@@ -1728,7 +1740,7 @@ app.post("/api/fault-reports", async (req, res) => {
       symptom_text_english: fallbackResult.symptom_text_english,
       acoustic_signal_class: acoustic_signal_class || null,
       severity: fallbackResult.severity,
-      diagnosis: hTranslation.diagnosis,
+      diagnosis: finalDiagnosis,
       recommended_action: hTranslation.recommended_action,
       estimated_cost_range: hTranslation.estimated_cost_range,
       synced_at: timestamp,
@@ -1748,15 +1760,25 @@ app.post("/api/fault-reports", async (req, res) => {
       acoustic_signal: acoustic_signal_class || "normal",
       kb_matches: kbMatches
     });
+    let finalDiagnosis = parsed.diagnosis;
+    let finalSymptomEng = parsed.symptom_english || "";
+    if (acoustic_signal_class && acoustic_signal_class !== "normal") {
+      if (!finalDiagnosis.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+        finalDiagnosis += "\n\nENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+      }
+      if (!finalSymptomEng.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+        finalSymptomEng += " ENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+      }
+    }
     const saved = db.addFaultReport({
       vehicle_id: targetVehicleId,
       driver_id,
       timestamp,
       symptom_text_hindi,
-      symptom_text_english: parsed.symptom_text_english || parsed.symptom_english,
+      symptom_text_english: finalSymptomEng,
       acoustic_signal_class: acoustic_signal_class || null,
       severity: parsed.severity,
-      diagnosis: parsed.diagnosis,
+      diagnosis: finalDiagnosis,
       recommended_action: parsed.recommended_action,
       estimated_cost_range: parsed.estimated_cost_range,
       synced_at: timestamp,
@@ -1766,6 +1788,12 @@ app.post("/api/fault-reports", async (req, res) => {
   } catch (error) {
     console.warn("Gemini Multi-Agent API failed at runtime. Saving using local RAG fallback.", error.message);
     const hTranslation = translateKnowledgeBaseToHindi(topMatch.id, fallbackResult.diagnosis, fallbackResult.recommended_action);
+    let finalDiagnosis = hTranslation.diagnosis;
+    if (acoustic_signal_class && acoustic_signal_class !== "normal") {
+      if (!finalDiagnosis.includes("ENGINE IS NOT IN GOOD CONDITION")) {
+        finalDiagnosis += "\n\nENGINE IS NOT IN GOOD CONDITION. POSSIBLE ABNORMAL ENGINE SOUND DETECTED. PLEASE VISIT THE NEAREST SERVICE CENTER.";
+      }
+    }
     const saved = db.addFaultReport({
       vehicle_id: targetVehicleId,
       driver_id,
@@ -1774,7 +1802,7 @@ app.post("/api/fault-reports", async (req, res) => {
       symptom_text_english: fallbackResult.symptom_text_english,
       acoustic_signal_class: acoustic_signal_class || null,
       severity: fallbackResult.severity,
-      diagnosis: hTranslation.diagnosis,
+      diagnosis: finalDiagnosis,
       recommended_action: hTranslation.recommended_action,
       estimated_cost_range: hTranslation.estimated_cost_range,
       synced_at: timestamp,

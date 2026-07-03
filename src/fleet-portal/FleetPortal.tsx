@@ -6,7 +6,7 @@ import {
 import { 
   TrendingUp, Truck, Users, AlertTriangle, CheckCircle, RefreshCw, Plus, 
   Trash2, Mail, Link, AlertOctagon, Eye, MapPin, ChevronRight, FileText, Search, 
-  ShieldAlert, Settings, Info, Check, Calendar, Sun, Moon, Wrench
+  ShieldAlert, Settings, Info, Check, Calendar, Sun, Moon, Wrench, Copy, X
 } from 'lucide-react';
 import { User, Vehicle, FaultReport, FleetAlert, ServiceCenter, FatigueEvent, SosAlert } from '../types.js';
 import { motion, AnimatePresence } from 'motion/react';
@@ -294,6 +294,7 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
   const [showAddVehicleModal, setShowAddVehicleModal] = useState<boolean>(false);
   const [showInviteModal, setShowInviteModal] = useState<boolean>(false);
   const [inviteCode, setInviteCode] = useState<string>('');
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'success' | 'error'>('idle');
   
   const [newVehicle, setNewVehicle] = useState({
     registration_number: '',
@@ -444,7 +445,46 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
       const cleanOrgId = user.org_id ? user.org_id.replace('org_', '') : 'dynamic';
       setInviteCode(`${prefix}-INV-${cleanOrgId}`);
     }
+    setCopyStatus('idle');
     setShowInviteModal(true);
+  };
+
+  const handleCopyInviteCode = async () => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(inviteCode);
+        setCopyStatus('success');
+        setTimeout(() => {
+          setCopyStatus('idle');
+        }, 2000);
+      } else {
+        // Fallback for older browsers / insecure environments
+        const textArea = document.createElement("textarea");
+        textArea.value = inviteCode;
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (successful) {
+          setCopyStatus('success');
+          setTimeout(() => {
+            setCopyStatus('idle');
+          }, 2000);
+        } else {
+          throw new Error("execCommand copy failed");
+        }
+      }
+    } catch (err) {
+      console.error("Failed to copy invite code", err);
+      setCopyStatus('error');
+      setTimeout(() => {
+        setCopyStatus('idle');
+      }, 3000);
+    }
   };
 
   // -----------------------------------------------------
@@ -1709,12 +1749,24 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
 
       {/* 2. Invite Code Modal */}
       {showInviteModal && (
-        <div className="fixed inset-0 bg-slate-950/60 z-50 flex items-center justify-center p-4">
+        <div 
+          onClick={() => setShowInviteModal(false)}
+          className="fixed inset-0 bg-slate-950/60 z-50 flex items-center justify-center p-4"
+        >
           <motion.div 
+            onClick={(e) => e.stopPropagation()}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl"
+            className="relative glass dark:bg-slate-800/50 dark:border-white/10 transition-colors rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl"
           >
+            <button 
+              onClick={() => setShowInviteModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-650 dark:hover:text-slate-200 transition-colors"
+              aria-label="Close modal"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
             <CheckCircle className="h-12 w-12 text-emerald-500 mx-auto" />
             <div className="space-y-1">
               <h3 className="text-base font-bold text-slate-900 dark:text-white">Driver Onboarding Invite Code</h3>
@@ -1729,11 +1781,48 @@ export default function FleetPortal({ user, onLogout }: FleetPortalProps) {
               This code automatically binds driver profiles to your enterprise ID during signup.
             </p>
 
+            <AnimatePresence mode="wait">
+              {copyStatus === 'success' && (
+                <motion.div 
+                  key="success-toast"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="text-xs text-emerald-500 font-semibold bg-emerald-500/10 border border-emerald-500/20 py-2 px-3 rounded-lg flex items-center justify-center gap-1.5"
+                >
+                  <Check className="h-4 w-4" />
+                  <span>Invite code copied successfully!</span>
+                </motion.div>
+              )}
+              {copyStatus === 'error' && (
+                <motion.div 
+                  key="error-toast"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="text-xs text-red-500 font-semibold bg-red-500/10 border border-red-500/20 py-2 px-3 rounded-lg flex items-center justify-center gap-1.5"
+                >
+                  <AlertOctagon className="h-4 w-4" />
+                  <span>Failed to copy. Please copy manually.</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <button
-              onClick={() => setShowInviteModal(false)}
-              className="w-full bg-slate-900 hover:bg-slate-850 text-white font-bold py-2 rounded-lg text-xs transition-colors"
+              onClick={handleCopyInviteCode}
+              className="w-full bg-slate-900 hover:bg-slate-850 text-white font-bold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2"
             >
-              Done &amp; Dismiss
+              {copyStatus === 'success' ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  <span>Copied ✓</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  <span>Copy Code</span>
+                </>
+              )}
             </button>
           </motion.div>
         </div>
