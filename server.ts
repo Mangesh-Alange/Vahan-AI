@@ -987,4 +987,13 @@ async function startServer() {
   });
 }
 
-startServer();
+if (!process.env.FIREBASE_FUNCTIONS) {
+  startServer();
+} else {
+  // In serverless environments, connect to DB but don't start the listener
+  db.connectMongo().catch(err => {
+    console.error("Error initializing MongoDB connection in function:", err);
+  });
+}
+
+export { app };
