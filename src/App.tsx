@@ -302,21 +302,21 @@ export default function App() {
           </p>
           
           {/* Live Edge-AI Stats */}
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-2 mt-4 w-full drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-            <div className="flex items-center gap-1.5 text-xs md:text-sm whitespace-nowrap">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse flex-shrink-0"></div>
+          <div className="flex items-center justify-center lg:justify-start gap-x-2 sm:gap-x-3.5 mt-4 w-full text-[10px] sm:text-xs md:text-sm whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+            <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-emerald-400 rounded-full animate-pulse flex-shrink-0"></div>
               <span className="text-emerald-400 font-mono font-bold">5 AI Agents</span>
               <span className="text-slate-300">active</span>
             </div>
-            <div className="w-px h-3.5 bg-slate-600 flex-shrink-0"></div>
-            <div className="flex items-center gap-1.5 text-xs md:text-sm whitespace-nowrap">
-              <WifiOff className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+            <div className="w-px h-3 bg-slate-600 flex-shrink-0"></div>
+            <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+              <WifiOff className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-400 flex-shrink-0" />
               <span className="text-amber-400 font-mono font-bold">Offline-First</span>
               <span className="text-slate-300">edge compute</span>
             </div>
-            <div className="w-px h-3.5 bg-slate-600 flex-shrink-0 hidden sm:block"></div>
-            <div className="hidden sm:flex items-center gap-1.5 text-xs md:text-sm whitespace-nowrap">
-              <Volume2 className="h-3.5 w-3.5 text-cyan-400 flex-shrink-0" />
+            <div className="w-px h-3 bg-slate-600 flex-shrink-0 hidden sm:block"></div>
+            <div className="hidden sm:flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+              <Volume2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-cyan-400 flex-shrink-0" />
               <span className="text-cyan-400 font-mono font-bold">Hindi + Acoustic</span>
               <span className="text-slate-300">RAG</span>
             </div>
