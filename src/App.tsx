@@ -245,29 +245,25 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans relative overflow-hidden flex flex-col justify-between">
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans relative overflow-hidden">
       
       {/* FULL-SCREEN Truck Fleet Hero Background */}
-      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+      <div className="absolute inset-0 w-full h-full z-0">
         <img
           src="/tata-fleet-bg.png"
           alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.08] blur-[6px] scale-105"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.65]"
           style={{
             animation: 'kenburns 25s ease-in-out infinite alternate',
           }}
         />
-        {/* Glow Effects for Premium Mesh Look */}
-        <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-amber-500/10 rounded-full blur-[80px] pointer-events-none"></div>
-        <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-        
         {/* Gradient overlays for depth and readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/50 to-slate-950/95"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/40 via-transparent to-slate-950/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-transparent to-slate-950/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/30 via-transparent to-slate-950/30"></div>
       </div>
 
       {/* Top Navigation Bar */}
-      <nav className="relative z-20 flex items-center justify-between px-6 md:px-12 py-5 bg-slate-950/40 backdrop-blur-md border-b border-white/5">
+      <nav className="relative z-20 flex items-center justify-between px-6 md:px-12 py-5">
         <div className="flex items-center gap-3">
           <div className="bg-amber-500 text-slate-950 p-2 rounded-lg shadow-lg shadow-amber-500/20">
             <Truck className="h-5 w-5" />
@@ -281,105 +277,95 @@ export default function App() {
               {dbStatus.usingMongo ? "MongoDB Live" : "Local Cache"}
             </span>
           )}
-          <a href="#" className="text-xs text-slate-300 hover:text-white transition-colors hidden sm:block">About</a>
-          <a href="#" className="text-xs text-slate-300 hover:text-white transition-colors hidden sm:block">Docs</a>
+          <a href="#" className="text-xs text-slate-400 hover:text-white transition-colors hidden sm:block">About</a>
+          <a href="#" className="text-xs text-slate-400 hover:text-white transition-colors hidden sm:block">Docs</a>
         </div>
       </nav>
 
       {/* Main Content - Two-Column Layout to Prevent Scrolling on Desktop */}
-      <div className="relative z-10 flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-8 lg:gap-10 min-h-[calc(100vh-140px)] max-w-6xl mx-auto px-4 py-6 overflow-y-auto lg:overflow-y-visible">
+      <div className="relative z-10 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 lg:gap-12 min-h-[calc(100vh-80px)] max-w-6xl mx-auto px-4 pb-8 pt-4 lg:pt-8 overflow-y-auto lg:overflow-y-visible">
         
-        {/* Left Column: Hero Tagline & Differentiators wrapped in a glass container */}
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-xl w-full bg-slate-900/40 backdrop-blur-xl rounded-3xl p-6 lg:p-8 border border-white/10 shadow-2xl shadow-black/60 justify-between">
-          <div className="w-full flex flex-col items-center lg:items-start">
-            <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-1.5 mb-4 text-[11px] text-amber-400 font-bold uppercase tracking-widest">
-              <Cpu className="h-3 w-3 animate-pulse" />
-              Edge AI · Works Offline · Hindi Voice-First
+        {/* Left Column: Hero Tagline & Differentiators */}
+        <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-xl">
+          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-1.5 mb-4 text-[11px] text-amber-400 font-bold uppercase tracking-widest">
+            <Cpu className="h-3 w-3" />
+            Edge AI · Works Offline · Hindi Voice-First
+          </div>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight drop-shadow-2xl">
+            What if your truck could
+            <br />
+            <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent">tell you it's breaking down?</span>
+          </h1>
+          <p className="text-slate-300/70 text-sm mt-3 max-w-xl mx-auto lg:mx-0 font-light leading-relaxed">
+            Your driver speaks Hindi into their phone. AI listens to the engine. The camera watches for fatigue.
+            <span className="text-white font-medium"> No internet needed.</span>
+          </p>
+          
+          {/* Live Edge-AI Stats */}
+          <div className="flex items-center justify-center lg:justify-start gap-4 mt-4 w-full">
+            <div className="flex items-center gap-2 text-[11px]">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+              <span className="text-emerald-400 font-mono font-bold">5 AI Agents</span>
+              <span className="text-slate-500">active</span>
             </div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.15] tracking-tight drop-shadow-2xl">
-              What if your truck could
-              <br />
-              <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent">tell you it's breaking down?</span>
-            </h1>
-            <p className="text-slate-200 text-sm md:text-base mt-4 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-              Your driver speaks Hindi into their phone. AI listens to the engine. The camera watches for fatigue.
-              <span className="text-amber-400 font-bold"> No internet needed.</span>
-            </p>
-            
-            {/* Live Edge-AI Stats */}
-            <div className="flex items-center justify-center lg:justify-start gap-4 mt-5 w-full">
-              <div className="flex items-center gap-2 text-xs">
-                <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
-                <span className="text-emerald-400 font-mono font-black">5 AI Agents</span>
-                <span className="text-slate-300 font-medium">active</span>
-              </div>
-              <div className="w-px h-4 bg-slate-800"></div>
-              <div className="flex items-center gap-2 text-xs">
-                <WifiOff className="h-3.5 w-3.5 text-amber-400" />
-                <span className="text-amber-400 font-mono font-black">Offline-First</span>
-                <span className="text-slate-300 font-medium">edge compute</span>
-              </div>
-              <div className="w-px h-4 bg-slate-800 hidden sm:block"></div>
-              <div className="hidden sm:flex items-center gap-2 text-xs">
-                <Volume2 className="h-3.5 w-3.5 text-cyan-400" />
-                <span className="text-cyan-400 font-mono font-black">Hindi + Acoustic</span>
-                <span className="text-slate-300 font-medium">RAG</span>
-              </div>
+            <div className="w-px h-4 bg-slate-700"></div>
+            <div className="flex items-center gap-2 text-[11px]">
+              <WifiOff className="h-3 w-3 text-amber-400" />
+              <span className="text-amber-400 font-mono font-bold">Offline-First</span>
+              <span className="text-slate-500">edge compute</span>
+            </div>
+            <div className="w-px h-4 bg-slate-700 hidden sm:block"></div>
+            <div className="hidden sm:flex items-center gap-2 text-[11px]">
+              <Volume2 className="h-3 w-3 text-cyan-400" />
+              <span className="text-cyan-400 font-mono font-bold">Hindi + Acoustic</span>
+              <span className="text-slate-500">RAG</span>
             </div>
           </div>
 
           {/* 🔥 What Makes Us Different - BOLD Differentiator Strip */}
-          <div className="mt-8 w-full">
-            <p className="text-center lg:text-left text-[10px] uppercase tracking-[0.25em] text-slate-400 font-extrabold mb-3">
+          <div className="mt-6 w-full">
+            <p className="text-center lg:text-left text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-3">
               ⚡ Not another dashboard — This is <span className="text-amber-400">Edge AI that works at 0 bars</span>
             </p>
-            <div className="grid grid-cols-2 gap-3.5 w-full">
+            <div className="grid grid-cols-2 gap-3 w-full">
               {/* Hindi Voice Card */}
               <div className="relative overflow-hidden rounded-2xl p-[1px] group" style={{background: 'linear-gradient(135deg, rgba(245,158,11,0.4), rgba(245,158,11,0.05), rgba(245,158,11,0.3))'}}>
-                <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-4 h-full relative overflow-hidden flex flex-col justify-between">
+                <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-3.5 h-full relative overflow-hidden">
                   <div className="absolute -top-6 -right-6 w-20 h-20 bg-amber-500/10 rounded-full blur-xl group-hover:bg-amber-500/20 transition-all duration-500"></div>
-                  <div>
-                    <div className="text-2xl mb-1">🎤</div>
-                    <p className="text-sm font-black text-white">Hindi Voice RAG</p>
-                    <p className="text-xs text-amber-400 font-bold mt-1">"गाड़ी से धुआं आ रहा है"</p>
-                  </div>
-                  <p className="text-[11px] text-slate-300 mt-1.5 font-medium leading-tight">Speak → AI diagnoses in seconds</p>
+                  <div className="text-2xl mb-1.5">🎤</div>
+                  <p className="text-xs font-black text-white">Hindi Voice RAG</p>
+                  <p className="text-[10px] text-amber-400/80 font-medium mt-0.5">"गाड़ी से धुआं आ रहा है"</p>
+                  <p className="text-[9px] text-slate-400 mt-0.5">Speak → AI diagnoses in seconds</p>
                 </div>
               </div>
               {/* Drowsiness Card */}
               <div className="relative overflow-hidden rounded-2xl p-[1px] group" style={{background: 'linear-gradient(135deg, rgba(6,182,212,0.4), rgba(6,182,212,0.05), rgba(6,182,212,0.3))'}}>
-                <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-4 h-full relative overflow-hidden flex flex-col justify-between">
+                <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-3.5 h-full relative overflow-hidden">
                   <div className="absolute -top-6 -right-6 w-20 h-20 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/20 transition-all duration-500"></div>
-                  <div>
-                    <div className="text-2xl mb-1">👁️</div>
-                    <p className="text-sm font-black text-white">Drowsiness Watch</p>
-                    <p className="text-xs text-cyan-400 font-bold mt-1">EAR &lt; 0.25 → ALERT!</p>
-                  </div>
-                  <p className="text-[11px] text-slate-300 mt-1.5 font-medium leading-tight">Webcam saves lives in real-time</p>
+                  <div className="text-2xl mb-1.5">👁️</div>
+                  <p className="text-xs font-black text-white">Drowsiness Watch</p>
+                  <p className="text-[10px] text-cyan-400/80 font-medium mt-0.5">EAR {"<"} 0.25 → ALERT!</p>
+                  <p className="text-[9px] text-slate-400 mt-0.5">Webcam saves lives in real-time</p>
                 </div>
               </div>
               {/* Engine Sound Card */}
               <div className="relative overflow-hidden rounded-2xl p-[1px] group" style={{background: 'linear-gradient(135deg, rgba(16,185,129,0.4), rgba(16,185,129,0.05), rgba(16,185,129,0.3))'}}>
-                <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-4 h-full relative overflow-hidden flex flex-col justify-between">
+                <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-3.5 h-full relative overflow-hidden">
                   <div className="absolute -top-6 -right-6 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
-                  <div>
-                    <div className="text-2xl mb-1">🔊</div>
-                    <p className="text-sm font-black text-white">Acoustic FFT</p>
-                    <p className="text-xs text-emerald-400 font-bold mt-1">Knocks & squeals</p>
-                  </div>
-                  <p className="text-[11px] text-slate-300 mt-1.5 font-medium leading-tight">Phone mic → frequency analysis</p>
+                  <div className="text-2xl mb-1.5">🔊</div>
+                  <p className="text-xs font-black text-white">Acoustic FFT</p>
+                  <p className="text-[10px] text-emerald-400/80 font-medium mt-0.5">Engine knock? Bearing fail?</p>
+                  <p className="text-[9px] text-slate-400 mt-0.5">Phone mic → frequency analysis</p>
                 </div>
               </div>
               {/* Fleet Pattern Card */}
               <div className="relative overflow-hidden rounded-2xl p-[1px] group" style={{background: 'linear-gradient(135deg, rgba(168,85,247,0.4), rgba(168,85,247,0.05), rgba(168,85,247,0.3))'}}>
-                <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-4 h-full relative overflow-hidden flex flex-col justify-between">
+                <div className="bg-slate-950/90 backdrop-blur-xl rounded-2xl p-3.5 h-full relative overflow-hidden">
                   <div className="absolute -top-6 -right-6 w-20 h-20 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all duration-500"></div>
-                  <div>
-                    <div className="text-2xl mb-1">🧠</div>
-                    <p className="text-sm font-black text-white">Fleet Brain</p>
-                    <p className="text-xs text-purple-400 font-bold mt-1">Cross-truck alert</p>
-                  </div>
-                  <p className="text-[11px] text-slate-300 mt-1.5 font-medium leading-tight">Pattern matching across fleet</p>
+                  <div className="text-2xl mb-1.5">🧠</div>
+                  <p className="text-xs font-black text-white">Fleet Brain</p>
+                  <p className="text-[10px] text-purple-400/80 font-medium mt-0.5">3 trucks same fault = alert</p>
+                  <p className="text-[9px] text-slate-400 mt-0.5">Cross-vehicle pattern detection</p>
                 </div>
               </div>
             </div>
