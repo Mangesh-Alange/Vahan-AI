@@ -826,7 +826,7 @@ app.post('/api/transcribe-audio', async (req, res) => {
 
 // Conversational Driver Copilot AI assistant endpoint via Gemini 3.5 Flash
 app.post('/api/driver-copilot', async (req, res) => {
-  const { message, history } = req.body;
+  const { message, history, questionnaireContext } = req.body;
   if (!message) {
     return res.status(400).json({ error: "Message is required." });
   }
@@ -843,6 +843,7 @@ app.post('/api/driver-copilot', async (req, res) => {
       Answer the driver's questions or comments in a friendly, reassuring, simple, and mechanical expert manner.
       Respond strictly in clear, simple Hindi (written in Devanagari script) so that the truck driver can easily read and understand. Do not use complex English terms or Latin script unless absolutely necessary (like name of parts: 'radiator', 'injector' which can be written in Hindi like 'रेडिएटर' or 'इंजेक्टर').
       Keep answers concise (max 3-4 sentences), highly practical, safety-first, and realistic for Indian highway breakdown scenarios.
+      If a structured pre-diagnostic questionnaire JSON is provided, use it as extra context to narrow the fault, but do not replace the user's original question.
     `;
 
     const contents = [];
@@ -853,6 +854,14 @@ app.post('/api/driver-copilot', async (req, res) => {
           parts: [{ text: turn.content }]
         });
       }
+    }
+    if (questionnaireContext && typeof questionnaireContext === 'object') {
+      contents.push({
+        role: 'user',
+        parts: [{
+          text: `Driver pre-check questionnaire (use as additional context only, not as final query): ${JSON.stringify(questionnaireContext)}`
+        }]
+      });
     }
     contents.push({
       role: 'user',

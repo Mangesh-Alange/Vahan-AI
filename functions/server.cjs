@@ -440,6 +440,26 @@ var Database = class {
     const user = this.data.users.find((u) => u.phone === phone && u.password_hash === hash);
     return user || null;
   }
+  findUserByGoogleIdentity(firebaseUid, email) {
+    const normalizedEmail = email ? email.toLowerCase().trim() : null;
+    const user = this.data.users.find((u) => {
+      if (u.firebase_uid && u.firebase_uid === firebaseUid) return true;
+      if (normalizedEmail && u.email && u.email.toLowerCase() === normalizedEmail) return true;
+      return false;
+    });
+    return user || null;
+  }
+  attachGoogleIdentity(userId, firebaseUid, email) {
+    const user = this.data.users.find((u) => u.id === userId);
+    if (!user) return null;
+    user.firebase_uid = firebaseUid;
+    if (email) {
+      user.email = email.toLowerCase().trim();
+    }
+    this.save();
+    this.asyncWrite("users", "update", { id: userId }, { firebase_uid: user.firebase_uid, email: user.email });
+    return user;
+  }
   // Vehicles API
   getVehicles(orgId) {
     return this.data.vehicles.filter((v) => v.org_id === orgId);
@@ -1536,6 +1556,48 @@ function translateKnowledgeBaseToHindi(id, defaultDiag, defaultAction) {
     estimated_cost_range: "\u20B92,500 - \u20B915,000"
   };
 }
+function resolveOrgIdFromInviteCode(inviteCode) {
+  let orgId = "";
+  const codeUpper = inviteCode.toUpperCase().trim();
+  if (codeUpper === "RAJP-INV-1234" || codeUpper.startsWith("RAJP-INV")) {
+    orgId = "org_rajpath";
+  } else if (codeUpper === "KEDA-INV-5678" || codeUpper.startsWith("KEDA-INV")) {
+    orgId = "org_kedar";
+  } else {
+    const parts = codeUpper.split("-INV-");
+    if (parts.length === 2) {
+      const suffix = parts[1].trim();
+      const candidate1 = suffix;
+      const candidate2 = "org_" + suffix;
+      const matchedOrg = db.getOrganizations().find(
+        (o) => o.id.toLowerCase() === candidate1.toLowerCase() || o.id.toLowerCase() === candidate2.toLowerCase()
+      );
+      if (matchedOrg) {
+        orgId = matchedOrg.id;
+      } else {
+        const matchedManager = db.getUsers().find(
+          (u) => u.role === "fleet_manager" && u.org_id && (u.org_id.toLowerCase() === candidate1.toLowerCase() || u.org_id.toLowerCase() === candidate2.toLowerCase())
+        );
+        if (matchedManager && matchedManager.org_id) {
+          orgId = matchedManager.org_id;
+          db.createOrganization({
+            id: orgId,
+            name: `${matchedManager.name}'s Transport Fleet`,
+            plan_tier: "free",
+            created_at: (/* @__PURE__ */ new Date()).toISOString()
+          });
+        }
+      }
+    }
+  }
+  return orgId;
+}
+function buildGooglePhoneFallback(firebaseUid) {
+  const base = `google_${firebaseUid.slice(0, 12)}`;
+  const exists = db.getUsers().some((u) => u.phone === base);
+  if (!exists) return base;
+  return `${base}_${Math.random().toString(36).substring(2, 6)}`;
+}
 app.post("/api/auth/login", (req, res) => {
   const { phone, password } = req.body;
   if (!phone || !password) {
@@ -1577,40 +1639,78 @@ app.post("/api/auth/signup", (req, res) => {
   }, password);
   res.json({ user: newUser });
 });
+app.post("/api/auth/google", (req, res) => {
+  const {
+    mode,
+    firebase_uid,
+    email,
+    name,
+    phone,
+    role,
+    preferred_language,
+    org_name,
+    invite_code
+  } = req.body;
+  if (!firebase_uid || !name) {
+    return res.status(400).json({ error: "Google account details are missing." });
+  }
+  const existing = db.findUserByGoogleIdentity(firebase_uid, email);
+  if (existing) {
+    const linkedUser = db.attachGoogleIdentity(existing.id, firebase_uid, email) || existing;
+    return res.json({ user: linkedUser });
+  }
+  if (mode !== "signup") {
+    return res.status(404).json({ error: "No account found. Please register first." });
+  }
+  if (!role) {
+    return res.status(400).json({ error: "Please select account type before continuing with Google." });
+  }
+  let orgId = null;
+  if (role === "driver") {
+    if (!invite_code) {
+      return res.status(400).json({ error: "Invite code is required for driver signup." });
+    }
+    const resolvedOrgId = resolveOrgIdFromInviteCode(invite_code);
+    if (!resolvedOrgId) {
+      return res.status(400).json({ error: "Invalid invite code. Please check with your fleet manager." });
+    }
+    orgId = resolvedOrgId;
+  } else if (role === "fleet_manager") {
+    const newOrgName = org_name || `${name}'s Transport Fleet`;
+    const newOrgId = "org_" + Math.random().toString(36).substring(2, 9);
+    db.createOrganization({
+      id: newOrgId,
+      name: newOrgName,
+      plan_tier: "free",
+      created_at: (/* @__PURE__ */ new Date()).toISOString()
+    });
+    orgId = newOrgId;
+  } else {
+    return res.status(400).json({ error: "Unsupported role selected." });
+  }
+  const normalizedEmail = email ? String(email).toLowerCase().trim() : void 0;
+  const resolvedPhone = typeof phone === "string" && phone.trim() ? phone.trim() : buildGooglePhoneFallback(firebase_uid);
+  const existingPhoneUser = db.getUsers().find((u) => u.phone === resolvedPhone);
+  if (existingPhoneUser) {
+    return res.status(400).json({ error: "A user with this phone already exists. Please sign in using existing method." });
+  }
+  const newUser = db.createUser({
+    org_id: orgId,
+    role,
+    name,
+    phone: resolvedPhone,
+    email: normalizedEmail,
+    firebase_uid,
+    preferred_language: preferred_language || "hi"
+  }, `google-${firebase_uid}-${Date.now()}`);
+  res.json({ user: newUser });
+});
 app.post("/api/auth/invite", (req, res) => {
   const { invite_code, name, phone, password, preferred_language } = req.body;
   if (!invite_code || !name || !phone || !password) {
     return res.status(400).json({ error: "Missing required details." });
   }
-  let org_id = "";
-  const codeUpper = invite_code.toUpperCase().trim();
-  if (codeUpper === "RAJP-INV-1234" || codeUpper.startsWith("RAJP-INV")) {
-    org_id = "org_rajpath";
-  } else if (codeUpper === "KEDA-INV-5678" || codeUpper.startsWith("KEDA-INV")) {
-    org_id = "org_kedar";
-  } else {
-    const parts = codeUpper.split("-INV-");
-    if (parts.length === 2) {
-      const suffix = parts[1].trim();
-      const candidate1 = suffix;
-      const candidate2 = "org_" + suffix;
-      const matchedOrg = db.getOrganizations().find((o) => o.id.toLowerCase() === candidate1.toLowerCase() || o.id.toLowerCase() === candidate2.toLowerCase());
-      if (matchedOrg) {
-        org_id = matchedOrg.id;
-      } else {
-        const matchedManager = db.getUsers().find((u) => u.role === "fleet_manager" && u.org_id && (u.org_id.toLowerCase() === candidate1.toLowerCase() || u.org_id.toLowerCase() === candidate2.toLowerCase()));
-        if (matchedManager && matchedManager.org_id) {
-          org_id = matchedManager.org_id;
-          db.createOrganization({
-            id: org_id,
-            name: `${matchedManager.name}'s Transport Fleet`,
-            plan_tier: "free",
-            created_at: (/* @__PURE__ */ new Date()).toISOString()
-          });
-        }
-      }
-    }
-  }
+  const org_id = resolveOrgIdFromInviteCode(invite_code);
   if (!org_id) {
     return res.status(400).json({ error: "Invalid invite code. Please check with your fleet manager." });
   }
@@ -1894,7 +1994,7 @@ app.post("/api/transcribe-audio", async (req, res) => {
   }
 });
 app.post("/api/driver-copilot", async (req, res) => {
-  const { message, history } = req.body;
+  const { message, history, questionnaireContext } = req.body;
   if (!message) {
     return res.status(400).json({ error: "Message is required." });
   }
@@ -1909,6 +2009,7 @@ app.post("/api/driver-copilot", async (req, res) => {
       Answer the driver's questions or comments in a friendly, reassuring, simple, and mechanical expert manner.
       Respond strictly in clear, simple Hindi (written in Devanagari script) so that the truck driver can easily read and understand. Do not use complex English terms or Latin script unless absolutely necessary (like name of parts: 'radiator', 'injector' which can be written in Hindi like '\u0930\u0947\u0921\u093F\u090F\u091F\u0930' or '\u0907\u0902\u091C\u0947\u0915\u094D\u091F\u0930').
       Keep answers concise (max 3-4 sentences), highly practical, safety-first, and realistic for Indian highway breakdown scenarios.
+      If a structured pre-diagnostic questionnaire JSON is provided, use it as extra context to narrow the fault, but do not replace the user's original question.
     `;
     const contents = [];
     if (history && Array.isArray(history)) {
@@ -1918,6 +2019,14 @@ app.post("/api/driver-copilot", async (req, res) => {
           parts: [{ text: turn.content }]
         });
       }
+    }
+    if (questionnaireContext && typeof questionnaireContext === "object") {
+      contents.push({
+        role: "user",
+        parts: [{
+          text: `Driver pre-check questionnaire (use as additional context only, not as final query): ${JSON.stringify(questionnaireContext)}`
+        }]
+      });
     }
     contents.push({
       role: "user",

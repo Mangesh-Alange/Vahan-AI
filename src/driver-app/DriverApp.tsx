@@ -16,6 +16,148 @@ interface DriverAppProps {
   onLogout: () => void;
 }
 
+type VehicleIssueCategory =
+  | 'Engine'
+  | 'Transmission/Gearbox'
+  | 'Brakes'
+  | 'Electrical System'
+  | 'Suspension/Steering'
+  | 'Cooling System'
+  | 'Exhaust'
+  | 'Not Sure / Multiple';
+type QuestionnaireAnswerValue = boolean | string | string[] | null;
+type IntakeFrequency = 'Always' | 'Only when cold-started' | 'Only at high speed' | 'Intermittent';
+type IntakeDuration = 'Just started' | 'Few days' | 'Few weeks' | 'Ongoing for a long time';
+type QuestionnaireStage = 1 | 2 | 3 | 4;
+
+interface QuestionnaireQuestion {
+  key: string;
+  label: string;
+  type: 'boolean' | 'choice' | 'text' | 'multi-select';
+  options?: string[];
+  placeholder?: string;
+  required?: boolean;
+}
+
+interface DriverIssueQuestionnaireContext {
+  primaryCategory: VehicleIssueCategory;
+  possibleRelatedCategories: VehicleIssueCategory[];
+  symptoms: Record<string, boolean | string | string[]>;
+  frequency: IntakeFrequency | '';
+  duration: IntakeDuration | '';
+  userAdditionalNotes: string;
+  userDescription: string;
+}
+
+const VEHICLE_ISSUE_CATEGORIES: VehicleIssueCategory[] = [
+  'Engine',
+  'Transmission/Gearbox',
+  'Brakes',
+  'Electrical System',
+  'Suspension/Steering',
+  'Cooling System',
+  'Exhaust',
+  'Not Sure / Multiple'
+];
+
+const ISSUE_CATEGORY_META: Record<VehicleIssueCategory, { hint: string; keywords: string[]; accent: string }> = {
+  Engine: {
+    hint: 'Noise, power loss, rough idle, smoke.',
+    keywords: ['engine', 'pickup', 'power', 'overheat', 'smoke', 'misfire', 'knocking', 'ticking', 'इंजन', 'पावर', 'धुआं'],
+    accent: 'bg-orange-500/10 text-orange-500 border-orange-500/30'
+  },
+  'Transmission/Gearbox': {
+    hint: 'Hard shifting, slip, clutch, gear noise.',
+    keywords: ['gear', 'gearbox', 'transmission', 'clutch', 'slip', 'shift', 'grinding', 'clunk', 'गियर', 'क्लच'],
+    accent: 'bg-amber-500/10 text-amber-500 border-amber-500/30'
+  },
+  Brakes: {
+    hint: 'Pedal feel, pull, squeal, vibration.',
+    keywords: ['brake', 'pedal', 'squeal', 'grinding', 'pulls', 'spongy', 'ब्रेक', 'पैडल'],
+    accent: 'bg-red-500/10 text-red-400 border-red-500/30'
+  },
+  'Electrical System': {
+    hint: 'Battery, charging, lights, starting.',
+    keywords: ['battery', 'charging', 'alternator', 'start', 'self', 'flicker', 'wiring', 'electrical', 'बैटरी', 'स्टार्ट'],
+    accent: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
+  },
+  'Suspension/Steering': {
+    hint: 'Knocks, steering play, drift, bumps.',
+    keywords: ['suspension', 'steering', 'knock', 'play', 'drift', 'alignment', 'shock', 'झटका', 'स्टीयरिंग'],
+    accent: 'bg-violet-500/10 text-violet-400 border-violet-500/30'
+  },
+  'Cooling System': {
+    hint: 'Heat, coolant, fan, steam, leaks.',
+    keywords: ['coolant', 'temperature', 'overheat', 'radiator', 'fan', 'steam', 'heat', 'water', 'कूलेंट', 'गर्म'],
+    accent: 'bg-sky-500/10 text-sky-400 border-sky-500/30'
+  },
+  Exhaust: {
+    hint: 'Smoke color, soot, smell, exhaust noise.',
+    keywords: ['exhaust', 'smoke', 'soot', 'muffler', 'silencer', 'smell', 'black smoke', 'white smoke', 'धुआं', 'साइलेंसर'],
+    accent: 'bg-stone-500/10 text-stone-300 border-stone-500/30'
+  },
+  'Not Sure / Multiple': {
+    hint: 'Use when signs overlap or are unclear.',
+    keywords: [],
+    accent: 'bg-slate-500/10 text-slate-300 border-slate-500/30'
+  }
+};
+
+const QUESTIONNAIRE_QUESTIONS: Record<Exclude<VehicleIssueCategory, 'Not Sure / Multiple'>, QuestionnaireQuestion[]> = {
+  Engine: [
+    { key: 'engineNoise', label: 'Any unusual noise from the engine (knocking/ticking)?', type: 'boolean', required: true },
+    { key: 'dashboardWarning', label: 'Any warning light on the dashboard?', type: 'boolean', required: true },
+    { key: 'powerLoss', label: 'Loss of power while driving or climbing?', type: 'boolean', required: true },
+    { key: 'smokeColor', label: 'Smoke from exhaust?', type: 'choice', options: ['None', 'White', 'Black', 'Blue', 'Not sure'] },
+    { key: 'roughIdle', label: 'Rough idling or vibration at stop?', type: 'boolean' }
+  ],
+  'Transmission/Gearbox': [
+    { key: 'hardToShiftGears', label: 'Hard to shift gears?', type: 'boolean', required: true },
+    { key: 'grindingNoise', label: 'Grinding or clunking when shifting?', type: 'boolean', required: true },
+    { key: 'delayedEngagement', label: 'Delayed engagement in Drive or Reverse?', type: 'boolean', required: true },
+    { key: 'gearSlip', label: 'Engine revs rise but vehicle does not pull as expected?', type: 'boolean' },
+    { key: 'fluidLeak', label: 'Any fluid leak under the vehicle?', type: 'choice', options: ['No', 'Yes - red/brown', 'Yes - clear', 'Yes - unsure'] }
+  ],
+  Brakes: [
+    { key: 'squealingOrGrinding', label: 'Squealing or grinding noise when braking?', type: 'boolean', required: true },
+    { key: 'softBrakePedal', label: 'Soft or spongy brake pedal?', type: 'boolean', required: true },
+    { key: 'pullsToOneSide', label: 'Vehicle pulls to one side when braking?', type: 'boolean', required: true },
+    { key: 'brakePulse', label: 'Pedal pulsation or vibration under braking?', type: 'boolean' },
+    { key: 'warningLight', label: 'Brake warning light on dashboard?', type: 'boolean' }
+  ],
+  'Electrical System': [
+    { key: 'startingProblem', label: 'Starting or cranking problem?', type: 'boolean', required: true },
+    { key: 'batteryWarningLight', label: 'Battery / charging warning light on?', type: 'boolean', required: true },
+    { key: 'lightsFlicker', label: 'Headlights or cabin lights flickering?', type: 'boolean', required: true },
+    { key: 'accessoriesDead', label: 'Any accessories not working (horn, wipers, indicators)?', type: 'boolean' },
+    { key: 'burningSmell', label: 'Burning smell from wiring or fuse box?', type: 'boolean' }
+  ],
+  'Suspension/Steering': [
+    { key: 'knockOverBumps', label: 'Knock or thud over bumps / potholes?', type: 'boolean', required: true },
+    { key: 'steeringPlay', label: 'Excessive play or looseness in steering?', type: 'boolean', required: true },
+    { key: 'pullOrDrift', label: 'Vehicle pulls or drifts to one side?', type: 'boolean', required: true },
+    { key: 'bodyRoll', label: 'Body roll or bouncing feels unusually high?', type: 'boolean' },
+    { key: 'tyreWear', label: 'Uneven tyre wear noticed?', type: 'boolean' }
+  ],
+  'Cooling System': [
+    { key: 'temperatureHigh', label: 'Temperature gauge running high?', type: 'boolean', required: true },
+    { key: 'coolantLeak', label: 'Any coolant leak under the vehicle or near radiator?', type: 'boolean', required: true },
+    { key: 'fanRunningConstantly', label: 'Cooling fan running continuously or too often?', type: 'boolean', required: true },
+    { key: 'steamOrSweetSmell', label: 'Steam or sweet smell from the bonnet area?', type: 'boolean' },
+    { key: 'heaterWeak', label: 'Cabin heater weak even when engine warms up?', type: 'boolean' }
+  ],
+  Exhaust: [
+    { key: 'smokeColor', label: 'Exhaust smoke color?', type: 'choice', options: ['None', 'White', 'Black', 'Blue', 'Grey', 'Not sure'], required: true },
+    { key: 'sootOrResidue', label: 'Soot or residue around the tailpipe?', type: 'boolean', required: true },
+    { key: 'exhaustNoise', label: 'Loud exhaust leak or hissing sound?', type: 'boolean', required: true },
+    { key: 'smell', label: 'Strong fuel, burning or oily smell from exhaust?', type: 'boolean' },
+    { key: 'powerDrop', label: 'Power drop or sluggish acceleration?', type: 'boolean' }
+  ]
+};
+
+const FREQUENCY_OPTIONS: IntakeFrequency[] = ['Always', 'Only when cold-started', 'Only at high speed', 'Intermittent'];
+const DURATION_OPTIONS: IntakeDuration[] = ['Just started', 'Few days', 'Few weeks', 'Ongoing for a long time'];
+
 export default function DriverApp({ user, onLogout }: DriverAppProps) {
   // Navigation
   const [activeTab, setActiveTab] = useState<'diagnose' | 'acoustic' | 'fatigue' | 'history' | 'wellness'>('diagnose');
@@ -168,6 +310,19 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   ]);
   const [chatInput, setChatInput] = useState<string>('');
   const [isSendingToCopilot, setIsSendingToCopilot] = useState<boolean>(false);
+  const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState<boolean>(false);
+  const [questionnaireStep, setQuestionnaireStep] = useState<QuestionnaireStage>(1);
+  const [selectedIssueCategory, setSelectedIssueCategory] = useState<VehicleIssueCategory | null>(null);
+  const [questionnaireAnswers, setQuestionnaireAnswers] = useState<Record<string, QuestionnaireAnswerValue>>({});
+  const [pendingCopilotMessage, setPendingCopilotMessage] = useState<string | null>(null);
+  const [suggestedIssueCategory, setSuggestedIssueCategory] = useState<VehicleIssueCategory | null>(null);
+  const [relatedCategories, setRelatedCategories] = useState<VehicleIssueCategory[]>([]);
+  const [questionnaireFrequency, setQuestionnaireFrequency] = useState<IntakeFrequency | ''>('');
+  const [questionnaireDuration, setQuestionnaireDuration] = useState<IntakeDuration | ''>('');
+  const [userAdditionalNotes, setUserAdditionalNotes] = useState<string>('');
+  const [questionnaireStepError, setQuestionnaireStepError] = useState<string>('');
+  const [questionnaireReview, setQuestionnaireReview] = useState<DriverIssueQuestionnaireContext | null>(null);
+  const [isQuestionnaireSubmitting, setIsQuestionnaireSubmitting] = useState<boolean>(false);
 
   // SOS State
   const [isSendingSos, setIsSendingSos] = useState<boolean>(false);
@@ -640,12 +795,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
   // -----------------------------------------------------
   // DRIVER AI COPILOT INTERACTION
   // -----------------------------------------------------
-  const handleSendToCopilot = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!chatInput.trim() || isSendingToCopilot) return;
-
-    const userMsg = chatInput.trim();
-    setChatInput('');
+  const sendCopilotMessage = async (userMsg: string, extraContext?: DriverIssueQuestionnaireContext) => {
     setChatMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setIsSendingToCopilot(true);
 
@@ -686,15 +836,21 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const requestBody: Record<string, unknown> = {
+        message: userMsg,
+        history: chatMessages.slice(-6) // Send last 6 messages for context
+      };
+      if (extraContext) {
+        requestBody.questionnaireContext = extraContext;
+      }
+
       const res = await fetch(`${API_URL}/api/driver-copilot`, {
         signal: controller.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: userMsg,
-          history: chatMessages.slice(-6) // Send last 6 messages for context
-        })
+        body: JSON.stringify(requestBody)
       });
+      clearTimeout(timeoutId);
       const data = await res.json();
       if (data.reply) {
         setChatMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
@@ -712,6 +868,248 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
     } finally {
       setIsSendingToCopilot(false);
     }
+  };
+
+  const inferIssueCategoryFromMessage = (message: string): VehicleIssueCategory | null => {
+    const text = message.toLowerCase();
+    let bestCategory: VehicleIssueCategory | null = null;
+    let bestScore = 0;
+
+    for (const category of VEHICLE_ISSUE_CATEGORIES) {
+      if (category === 'Not Sure / Multiple') continue;
+      const score = ISSUE_CATEGORY_META[category].keywords.reduce((acc, keyword) => (
+        text.includes(keyword.toLowerCase()) ? acc + 1 : acc
+      ), 0);
+      if (score > bestScore) {
+        bestScore = score;
+        bestCategory = category;
+      }
+    }
+
+    return bestScore >= 1 ? bestCategory : null;
+  };
+
+  const createQuestionDefaults = (category: VehicleIssueCategory): Record<string, QuestionnaireAnswerValue> => {
+    const defaults: Record<string, QuestionnaireAnswerValue> = {};
+    const questions = category === 'Not Sure / Multiple'
+      ? [
+          { key: 'uncertainSystems', type: 'multi-select' as const },
+          { key: 'genericNoise', type: 'boolean' as const },
+          { key: 'genericLeak', type: 'boolean' as const },
+          { key: 'genericWarning', type: 'boolean' as const }
+        ]
+      : QUESTIONNAIRE_QUESTIONS[category];
+
+    for (const question of questions) {
+      defaults[question.key] = question.type === 'text'
+        ? ''
+        : question.type === 'multi-select'
+          ? []
+          : question.type === 'choice'
+            ? ''
+            : null;
+    }
+
+    return defaults;
+  };
+
+  const getCategoryQuestions = (category: VehicleIssueCategory) => {
+    if (category === 'Not Sure / Multiple') {
+      return [
+        { key: 'uncertainSystems', label: 'Which systems seem possibly involved?', type: 'multi-select' as const, options: VEHICLE_ISSUE_CATEGORIES.filter(option => option !== 'Not Sure / Multiple'), required: true },
+        { key: 'genericNoise', label: 'Any unusual noise?', type: 'boolean' as const, required: true },
+        { key: 'genericLeak', label: 'Any fluid leak or smell?', type: 'boolean' as const },
+        { key: 'genericWarning', label: 'Any dashboard warning light?', type: 'boolean' as const }
+      ];
+    }
+    return QUESTIONNAIRE_QUESTIONS[category];
+  };
+
+  const normalizeChoice = (value: QuestionnaireAnswerValue) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string') return value;
+    if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+    return '';
+  };
+
+  const collectStructuredSymptoms = (category: VehicleIssueCategory, answers: Record<string, QuestionnaireAnswerValue>) => {
+    const symptoms: Record<string, boolean | string | string[]> = {};
+    for (const [key, value] of Object.entries(answers)) {
+      if (value === null || value === '' || (Array.isArray(value) && !value.length)) continue;
+      symptoms[key] = value;
+    }
+    if (category === 'Not Sure / Multiple' && Array.isArray(answers.uncertainSystems)) {
+      symptoms.uncertainSystems = answers.uncertainSystems;
+    }
+    return symptoms;
+  };
+
+  const detectRelatedCategories = (primaryCategory: VehicleIssueCategory, answers: Record<string, QuestionnaireAnswerValue>): VehicleIssueCategory[] => {
+    const joined = Object.values(answers)
+      .flatMap((value) => Array.isArray(value) ? value : [normalizeChoice(value)])
+      .join(' ')
+      .toLowerCase();
+    const scores = new Map<VehicleIssueCategory, number>();
+
+    for (const category of VEHICLE_ISSUE_CATEGORIES) {
+      if (category === 'Not Sure / Multiple') continue;
+      let score = 0;
+      for (const keyword of ISSUE_CATEGORY_META[category].keywords) {
+        if (joined.includes(keyword.toLowerCase())) score += 1;
+      }
+      if (score > 0) scores.set(category, score);
+    }
+
+    const related = [...scores.entries()]
+      .filter(([category]) => category !== primaryCategory)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 2)
+      .map(([category]) => category);
+
+    return related;
+  };
+
+  const buildQuestionnaireContext = () => {
+    if (!selectedIssueCategory || !pendingCopilotMessage) return null;
+    const category = selectedIssueCategory;
+    const symptoms = collectStructuredSymptoms(category, questionnaireAnswers);
+    const related = category === 'Not Sure / Multiple'
+      ? (questionnaireAnswers.uncertainSystems as VehicleIssueCategory[] | undefined)?.filter((item) => item !== 'Not Sure / Multiple') ?? []
+      : detectRelatedCategories(category, questionnaireAnswers);
+
+    return {
+      primaryCategory: category,
+      possibleRelatedCategories: related,
+      symptoms,
+      frequency: questionnaireFrequency,
+      duration: questionnaireDuration,
+      userAdditionalNotes: userAdditionalNotes.trim(),
+      userDescription: pendingCopilotMessage
+    };
+  };
+
+  const resetQuestionnaire = () => {
+    setIsQuestionnaireOpen(false);
+    setQuestionnaireStep(1);
+    setSelectedIssueCategory(null);
+    setSuggestedIssueCategory(null);
+    setRelatedCategories([]);
+    setQuestionnaireAnswers({});
+    setQuestionnaireFrequency('');
+    setQuestionnaireDuration('');
+    setUserAdditionalNotes('');
+    setQuestionnaireReview(null);
+    setQuestionnaireStepError('');
+  };
+
+  const handleSkipQuestionnaire = async () => {
+    const pendingMessage = pendingCopilotMessage;
+    resetQuestionnaire();
+    setPendingCopilotMessage(null);
+
+    if (pendingMessage) {
+      await sendCopilotMessage(pendingMessage);
+    }
+  };
+
+  const handleQuestionnaireCategorySelect = (category: VehicleIssueCategory) => {
+    setSelectedIssueCategory(category);
+    setQuestionnaireAnswers(createQuestionDefaults(category));
+    setQuestionnaireStepError('');
+  };
+
+  const handleQuestionnaireContinue = () => {
+    if (!selectedIssueCategory) {
+      setQuestionnaireStepError('Please choose a category first.');
+      return;
+    }
+    setQuestionnaireStep(2);
+    setQuestionnaireStepError('');
+  };
+
+  const isQuestionnaireStepTwoValid = () => {
+    if (!selectedIssueCategory) return false;
+    const questions = getCategoryQuestions(selectedIssueCategory).filter(question => question.required);
+    return questions.every((question) => {
+      const value = questionnaireAnswers[question.key];
+      if (question.type === 'boolean') return typeof value === 'boolean';
+      if (question.type === 'choice') return typeof value === 'string' && value.trim().length > 0;
+      if (question.type === 'multi-select') return Array.isArray(value) && value.length > 0;
+      return typeof value === 'string' && value.trim().length > 0;
+    });
+  };
+
+  const handleQuestionnaireNext = () => {
+    if (!isQuestionnaireStepTwoValid()) {
+      setQuestionnaireStepError('Please answer the required checks before continuing.');
+      return;
+    }
+    setQuestionnaireStep(3);
+    setQuestionnaireStepError('');
+  };
+
+  const handleQuestionnaireReview = () => {
+    const context = buildQuestionnaireContext();
+    if (!context) {
+      setQuestionnaireStepError('Questionnaire data is incomplete.');
+      return;
+    }
+
+    const related = context.possibleRelatedCategories.length
+      ? context.possibleRelatedCategories
+      : detectRelatedCategories(context.primaryCategory, questionnaireAnswers);
+
+    setRelatedCategories(related);
+    setQuestionnaireReview({ ...context, possibleRelatedCategories: related });
+    setQuestionnaireStep(4);
+    setQuestionnaireStepError('');
+  };
+
+  const handleQuestionnaireComplete = async () => {
+    const context = buildQuestionnaireContext();
+    if (!context) return;
+    const finalContext = {
+      ...context,
+      possibleRelatedCategories: relatedCategories.length ? relatedCategories : context.possibleRelatedCategories
+    };
+    setIsQuestionnaireSubmitting(true);
+    try {
+      await sendCopilotMessage(finalContext.userDescription, finalContext);
+    } finally {
+      resetQuestionnaire();
+      setPendingCopilotMessage(null);
+      setIsQuestionnaireSubmitting(false);
+    }
+  };
+
+  const handleQuestionnaireBack = () => {
+    setQuestionnaireStep(prev => (prev === 1 ? 1 : (prev - 1) as QuestionnaireStage));
+    setQuestionnaireStepError('');
+  };
+
+  const handleQuestionnaireChoice = (key: string, value: QuestionnaireAnswerValue) => {
+    setQuestionnaireAnswers(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleSendToCopilot = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!chatInput.trim() || isSendingToCopilot || isQuestionnaireOpen) return;
+
+    const userMsg = chatInput.trim();
+    setChatInput('');
+    const guessedCategory = inferIssueCategoryFromMessage(userMsg);
+    setPendingCopilotMessage(userMsg);
+    setIsQuestionnaireOpen(true);
+    setQuestionnaireStep(1);
+    setSelectedIssueCategory(guessedCategory ?? null);
+    setSuggestedIssueCategory(guessedCategory);
+    setRelatedCategories([]);
+    setQuestionnaireAnswers(guessedCategory ? createQuestionDefaults(guessedCategory) : createQuestionDefaults('Not Sure / Multiple'));
+    setQuestionnaireFrequency('');
+    setQuestionnaireDuration('');
+    setUserAdditionalNotes('');
+    setQuestionnaireReview(null);
+    setQuestionnaireStepError('');
   };
 
   // -----------------------------------------------------
@@ -1897,6 +2295,350 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                   </div>
                 )}
               </div>
+              {isQuestionnaireOpen && (
+                <div className="glass dark:bg-slate-800/50 rounded-lg border border-amber-500/40 p-3 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Guided Pre-Diagnostic Intake</p>
+                      <p className="text-[9px] text-slate-500 dark:text-slate-400 mt-0.5">Optional, mechanic-style, and designed to sharpen the model's first guess.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleSkipQuestionnaire}
+                      className="text-[9px] px-2 py-1 rounded bg-slate-200 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors shrink-0"
+                    >
+                      Skip
+                    </button>
+                  </div>
+
+                  <div className="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-700/50 overflow-hidden">
+                    <div
+                      className="h-full bg-amber-500 transition-all duration-300"
+                      style={{ width: `${(questionnaireStep / 4) * 100}%` }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between text-[9px] text-slate-500 dark:text-slate-400">
+                    <span>Step {questionnaireStep} of 4</span>
+                    <span>Collecting structured symptoms before AI call</span>
+                  </div>
+
+                  {questionnaireStep === 1 && (
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+                        Which part of the vehicle seems to have the issue?
+                      </p>
+                      {suggestedIssueCategory && (
+                        <p className="text-[9px] text-emerald-500">
+                          AI hint from your text: <span className="font-bold">{suggestedIssueCategory}</span>
+                        </p>
+                      )}
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {VEHICLE_ISSUE_CATEGORIES.map((category) => (
+                          <button
+                            key={category}
+                            type="button"
+                            onClick={() => handleQuestionnaireCategorySelect(category)}
+                            className={`rounded border p-2 text-left transition-colors ${
+                              selectedIssueCategory === category
+                                ? `${ISSUE_CATEGORY_META[category].accent} border-current`
+                                : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-amber-500 hover:text-amber-500'
+                            }`}
+                          >
+                            <div className="text-[9px] font-bold leading-tight">{category}</div>
+                            <div className="text-[8px] mt-0.5 leading-relaxed opacity-80">{ISSUE_CATEGORY_META[category].hint}</div>
+                          </button>
+                        ))}
+                      </div>
+                      {questionnaireStepError && <p className="text-[9px] text-red-400">{questionnaireStepError}</p>}
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={handleQuestionnaireContinue}
+                          disabled={!selectedIssueCategory}
+                          className="text-[9px] px-2 py-1 rounded bg-amber-500 hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold transition-colors"
+                        >
+                          Continue
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {questionnaireStep === 2 && selectedIssueCategory && (
+                    <div className="space-y-2.5">
+                      <div>
+                        <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+                          Follow-up checks for {selectedIssueCategory}
+                        </p>
+                        <p className="text-[9px] text-slate-500 dark:text-slate-400">These are the checks a mechanic would usually ask next.</p>
+                      </div>
+
+                      {getCategoryQuestions(selectedIssueCategory).map((question) => (
+                        <div key={question.key} className="space-y-1.5 rounded border border-slate-200 dark:border-slate-700/60 p-2">
+                          <p className="text-[9px] text-slate-600 dark:text-slate-400">
+                            {question.label} {question.required && <span className="text-red-500">*</span>}
+                          </p>
+
+                          {question.type === 'boolean' && (
+                            <div className="flex gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => handleQuestionnaireChoice(question.key, true)}
+                                className={`text-[9px] px-2 py-1 rounded border transition-colors ${
+                                  questionnaireAnswers[question.key] === true
+                                    ? 'bg-amber-500/20 border-amber-500 text-amber-500'
+                                    : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                }`}
+                              >
+                                Yes
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleQuestionnaireChoice(question.key, false)}
+                                className={`text-[9px] px-2 py-1 rounded border transition-colors ${
+                                  questionnaireAnswers[question.key] === false
+                                    ? 'bg-amber-500/20 border-amber-500 text-amber-500'
+                                    : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                }`}
+                              >
+                                No
+                              </button>
+                            </div>
+                          )}
+
+                          {question.type === 'choice' && question.options && (
+                            <div className="flex flex-wrap gap-1.5">
+                              {question.options.map((option) => (
+                                <button
+                                  key={option}
+                                  type="button"
+                                  onClick={() => handleQuestionnaireChoice(question.key, option)}
+                                  className={`text-[9px] px-2 py-1 rounded border transition-colors ${
+                                    questionnaireAnswers[question.key] === option
+                                      ? 'bg-amber-500/20 border-amber-500 text-amber-500'
+                                      : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                  }`}
+                                >
+                                  {option}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+
+                          {question.type === 'multi-select' && question.options && (
+                            <div className="grid grid-cols-2 gap-1.5">
+                              {question.options.map((option) => {
+                                const current = Array.isArray(questionnaireAnswers[question.key]) ? questionnaireAnswers[question.key] as string[] : [];
+                                const active = current.includes(option);
+                                return (
+                                  <button
+                                    key={option}
+                                    type="button"
+                                    onClick={() => {
+                                      setQuestionnaireAnswers(prev => {
+                                        const existing = Array.isArray(prev[question.key]) ? prev[question.key] as string[] : [];
+                                        const next = existing.includes(option)
+                                          ? existing.filter(item => item !== option)
+                                          : [...existing, option];
+                                        return { ...prev, [question.key]: next };
+                                      });
+                                    }}
+                                    className={`text-[9px] px-2 py-1 rounded border text-left transition-colors ${
+                                      active
+                                        ? 'bg-amber-500/20 border-amber-500 text-amber-500'
+                                        : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                    }`}
+                                  >
+                                    {option}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+
+                          {question.type === 'text' && (
+                            <input
+                              type="text"
+                              value={typeof questionnaireAnswers[question.key] === 'string' ? questionnaireAnswers[question.key] as string : ''}
+                              onChange={(event) => handleQuestionnaireChoice(question.key, event.target.value)}
+                              placeholder={question.placeholder || 'Type short answer...'}
+                              className="w-full text-[10px] px-2 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
+                            />
+                          )}
+                        </div>
+                      ))}
+
+                      {questionnaireStepError && <p className="text-[9px] text-red-400">{questionnaireStepError}</p>}
+
+                      <div className="flex justify-between gap-1.5 pt-1">
+                        <button
+                          type="button"
+                          onClick={handleQuestionnaireBack}
+                          className="text-[9px] px-2 py-1 rounded border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleQuestionnaireNext}
+                          disabled={!isQuestionnaireStepTwoValid()}
+                          className="text-[9px] px-2 py-1 rounded bg-amber-500 hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold transition-colors"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {questionnaireStep === 3 && (
+                    <div className="space-y-2.5">
+                      <div>
+                        <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300">Frequency &amp; duration</p>
+                        <p className="text-[9px] text-slate-500 dark:text-slate-400">This helps the model separate a one-off fault from a recurring pattern.</p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <p className="text-[9px] text-slate-600 dark:text-slate-400">How often does this happen?</p>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {FREQUENCY_OPTIONS.map((option) => (
+                            <button
+                              key={option}
+                              type="button"
+                              onClick={() => {
+                                setQuestionnaireFrequency(option);
+                                setQuestionnaireStepError('');
+                              }}
+                              className={`text-[9px] px-2 py-1 rounded border transition-colors ${
+                                questionnaireFrequency === option
+                                  ? 'bg-amber-500/20 border-amber-500 text-amber-500'
+                                  : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                              }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <p className="text-[9px] text-slate-600 dark:text-slate-400">How long has this been happening?</p>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {DURATION_OPTIONS.map((option) => (
+                            <button
+                              key={option}
+                              type="button"
+                              onClick={() => {
+                                setQuestionnaireDuration(option);
+                                setQuestionnaireStepError('');
+                              }}
+                              className={`text-[9px] px-2 py-1 rounded border transition-colors ${
+                                questionnaireDuration === option
+                                  ? 'bg-amber-500/20 border-amber-500 text-amber-500'
+                                  : 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                              }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                        {(questionnaireFrequency || questionnaireDuration) && (
+                          <p className="text-[8px] text-emerald-500">
+                            Selected: {questionnaireFrequency || '—'} / {questionnaireDuration || '—'}
+                          </p>
+                        )}
+                      </div>
+
+                      {questionnaireStepError && <p className="text-[9px] text-red-400">{questionnaireStepError}</p>}
+
+                      <div className="flex justify-between gap-1.5 pt-1">
+                        <button
+                          type="button"
+                          onClick={handleQuestionnaireBack}
+                          className="text-[9px] px-2 py-1 rounded border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleQuestionnaireReview}
+                          className="text-[9px] px-2 py-1 rounded bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold transition-colors"
+                        >
+                          Review
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {questionnaireStep === 4 && questionnaireReview && (
+                    <div className="space-y-2.5">
+                      <div>
+                        <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300">Review &amp; extra notes</p>
+                        <p className="text-[9px] text-slate-500 dark:text-slate-400">Check the structured intake before sending it to the AI model.</p>
+                      </div>
+
+                      <div className="grid gap-2 text-[9px]">
+                        <div className="rounded border border-slate-200 dark:border-slate-700/60 p-2">
+                          <p className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[8px]">Primary category</p>
+                          <p className="font-bold text-slate-800 dark:text-white">{questionnaireReview.primaryCategory}</p>
+                        </div>
+                        <div className="rounded border border-slate-200 dark:border-slate-700/60 p-2">
+                          <p className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[8px]">Possible related categories</p>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {(relatedCategories.length ? relatedCategories : questionnaireReview.possibleRelatedCategories).length > 0 ? (
+                              (relatedCategories.length ? relatedCategories : questionnaireReview.possibleRelatedCategories).map((category) => (
+                                <span key={category} className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                                  {category}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-slate-500 dark:text-slate-400">None flagged</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="rounded border border-slate-200 dark:border-slate-700/60 p-2">
+                          <p className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[8px]">Frequency / duration</p>
+                          <p className="font-medium text-slate-800 dark:text-white">
+                            {questionnaireReview.frequency || '—'} / {questionnaireReview.duration || '—'}
+                          </p>
+                        </div>
+                        <div className="rounded border border-slate-200 dark:border-slate-700/60 p-2">
+                          <p className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[8px]">Original query</p>
+                          <p className="text-slate-800 dark:text-white leading-relaxed mt-0.5">{questionnaireReview.userDescription}</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <p className="text-[9px] text-slate-600 dark:text-slate-400">Additional notes</p>
+                        <textarea
+                          value={userAdditionalNotes}
+                          onChange={(event) => setUserAdditionalNotes(event.target.value)}
+                          placeholder="Add anything else the mechanic should know..."
+                          className="w-full min-h-[72px] resize-y text-[10px] px-2 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
+                        />
+                      </div>
+
+                      {questionnaireStepError && <p className="text-[9px] text-red-400">{questionnaireStepError}</p>}
+
+                      <div className="flex justify-between gap-1.5 pt-1">
+                        <button
+                          type="button"
+                          onClick={handleQuestionnaireBack}
+                          className="text-[9px] px-2 py-1 rounded border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => void handleQuestionnaireComplete()}
+                          disabled={isQuestionnaireSubmitting || isSendingToCopilot}
+                          className="text-[9px] px-2 py-1 rounded bg-amber-500 hover:bg-amber-600 disabled:opacity-60 disabled:cursor-not-allowed text-slate-950 font-bold transition-colors"
+                        >
+                          {isQuestionnaireSubmitting || isSendingToCopilot ? 'Sending...' : 'Send to Copilot'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
               <form onSubmit={handleSendToCopilot} className="flex gap-1.5">
                 <input
                   type="text"
@@ -1907,7 +2649,7 @@ export default function DriverApp({ user, onLogout }: DriverAppProps) {
                 />
                 <button
                   type="submit"
-                  disabled={isSendingToCopilot || !chatInput.trim()}
+                  disabled={isSendingToCopilot || !chatInput.trim() || isQuestionnaireOpen}
                   className="bg-amber-500 hover:bg-amber-600 disabled:glass dark:bg-slate-800/50 text-neutral-950 disabled:text-slate-500 dark:text-slate-500 px-3.5 rounded-lg transition-colors flex items-center justify-center cursor-pointer"
                 >
                   <Send className="h-3.5 w-3.5" />
