@@ -296,29 +296,29 @@ export default function App() {
             <br />
             <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent">tell you it's breaking down?</span>
           </h1>
-          <p className="text-slate-100 text-[15px] mt-4.5 max-w-xl mx-auto lg:mx-0 font-semibold leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
+          <p className="text-slate-100 text-sm md:text-[15px] mt-4 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
             Your driver speaks Hindi into their phone. AI listens to the engine. The camera watches for fatigue.
-            <span className="text-amber-400 font-black"> No internet needed.</span>
+            <span className="text-amber-400 font-bold"> No internet needed.</span>
           </p>
           
           {/* Live Edge-AI Stats */}
-          <div className="flex items-center justify-center lg:justify-start gap-4 mt-5 w-full drop-shadow-[0_2px_5px_rgba(0,0,0,0.95)]">
-            <div className="flex items-center gap-2 text-xs md:text-[13px]">
-              <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
-              <span className="text-emerald-400 font-mono font-black">5 AI Agents</span>
-              <span className="text-slate-200 font-semibold">active</span>
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-2 mt-4 w-full drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+            <div className="flex items-center gap-1.5 text-xs md:text-sm whitespace-nowrap">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse flex-shrink-0"></div>
+              <span className="text-emerald-400 font-mono font-bold">5 AI Agents</span>
+              <span className="text-slate-300">active</span>
             </div>
-            <div className="w-px h-4 bg-slate-500"></div>
-            <div className="flex items-center gap-2 text-xs md:text-[13px]">
-              <WifiOff className="h-3.5 w-3.5 text-amber-400" />
-              <span className="text-amber-400 font-mono font-black">Offline-First</span>
-              <span className="text-slate-200 font-semibold">edge compute</span>
+            <div className="w-px h-3.5 bg-slate-600 flex-shrink-0"></div>
+            <div className="flex items-center gap-1.5 text-xs md:text-sm whitespace-nowrap">
+              <WifiOff className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+              <span className="text-amber-400 font-mono font-bold">Offline-First</span>
+              <span className="text-slate-300">edge compute</span>
             </div>
-            <div className="w-px h-4 bg-slate-500 hidden sm:block"></div>
-            <div className="hidden sm:flex items-center gap-2 text-xs md:text-[13px]">
-              <Volume2 className="h-3.5 w-3.5 text-cyan-400" />
-              <span className="text-cyan-400 font-mono font-black">Hindi + Acoustic</span>
-              <span className="text-slate-200 font-semibold">RAG</span>
+            <div className="w-px h-3.5 bg-slate-600 flex-shrink-0 hidden sm:block"></div>
+            <div className="hidden sm:flex items-center gap-1.5 text-xs md:text-sm whitespace-nowrap">
+              <Volume2 className="h-3.5 w-3.5 text-cyan-400 flex-shrink-0" />
+              <span className="text-cyan-400 font-mono font-bold">Hindi + Acoustic</span>
+              <span className="text-slate-300">RAG</span>
             </div>
           </div>
 
