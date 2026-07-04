@@ -296,35 +296,35 @@ export default function App() {
             <br />
             <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent">tell you it's breaking down?</span>
           </h1>
-          <p className="text-slate-300/70 text-sm mt-3 max-w-xl mx-auto lg:mx-0 font-light leading-relaxed">
+          <p className="text-slate-100 text-[15px] mt-4.5 max-w-xl mx-auto lg:mx-0 font-semibold leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
             Your driver speaks Hindi into their phone. AI listens to the engine. The camera watches for fatigue.
-            <span className="text-white font-medium"> No internet needed.</span>
+            <span className="text-amber-400 font-black"> No internet needed.</span>
           </p>
           
           {/* Live Edge-AI Stats */}
-          <div className="flex items-center justify-center lg:justify-start gap-4 mt-4 w-full">
-            <div className="flex items-center gap-2 text-[11px]">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-              <span className="text-emerald-400 font-mono font-bold">5 AI Agents</span>
-              <span className="text-slate-500">active</span>
+          <div className="flex items-center justify-center lg:justify-start gap-4 mt-5 w-full drop-shadow-[0_2px_5px_rgba(0,0,0,0.95)]">
+            <div className="flex items-center gap-2 text-xs md:text-[13px]">
+              <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
+              <span className="text-emerald-400 font-mono font-black">5 AI Agents</span>
+              <span className="text-slate-200 font-semibold">active</span>
             </div>
-            <div className="w-px h-4 bg-slate-700"></div>
-            <div className="flex items-center gap-2 text-[11px]">
-              <WifiOff className="h-3 w-3 text-amber-400" />
-              <span className="text-amber-400 font-mono font-bold">Offline-First</span>
-              <span className="text-slate-500">edge compute</span>
+            <div className="w-px h-4 bg-slate-500"></div>
+            <div className="flex items-center gap-2 text-xs md:text-[13px]">
+              <WifiOff className="h-3.5 w-3.5 text-amber-400" />
+              <span className="text-amber-400 font-mono font-black">Offline-First</span>
+              <span className="text-slate-200 font-semibold">edge compute</span>
             </div>
-            <div className="w-px h-4 bg-slate-700 hidden sm:block"></div>
-            <div className="hidden sm:flex items-center gap-2 text-[11px]">
-              <Volume2 className="h-3 w-3 text-cyan-400" />
-              <span className="text-cyan-400 font-mono font-bold">Hindi + Acoustic</span>
-              <span className="text-slate-500">RAG</span>
+            <div className="w-px h-4 bg-slate-500 hidden sm:block"></div>
+            <div className="hidden sm:flex items-center gap-2 text-xs md:text-[13px]">
+              <Volume2 className="h-3.5 w-3.5 text-cyan-400" />
+              <span className="text-cyan-400 font-mono font-black">Hindi + Acoustic</span>
+              <span className="text-slate-200 font-semibold">RAG</span>
             </div>
           </div>
 
           {/* 🔥 What Makes Us Different - BOLD Differentiator Strip */}
-          <div className="mt-6 w-full">
-            <p className="text-center lg:text-left text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-3">
+          <div className="mt-7 w-full">
+            <p className="text-center lg:text-left text-xs uppercase tracking-[0.2em] text-slate-200 font-black mb-3.5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
               ⚡ Not another dashboard — This is <span className="text-amber-400">Edge AI that works at 0 bars</span>
             </p>
             <div className="grid grid-cols-2 gap-3 w-full">
