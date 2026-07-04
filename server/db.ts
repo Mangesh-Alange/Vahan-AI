@@ -19,6 +19,8 @@ export interface User {
   name: string;
   phone: string;
   password_hash: string;
+  email?: string;
+  firebase_uid?: string;
   preferred_language: string;
   created_at: string;
 }
@@ -553,6 +555,28 @@ export class Database {
     const hash = hashPassword(passwordText);
     const user = this.data.users.find(u => u.phone === phone && u.password_hash === hash);
     return user || null;
+  }
+
+  public findUserByGoogleIdentity(firebaseUid: string, email?: string | null): User | null {
+    const normalizedEmail = email ? email.toLowerCase().trim() : null;
+    const user = this.data.users.find(u => {
+      if (u.firebase_uid && u.firebase_uid === firebaseUid) return true;
+      if (normalizedEmail && u.email && u.email.toLowerCase() === normalizedEmail) return true;
+      return false;
+    });
+    return user || null;
+  }
+
+  public attachGoogleIdentity(userId: string, firebaseUid: string, email?: string | null): User | null {
+    const user = this.data.users.find(u => u.id === userId);
+    if (!user) return null;
+    user.firebase_uid = firebaseUid;
+    if (email) {
+      user.email = email.toLowerCase().trim();
+    }
+    this.save();
+    this.asyncWrite('users', 'update', { id: userId }, { firebase_uid: user.firebase_uid, email: user.email });
+    return user;
   }
 
   // Vehicles API

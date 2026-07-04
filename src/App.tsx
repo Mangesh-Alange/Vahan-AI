@@ -5,10 +5,12 @@ import {
   Mic, Eye, Cpu, BarChart3, Wifi, WifiOff, Volume2
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { signInWithPopup } from 'firebase/auth';
 import { User as UserType } from './types.js';
 import DriverApp from './driver-app/DriverApp.js';
 import FleetPortal from './fleet-portal/FleetPortal.js';
 import { API_URL } from './config.js';
+import { auth, googleProvider } from '@/lib/firebase';
 
 export default function App() {
   // Current session user
@@ -25,6 +27,11 @@ export default function App() {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dbStatus, setDbStatus] = useState<{ connected: boolean; usingMongo: boolean; uriDefined: boolean } | null>(null);
+
+  const persistSession = (sessionUser: UserType) => {
+    setUser(sessionUser);
+    localStorage.setItem('vahanai_session', JSON.stringify(sessionUser));
+  };
 
   // Auto-fill Demo profiles (For instant 1-click judging)
   const demoProfiles = [
@@ -118,8 +125,7 @@ export default function App() {
       const data = await res.json();
       
       if (data.user) {
-        setUser(data.user);
-        localStorage.setItem('vahanai_session', JSON.stringify(data.user));
+        persistSession(data.user);
       } else if (data.error) {
         setErrorMsg(data.error);
       }
@@ -142,6 +148,51 @@ export default function App() {
     }
   };
 
+  const handleGoogleAuth = async () => {
+    setErrorMsg('');
+    setIsLoading(true);
+
+    try {
+      const popupResult = await signInWithPopup(auth, googleProvider);
+      const firebaseUser = popupResult.user;
+      const resolvedName = firebaseUser.displayName || name || "Google User";
+      const resolvedPhone = firebaseUser.phoneNumber || '';
+
+      const res = await fetch(`${API_URL}/api/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode: isSignUp ? 'signup' : 'signin',
+          firebase_uid: firebaseUser.uid,
+          email: firebaseUser.email || null,
+          name: resolvedName,
+          phone: resolvedPhone,
+          role: isSignUp ? role : undefined,
+          preferred_language: 'hindi',
+          invite_code: isSignUp && role === 'driver' ? inviteCode : undefined,
+          org_name: isSignUp && role === 'fleet_manager' ? orgName : undefined
+        })
+      });
+
+      const data = await res.json();
+      if (data.user) {
+        persistSession(data.user);
+      } else if (data.error) {
+        setErrorMsg(data.error);
+      } else {
+        setErrorMsg('Google sign-in failed. Please try again.');
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setErrorMsg(err.message);
+      } else {
+        setErrorMsg('Google sign-in failed. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // 1-Click login for judges
   const handleQuickLogin = async (profile: typeof demoProfiles[0]) => {
     setErrorMsg('');
@@ -157,8 +208,7 @@ export default function App() {
       });
       const data = await res.json();
       if (data.user) {
-        setUser(data.user);
-        localStorage.setItem('vahanai_session', JSON.stringify(data.user));
+        persistSession(data.user);
       } else {
         setErrorMsg(data.error || "Login failed");
       }
@@ -407,6 +457,30 @@ export default function App() {
               {isLoading ? "Processing..." : isSignUp ? "Create Account" : "Sign In"}
               <ArrowRight className="h-4 w-4" />
             </button>
+
+            <div className="relative py-1">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/10"></div>
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-slate-950/80 px-3 text-[11px] text-slate-500 font-semibold">OR</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoogleAuth}
+              disabled={isLoading}
+              className="w-full bg-slate-900/70 border border-white/10 hover:border-white/25 hover:bg-slate-900 disabled:bg-neutral-900/70 disabled:text-neutral-500 text-white font-black py-3.5 rounded-xl text-sm transition-all flex items-center justify-center gap-2"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.3-1.5 3.9-5.5 3.9-3.3 0-6-2.8-6-6.2s2.7-6.2 6-6.2c1.9 0 3.2.8 3.9 1.5l2.7-2.7C17 2.9 14.8 2 12 2 6.9 2 2.8 6.5 2.8 12s4.1 10 9.2 10c5.3 0 8.8-3.8 8.8-9.1 0-.6-.1-1.1-.2-1.7H12z" />
+                <path fill="#34A853" d="M3.7 7.3l3.2 2.3C7.8 7.5 9.7 6 12 6c1.9 0 3.2.8 3.9 1.5l2.7-2.7C17 2.9 14.8 2 12 2 8.5 2 5.4 4.1 3.7 7.3z" />
+                <path fill="#FBBC05" d="M12 22c2.7 0 4.9-.9 6.6-2.5l-3-2.5c-.9.6-2.1 1-3.6 1-2.5 0-4.6-1.7-5.4-4l-3.3 2.6C4.9 19.8 8.1 22 12 22z" />
+                <path fill="#4285F4" d="M21 12.9c0-.6-.1-1.1-.2-1.7H12v3.9h5.5c-.3 1.7-1.3 3-2.8 3.9l3 2.5c1.8-1.7 3.3-4.3 3.3-8.6z" />
+              </svg>
+              <span>Continue with Google</span>
+            </button>
           </form>
         </div>
 
@@ -472,4 +546,3 @@ export default function App() {
     </div>
   );
 }
-

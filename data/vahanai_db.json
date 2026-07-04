@@ -29,6 +29,18 @@
       "name": "werty",
       "plan_tier": "free",
       "created_at": "2026-07-03T14:42:44.040Z"
+    },
+    {
+      "id": "org_9vsezoa",
+      "name": "qwer",
+      "plan_tier": "free",
+      "created_at": "2026-07-04T06:40:25.429Z"
+    },
+    {
+      "id": "org_7luskch",
+      "name": "Alok Chaturvedi's Transport Fleet",
+      "plan_tier": "free",
+      "created_at": "2026-07-04T14:02:28.115Z"
     }
   ],
   "users": [
@@ -211,6 +223,48 @@
       "id": "user_0lidqbh",
       "password_hash": "43a0d17178a9d26c9e0fe9a74b0b45e38d32f27aed887a008a54bf6e033bf7b9",
       "created_at": "2026-07-03T14:42:44.042Z"
+    },
+    {
+      "org_id": "org_9vsezoa",
+      "role": "fleet_manager",
+      "name": "asdfg",
+      "phone": "123456",
+      "preferred_language": "hindi",
+      "id": "user_p5n6yig",
+      "password_hash": "65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5",
+      "created_at": "2026-07-04T06:40:25.463Z"
+    },
+    {
+      "org_id": "org_9vsezoa",
+      "role": "driver",
+      "name": "abc",
+      "phone": "1234567",
+      "preferred_language": "hindi",
+      "id": "user_7cpmvyq",
+      "password_hash": "65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5",
+      "created_at": "2026-07-04T06:45:49.059Z"
+    },
+    {
+      "org_id": "org_7luskch",
+      "role": "fleet_manager",
+      "name": "Alok Chaturvedi",
+      "phone": "google_PFZ25R6dOxdF",
+      "email": "alokchaturvedi190@gmail.com",
+      "firebase_uid": "PFZ25R6dOxdFCGgYgzYNgdtbjWu2",
+      "preferred_language": "hindi",
+      "id": "user_nuct2e8",
+      "password_hash": "9c3eda1fab5fd0d4cfe5fcbc474fcd17de63f3ea29b16f7ae8bb294b4c887a87",
+      "created_at": "2026-07-04T14:02:28.129Z"
+    },
+    {
+      "org_id": "org_7luskch",
+      "role": "driver",
+      "name": "qrt",
+      "phone": "356",
+      "preferred_language": "hindi",
+      "id": "user_rktfatw",
+      "password_hash": "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
+      "created_at": "2026-07-04T14:12:09.174Z"
     }
   ],
   "vehicles": [
@@ -345,6 +399,17 @@
       "mileage": 50000,
       "last_service_date": "2026-07-02",
       "id": "veh_4jqqlp8"
+    },
+    {
+      "org_id": "org_9vsezoa",
+      "registration_number": "MH-12-BC-1234",
+      "make": "Tata",
+      "model": "IR",
+      "year": 2024,
+      "assigned_driver_id": "user_7cpmvyq",
+      "mileage": 50000,
+      "last_service_date": "2026-07-04",
+      "id": "veh_bm6lfp4"
     }
   ],
   "fault_reports": [
@@ -647,6 +712,21 @@
       "synced_at": "2026-07-02T14:45:21.688Z",
       "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_00 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: DRIVE. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of General inquiry. Cost estimate standard: N/A.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
       "id": "rep_zh6izd0"
+    },
+    {
+      "vehicle_id": "veh_bm6lfp4",
+      "driver_id": "user_7cpmvyq",
+      "timestamp": "2026-07-04T06:48:16.368Z",
+      "symptom_text_hindi": "Exhaust se bohot tez safed dhua nikal raha hai jisme mithi sweet smell hai",
+      "symptom_text_english": "Exhaust se bohot tez safed dhua nikal raha hai jisme mithi sweet smell hai",
+      "acoustic_signal_class": "normal",
+      "severity": "drive",
+      "diagnosis": "संभावित खराबी: This is not a vehicle fault, it is a general question (locations, greetings, etc.).. General inquiry, Location search, Chat suspected.",
+      "recommended_action": "सुझाव: इस सवाल का जवाब देने के लिए कृपया को-पायलट चैट का उपयोग करें। (Please use the Copilot chat to answer this question.)",
+      "estimated_cost_range": "₹2,500 - ₹15,000",
+      "synced_at": "2026-07-04T06:48:16.368Z",
+      "agent_trace_json": "{\"SupervisorAgent\":\"Local RAG Supervisor routed to heavy drivetrain diagnostics.\",\"DiagnosticAgent\":\"Identified match with fault model kb_00 based on keywords and acoustical pattern of \\\"normal\\\".\",\"TriageAgent\":\"Matched severity category: DRIVE. Driver action advised.\",\"MaintenanceAgent\":\"Recommended immediate inspection of General inquiry. Cost estimate standard: N/A.\",\"ReportAgent\":\"Compiled standard offline diagnostic report row successfully.\"}",
+      "id": "rep_uugwybm"
     }
   ],
   "fleet_alerts": [
@@ -862,6 +942,14 @@
       "duration_seconds": 6,
       "severity": "critical",
       "id": "fe_ricvpef"
+    },
+    {
+      "driver_id": "user_7cpmvyq",
+      "timestamp": "2026-07-04T06:49:37.008Z",
+      "ear_value": 0.20400000000000001,
+      "duration_seconds": 6,
+      "severity": "critical",
+      "id": "fe_a89uo0q"
     }
   ],
   "sos_alerts": [
@@ -971,6 +1059,14 @@
       "reason": "Predictive AI Recommendation: Radiator Coolant Pump",
       "scheduled_date": "2026-07-03T14:56:20.036Z",
       "id": "svc_1783004180037"
+    },
+    {
+      "org_id": "org_9vsezoa",
+      "vehicle_id": "MH-12-YK-3561",
+      "driver_id": "user_7cpmvyq",
+      "reason": "Predictive AI Recommendation: Radiator Coolant Pump",
+      "scheduled_date": "2026-07-05T06:47:03.561Z",
+      "id": "svc_1783147623597"
     }
   ]
 }
